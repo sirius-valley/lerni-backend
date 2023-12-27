@@ -7,7 +7,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   await app.listen(3000);
-  console.log(`Environment: ${configService.get<string>('environment')}`);
+  console.log(`Environment: ${configService.get<string>('ENVIRONMENT')}`);
 }
 
 bootstrap();
