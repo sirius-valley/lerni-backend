@@ -25,10 +25,10 @@ services:
       dockerfile: Dockerfile
     container_name: app-lerni
     environment:
-      - PORT=8080
+      - PORT=${PORT}
       - DATABASE_URL=${DATABASE_URL}
     ports:
-      - '8080:8080'
+      - '3000:3000'
     depends_on:
       - db
     volumes:
