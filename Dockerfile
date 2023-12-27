@@ -11,13 +11,14 @@ RUN npm install
 COPY prisma ./prisma/
 RUN npm run db:generate
 
-FROM node:18-slim as build
+FROM deps as build
 
 WORKDIR /app
 
 COPY package.json ./
 COPY tsconfig.json ./
 COPY --from=deps /app/node_modules ./node_modules
+COPY config ./config
 COPY src ./src
 
 RUN npm run build
@@ -42,7 +43,7 @@ ENV PORT 8080
 
 CMD ["sh", "-c", "npm run prod"]
 
-FROM node:18-slim as dev
+FROM build as dev
 
 RUN apt-get update -y && apt-get install -y openssl libc6
 
