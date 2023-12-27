@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  await app.listen(8080);
-  console.log(`Environment: ${configService.get<string>('environment')}`);
+  await app.listen(3000);
+  console.log(`Environment: ${configService.get<string>('ENVIRONMENT')}`);
 }
 
 bootstrap();
