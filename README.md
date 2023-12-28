@@ -19,5 +19,5 @@ PORT=3000
 To run the app, run the following command on the terminal
 
 ```bash
-docker compose --env-file /config/env/development.env up --build
+docker compose --env-file config/env/development.env up --build
 ```
