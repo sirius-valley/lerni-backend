@@ -16,10 +16,10 @@ model Auth {
   password  String
   createdAt DateTime @default(now())
 
-  user User?
+  user Student?
 }
 
-model User {
+model Student {
   id        String   @id @default(uuid())
   name      String
   lastname  String
