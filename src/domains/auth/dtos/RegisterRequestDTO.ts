@@ -8,4 +8,9 @@ export class RegisterRequestDTO {
     message: 'password too weak',
   })
   password: string;
+
+  constructor(email: string, password: string) {
+    this.email = email;
+    this.password = password;
+  }
 }
