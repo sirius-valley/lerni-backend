@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { configuration } from '../config/configuration';
+import { AuthController } from '../domains/auth/auth.controller';
+import { AuthModule } from '../domains/auth/auth.module';
+import { configuration } from '../../config/configuration';
 
 @Module({
   imports: [
@@ -10,8 +10,9 @@ import { configuration } from '../config/configuration';
       envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
       load: [configuration],
     }),
+    AuthModule, // And this line
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AuthController],
+  providers: [],
 })
 export class AppModule {}

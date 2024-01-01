@@ -11,6 +11,7 @@ DATABASE_URL=postgres://postgres:postgres@db:5432/lerni
 POSTGRES_DB=lerni
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
+JWT_SECRET=secret
 
 PORT=3000
 ```
