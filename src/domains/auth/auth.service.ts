@@ -5,6 +5,7 @@ import { JWTDTO } from './dtos/JWTDTO';
 import { AuthRepository } from './auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { LoginRequestDTO } from './dtos/LoginRequestDTO';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,26 @@ export class AuthService {
     });
     const jwt = await this.jwtService.signAsync(
       { sub: authCreated.id },
+      { secret: this.configService.get<string>('JWT_SECRET') },
+    );
+    return new JWTDTO(jwt);
+  }
+
+  public async login(loginDTO: LoginRequestDTO): Promise<JWTDTO> {
+    const auth = await this.authRepository.findAuthByEmail(loginDTO.email);
+    if (!auth)
+      throw new HttpException(
+        'User with provided email not found',
+        HttpStatus.NOT_FOUND,
+      );
+    const isCorrectPassword = await this.comparePassword(
+      loginDTO.password,
+      auth.password,
+    );
+    if (!isCorrectPassword)
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    const jwt = await this.jwtService.signAsync(
+      { sub: auth.id },
       { secret: this.configService.get<string>('JWT_SECRET') },
     );
     return new JWTDTO(jwt);
