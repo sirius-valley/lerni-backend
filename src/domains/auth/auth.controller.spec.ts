@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpException } from '@nestjs/common';
 import { configuration } from '../../../config/configuration';
 import * as process from 'process';
+import { LoginRequestDTO } from './dtos/LoginRequestDTO';
 
 process.env.NODE_ENV = 'development';
 describe('AuthController', () => {
@@ -56,7 +57,7 @@ describe('AuthController', () => {
         authController.register(
           new RegisterRequestDTO('test@mail.com', 'Password12'),
         ),
-      ).rejects.toThrow(new HttpException('Email already in use', 403));
+      ).rejects.toThrow(new HttpException('Email already in use', 409));
     });
     it('should return token successfully when not found', () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
@@ -70,6 +71,46 @@ describe('AuthController', () => {
           new RegisterRequestDTO('test@mail.com', 'Password12'),
         ),
       ).resolves.toEqual({ token: expect.any(String) });
+    });
+  });
+
+  describe('login', () => {
+    it('should return 404 when user is not found', () => {
+      (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
+
+      expect(
+        authController.register(
+          new RegisterRequestDTO('test@mail.com', 'Password12'),
+        ),
+      ).rejects.toThrow(
+        new HttpException('User with provided email not found', 404),
+      );
+    });
+
+    it('should return token when successfully logged in', () => {
+      (prismaService.auth as any).findUnique.mockResolvedValueOnce({
+        id: 1,
+        email: 'test@mail.com',
+        password: 'Password12',
+      } as any);
+      expect(
+        authController.login(
+          new LoginRequestDTO('test@mail.com', 'Password12'),
+        ),
+      ).resolves.toEqual({ token: expect.any(String) });
+    });
+
+    it('should return 401 when entered invalid password', () => {
+      (prismaService.auth as any).findUnique.mockResolvedValueOnce({
+        id: 1,
+        email: 'test@mail.com',
+        password: 'Password12',
+      } as any);
+      expect(
+        authController.login(
+          new LoginRequestDTO('test@mail.com', 'Password12'),
+        ),
+      ).rejects.toThrow(new HttpException('Invalid credentials', 401));
     });
   });
 });
