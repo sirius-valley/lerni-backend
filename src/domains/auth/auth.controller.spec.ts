@@ -11,6 +11,8 @@ import { HttpException } from '@nestjs/common';
 import { configuration } from '../../../config/configuration';
 import * as process from 'process';
 import { LoginRequestDTO } from './dtos/LoginRequestDTO';
+import { MailModule } from '../../mail/mail.module';
+import { MailService } from '../../mail/mail.service';
 
 process.env.NODE_ENV = 'development';
 describe('AuthController', () => {
@@ -20,6 +22,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
+        MailModule,
         ConfigModule.forRoot({
           envFilePath: `${process.cwd()}/config/env/${
             process.env.NODE_ENV
@@ -34,6 +37,7 @@ describe('AuthController', () => {
         JwtService,
         ConfigService,
         PrismaService,
+        MailService,
       ],
     })
       .overrideProvider(PrismaService)

@@ -6,6 +6,7 @@ import { AuthRepository } from './auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoginRequestDTO } from './dtos/LoginRequestDTO';
+import { MailService } from '../../mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {}
 
   public async register(registerDTO: RegisterRequestDTO): Promise<JWTDTO> {
@@ -28,6 +30,7 @@ export class AuthService {
       { sub: authCreated.id },
       { secret: this.configService.get<string>('JWT_SECRET') },
     );
+    await this.mailService.sendMail(authCreated.email);
     return new JWTDTO(jwt);
   }
 
