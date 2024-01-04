@@ -6,9 +6,12 @@ import { AuthRepository } from './auth.repository';
 import { PrismaService } from '../../prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from '../../../config/configuration';
+import { MailService } from '../../mail/mail.service';
+import { MailModule } from '../../mail/mail.module';
 
 @Module({
   imports: [
+    MailModule,
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
       load: [configuration],
@@ -18,7 +21,7 @@ import { configuration } from '../../../config/configuration';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  providers: [AuthService, AuthRepository, PrismaService],
+  providers: [AuthService, AuthRepository, PrismaService, MailService],
   controllers: [AuthController],
   exports: [AuthService],
 })

@@ -17,6 +17,7 @@ WORKDIR /app
 
 COPY package.json ./
 COPY tsconfig.json ./
+COPY nest-cli.json ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY config ./config
 COPY src ./src
