@@ -12,6 +12,9 @@ POSTGRES_DB=lerni
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 JWT_SECRET=secret
+EMAIL_HOST=smtp.gmail.com
+EMAIL_USER=email
+EMAIL_PASSWORD=password
 
 PORT=3000
 ```
