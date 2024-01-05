@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { configuration } from '../../../config/configuration';
 import { MailService } from '../../mail/mail.service';
 import { MailModule } from '../../mail/mail.module';
+import { JwtStrategy } from './strategies/jwt-strategy';
 
 @Module({
   imports: [
@@ -21,7 +22,13 @@ import { MailModule } from '../../mail/mail.module';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  providers: [AuthService, AuthRepository, PrismaService, MailService],
+  providers: [
+    AuthService,
+    AuthRepository,
+    PrismaService,
+    MailService,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })
