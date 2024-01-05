@@ -2,6 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
 import { StudentRequestDTO } from './dtos/StudentRequestDTO';
+import { HttpException } from '@nestjs/common';
+import { StudentRepository } from './student.repository';
+import { PrismaService } from '../../../prisma.service';
+import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 
 describe('StudentController', () => {
   let controller: StudentController;
@@ -17,6 +21,9 @@ describe('StudentController', () => {
             createStudent: jest.fn(),
           },
         },
+        StudentRepository,
+        PrismaService,
+        AttachStudentDataInterceptor,
       ],
     }).compile();
 
@@ -51,6 +58,28 @@ describe('StudentController', () => {
       expect(studentService.createStudent).toHaveBeenCalledWith(
         studentDTO,
         'authId123',
+      );
+    });
+
+    it('should throw an error if student already exists', async () => {
+      // Arrange
+      const studentDTO: StudentRequestDTO = {
+        name: 'John',
+        lastname: 'Doe',
+        profession: 'Student',
+        image: 'profile.jpg',
+      };
+
+      const req = {
+        user: {
+          authId: 'authId123',
+          studentId: 'studentId123',
+        },
+      };
+
+      // Act and Assert
+      await expect(controller.createStudent(req, studentDTO)).rejects.toThrow(
+        HttpException,
       );
     });
   });

@@ -19,4 +19,11 @@ export class StudentRepository {
     });
     return new StudentDTO(student);
   }
+
+  async findStudentByAuthId(authId: string): Promise<StudentDTO | null> {
+    const student = await this.prisma.student.findUnique({
+      where: { authId },
+    });
+    return student ? new StudentDTO(student) : null;
+  }
 }

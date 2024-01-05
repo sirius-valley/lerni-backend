@@ -20,12 +20,12 @@ model Auth {
 }
 
 model Student {
-  id        String   @id @default(uuid())
-  name      String
-  lastname  String
-  profesion String?
-  image     String?
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  name       String
+  lastname   String
+  profession String?
+  image      String?
+  createdAt  DateTime @default(now())
 
   authId String @unique
   auth   Auth   @relation(fields: [authId], references: [id])
