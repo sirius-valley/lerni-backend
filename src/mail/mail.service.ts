@@ -13,7 +13,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to: email,
       from: `Lerni Team ${this.configService.get<string>('EMAIL_USER')}`,
-      subject: 'Welcome to Lerni',
+      subject: 'Bienvenido/a a Lerni',
       template: 'welcome',
     });
   }
