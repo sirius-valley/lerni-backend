@@ -29,4 +29,186 @@ model Student {
 
   authId String @unique
   auth   Auth   @relation(fields: [authId], references: [id])
+
+  points PointLog[]
+
+  comments Comment[]
+
+  programs StudentProgram[]
+
+  pillSubmissions PillSubmission[]
+}
+
+model Teacher {
+  id         String   @id @default(uuid())
+  name       String
+  lastname   String
+  password   String
+  email      String
+  profession String
+  image      String?
+  createdAt  DateTime @default(now())
+
+  programs Program[]
+}
+
+enum PointEvent {
+  added
+  subtracted
+}
+
+model PointLog {
+  id String @id @default(uuid())
+
+  amount    Int
+  detail    String
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+}
+
+model Program {
+  id              String   @id @default(uuid())
+  name            String
+  hoursToComplete Int
+  pointsReward    Int
+  icon            String
+  createdAt       DateTime @default(now())
+
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+  comments Comment[]
+
+  versions ProgramVersion[]
+}
+
+enum Privacy {
+  public
+  private
+}
+
+enum Vote {
+  up
+  down
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  privacy   Privacy
+  vote      Vote
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+}
+
+model ProgramVersion {
+  id        String   @id @default(uuid())
+  version   Int
+  createdAt DateTime @default(now())
+
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+
+  studentPrograms StudentProgram[]
+
+  objectives PorgramObjective[]
+
+  programVersionPillVersions ProgramVersionPillVersion[]
+}
+
+model StudentProgram {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+}
+
+model PorgramObjective {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+}
+
+model Pill {
+  id             String        @id @default(uuid())
+  name           String
+  description    String
+  teacherComment String
+  PillVersion    PillVersion[]
+}
+
+model PillVersion {
+  id                    String   @id @default(uuid())
+  version               Int
+  completionTimeMinutes Int
+  block                 String
+  questionCount         Int
+  createdAt             DateTime @default(now())
+
+  pillId String
+  pill   Pill   @relation(fields: [pillId], references: [id])
+
+  PillObjectives PillObjective[]
+
+  ProgramVersions ProgramVersionPillVersion[]
+
+  PillSubmissions PillSubmission[]
+}
+
+model PillObjective {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  pillVersionId String
+  pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
+}
+
+model ProgramVersionPillVersion {
+  id        String   @id @default(uuid())
+  order     Int
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  pillVersionId String
+  pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
+}
+
+model PillSubmission {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  pillVersionId String
+  pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
+
+  PillAnswers PillAnswer[]
+}
+
+model PillAnswer {
+  id         String   @id @default(uuid())
+  questionId String
+  value      String
+  createdAt  DateTime @default(now())
+
+  pillSubmissionId String
+  pillSubmission   PillSubmission @relation(fields: [pillSubmissionId], references: [id])
 }
