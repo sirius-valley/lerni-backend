@@ -1,4 +1,4 @@
-export class JWTDTO {
+export class JwtDto {
   token: string;
 
   constructor(token: string) {

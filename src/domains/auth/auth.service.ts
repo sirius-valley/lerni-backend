@@ -1,11 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RegisterRequestDTO } from './dtos/RegisterRequestDTO';
-import { JWTDTO } from './dtos/JWTDTO';
+import { RegisterRequestDto } from './dtos/register-request.dto';
+import { JwtDto } from './dtos/jwt.dto';
 import { AuthRepository } from './auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { LoginRequestDTO } from './dtos/LoginRequestDTO';
+import { LoginRequestDto } from './dtos/login-request.dto';
 import { MailService } from '../../mail/mail.service';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
-  public async register(registerDTO: RegisterRequestDTO): Promise<JWTDTO> {
+  public async register(registerDTO: RegisterRequestDto): Promise<JwtDto> {
     const auth = await this.authRepository.findAuthByEmail(registerDTO.email);
     if (auth)
       throw new HttpException('Email already in use', HttpStatus.CONFLICT);
@@ -31,10 +31,10 @@ export class AuthService {
       { secret: this.configService.get<string>('JWT_SECRET') },
     );
     await this.mailService.sendMail(authCreated.email);
-    return new JWTDTO(jwt);
+    return new JwtDto(jwt);
   }
 
-  public async login(loginDTO: LoginRequestDTO): Promise<JWTDTO> {
+  public async login(loginDTO: LoginRequestDto): Promise<JwtDto> {
     const auth = await this.authRepository.findAuthByEmail(loginDTO.email);
     if (!auth)
       throw new HttpException(
@@ -51,7 +51,7 @@ export class AuthService {
       { sub: auth.id },
       { secret: this.configService.get<string>('JWT_SECRET') },
     );
-    return new JWTDTO(jwt);
+    return new JwtDto(jwt);
   }
 
   private async hashPassword(password: string): Promise<string> {

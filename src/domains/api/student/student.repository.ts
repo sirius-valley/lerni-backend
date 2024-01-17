@@ -1,29 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma.service';
-import { StudentRequestDTO } from './dtos/StudentRequestDTO';
-import { StudentDTO } from './dtos/StudentDTO';
+import { StudentRequestDto } from './dtos/student-request.dto';
+import { StudentDto } from './dtos/student.dto';
 
 @Injectable()
 export class StudentRepository {
   constructor(private prisma: PrismaService) {}
 
   async createStudent(
-    data: StudentRequestDTO,
+    data: StudentRequestDto,
     authId: string,
-  ): Promise<StudentDTO> {
+  ): Promise<StudentDto> {
     const student = await this.prisma.student.create({
       data: {
         ...data,
         auth: { connect: { id: authId } },
       },
     });
-    return new StudentDTO(student);
+    return new StudentDto(student);
   }
 
-  async findStudentByAuthId(authId: string): Promise<StudentDTO | null> {
+  async findStudentByAuthId(authId: string): Promise<StudentDto | null> {
     const student = await this.prisma.student.findUnique({
       where: { authId },
     });
-    return student ? new StudentDTO(student) : null;
+    return student ? new StudentDto(student) : null;
   }
 }

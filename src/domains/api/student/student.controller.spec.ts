@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
-import { StudentRequestDTO } from './dtos/StudentRequestDTO';
+import { StudentRequestDto } from './dtos/student-request.dto';
 import { HttpException } from '@nestjs/common';
 import { StudentRepository } from './student.repository';
 import { PrismaService } from '../../../prisma.service';
@@ -38,7 +38,7 @@ describe('StudentController', () => {
   describe('createStudent', () => {
     it('should create a new student', async () => {
       // Arrange
-      const studentDTO: StudentRequestDTO = {
+      const studentDTO: StudentRequestDto = {
         name: 'John',
         lastname: 'Doe',
         profession: 'Student',
@@ -63,7 +63,7 @@ describe('StudentController', () => {
 
     it('should throw an error if student already exists', async () => {
       // Arrange
-      const studentDTO: StudentRequestDTO = {
+      const studentDTO: StudentRequestDto = {
         name: 'John',
         lastname: 'Doe',
         profession: 'Student',

@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsNotEmpty, MaxLength } from 'class-validator';
 
-export class StudentRequestDTO {
+export class StudentRequestDto {
   @IsNotEmpty({ message: 'Name should not be empty' })
   @IsString({ message: 'Name should be a string' })
   @MaxLength(50, { message: 'Name should not exceed 50 characters' })
