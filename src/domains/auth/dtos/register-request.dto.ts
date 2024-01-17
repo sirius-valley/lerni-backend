@@ -1,6 +1,8 @@
 import { IsEmail, Matches } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class RegisterRequestDTO {
+export class RegisterRequestDto {
+  @ApiProperty()
   @IsEmail()
   email: string;
 

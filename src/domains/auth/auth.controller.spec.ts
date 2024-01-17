@@ -3,14 +3,14 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthRepository } from './auth.repository';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import { RegisterRequestDTO } from './dtos/RegisterRequestDTO';
+import { RegisterRequestDto } from './dtos/register-request.dto';
 import { PrismaService } from '../../prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpException } from '@nestjs/common';
 import { configuration } from '../../../config/configuration';
 import * as process from 'process';
-import { LoginRequestDTO } from './dtos/LoginRequestDTO';
+import { LoginRequestDto } from './dtos/login-request.dto';
 import { MailModule } from '../../mail/mail.module';
 import { MailService } from '../../mail/mail.service';
 
@@ -59,7 +59,7 @@ describe('AuthController', () => {
 
       expect(
         authController.register(
-          new RegisterRequestDTO('test@mail.com', 'Password12'),
+          new RegisterRequestDto('test@mail.com', 'Password12'),
         ),
       ).rejects.toThrow(new HttpException('Email already in use', 409));
     });
@@ -72,7 +72,7 @@ describe('AuthController', () => {
       } as any);
       expect(
         authController.register(
-          new RegisterRequestDTO('test@mail.com', 'Password12'),
+          new RegisterRequestDto('test@mail.com', 'Password12'),
         ),
       ).resolves.toEqual({ token: expect.any(String) });
     });
@@ -84,7 +84,7 @@ describe('AuthController', () => {
 
       expect(
         authController.register(
-          new RegisterRequestDTO('test@mail.com', 'Password12'),
+          new RegisterRequestDto('test@mail.com', 'Password12'),
         ),
       ).rejects.toThrow(
         new HttpException('User with provided email not found', 404),
@@ -99,7 +99,7 @@ describe('AuthController', () => {
       } as any);
       expect(
         authController.login(
-          new LoginRequestDTO('test@mail.com', 'Password12'),
+          new LoginRequestDto('test@mail.com', 'Password12'),
         ),
       ).resolves.toEqual({ token: expect.any(String) });
     });
@@ -112,7 +112,7 @@ describe('AuthController', () => {
       } as any);
       expect(
         authController.login(
-          new LoginRequestDTO('test@mail.com', 'Password12'),
+          new LoginRequestDto('test@mail.com', 'Password12'),
         ),
       ).rejects.toThrow(new HttpException('Invalid credentials', 401));
     });

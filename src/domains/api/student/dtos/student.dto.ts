@@ -1,4 +1,4 @@
-export class StudentDTO {
+export class StudentDto {
   id: string;
   name: string;
   lastname: string;
@@ -6,7 +6,7 @@ export class StudentDTO {
   image?: string;
   authId: string;
 
-  constructor(data: StudentDTO) {
+  constructor(data: StudentDto) {
     this.id = data.id;
     this.name = data.name;
     this.lastname = data.lastname;
