@@ -25,7 +25,7 @@ model Student {
   lastname   String?
   carreer    String?
   profession String?
-  ciudad     String?
+  city       String?
   image      String?
   createdAt  DateTime @default(now())
 
