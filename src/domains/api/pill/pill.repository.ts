@@ -21,6 +21,9 @@ export class PillRepository {
           },
         },
       },
+      include: {
+        pill: true,
+      },
     });
   }
 

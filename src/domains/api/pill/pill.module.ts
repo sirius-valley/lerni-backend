@@ -5,19 +5,11 @@ import { PillController } from './pill.controller';
 import { PillService } from './pill.service';
 import { PillRepository } from './pill.repository';
 import { StudentRepository } from '../student/student.repository';
-import { HttpModule } from '@nestjs/axios';
-import { ConfigModule } from '@nestjs/config';
-import { configuration } from '../../../../config/configuration';
+import { SpringPillModule } from '../pill-external-api/spring-pill.module';
 
 @Module({
   controllers: [PillController],
-  imports: [
-    HttpModule,
-    ConfigModule.forRoot({
-      envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
-      load: [configuration],
-    }),
-  ],
+  imports: [SpringPillModule],
   providers: [PrismaService, PillService, PillRepository, StudentRepository, AttachStudentDataInterceptor],
   exports: [PillService, PillRepository],
 })
