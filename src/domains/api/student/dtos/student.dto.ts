@@ -1,7 +1,7 @@
 export class StudentDto {
   id: string;
-  name: string;
-  lastname: string;
+  name?: string;
+  lastname?: string;
   profession?: string;
   image?: string;
   authId: string;

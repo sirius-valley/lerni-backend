@@ -22,10 +22,7 @@ export class AttachStudentDataInterceptor implements NestInterceptor {
       req.user.authId,
     );
     if (!student) return next.handle();
-    req.user = {
-      ...req.user,
-      studentId: student?.id,
-    };
+    req.user = student;
 
     return next.handle();
   }

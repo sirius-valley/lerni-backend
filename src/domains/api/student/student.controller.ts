@@ -12,6 +12,7 @@ import { StudentRequestDto } from './dtos/student-request.dto';
 import { StudentService } from './student.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiRequest } from '../../../types/api-request.interface';
 
 @Controller('api/student')
 @UseGuards(JwtGuard)
@@ -22,11 +23,10 @@ export class StudentController {
 
   @Post('me')
   async createStudent(
-    @Request() req: any,
+    @Request() req: ApiRequest,
     @Body() studentDTO: StudentRequestDto,
   ) {
-    if (req.user.studentId)
-      throw new HttpException('Student already exists', 409);
+    if (req.user.id) throw new HttpException('Student already exists', 409);
     return await this.studentService.createStudent(studentDTO, req.user.authId);
   }
 }
