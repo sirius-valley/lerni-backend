@@ -24,8 +24,6 @@ export class PillController {
     @Request() req: ApiRequest,
     @Param('id') id: string,
   ) {
-    console.log('req.user', req.user);
-    console.log('id', id);
     return await this.pillService.getPillVersionByPillId(
       (req.headers as any).authorization,
       req.user,
