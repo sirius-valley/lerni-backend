@@ -44,10 +44,7 @@ export class PillRepository {
     });
   }
 
-  public async getPillSubmissionByPillIdAndStudentId(
-    pillId: string,
-    studentId: string,
-  ) {
+  public async getPillSubmissionByPillIdAndStudentId(pillId: string, studentId: string) {
     return this.prisma.pillSubmission.findFirst({
       where: {
         studentId: studentId,

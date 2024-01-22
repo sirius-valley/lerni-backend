@@ -14,36 +14,16 @@ export class PillService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async getPillVersionByPillId(
-    authorization: string,
-    student: StudentDto,
-    pillId: string,
-  ) {
-    const pill = await this.pillRepository.getPillByPillIdAndStudentId(
-      pillId,
-      student.id,
-    );
+  public async getPillVersionByPillId(authorization: string, student: StudentDto, pillId: string) {
+    const pill = await this.pillRepository.getPillByPillIdAndStudentId(pillId, student.id);
     if (!pill) throw new HttpException('Pill not found', HttpStatus.NOT_FOUND);
     const teacher = await this.pillRepository.getTeacherByPillId(pillId);
     const answers =
-      (
-        await this.pillRepository.getPillSubmissionByPillIdAndStudentId(
-          pillId,
-          student.id,
-        )
-      )?.pillAnswers?.map(
+      (await this.pillRepository.getPillSubmissionByPillIdAndStudentId(pillId, student.id))?.pillAnswers?.map(
         (answer) => new PillAnswerSpringDto(answer.questionId, answer.value),
       ) || [];
-    const springProgress = await this.getSpringProgress(
-      pill.block,
-      authorization,
-      answers,
-    );
-    if (!springProgress)
-      throw new HttpException(
-        'Error while calculating progress',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    const springProgress = await this.getSpringProgress(pill.block, authorization, answers);
+    if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
 
     return {
       pill: springProgress,
@@ -51,32 +31,21 @@ export class PillService {
     };
   }
 
-  private async getSpringProgress(
-    pillBlock: any,
-    authorization: string,
-    answers: PillAnswerSpringDto[],
-  ) {
+  private async getSpringProgress(pillBlock: any, authorization: string, answers: PillAnswerSpringDto[]) {
     const springProgress = await firstValueFrom(
       this.httpService
-        .get(
-          this.configService.get<string>('SPRING_SERVICE_URL') +
-            '/pill/progress',
-          {
-            headers: {
-              Authorization: authorization,
-            },
-            data: {
-              answers: answers,
-              pillForm: JSON.parse(pillBlock),
-            },
+        .get(this.configService.get<string>('SPRING_SERVICE_URL') + '/pill/progress', {
+          headers: {
+            Authorization: authorization,
           },
-        )
+          data: {
+            answers: answers,
+            pillForm: JSON.parse(pillBlock),
+          },
+        })
         .pipe(
           catchError((err) => {
-            throw new HttpException(
-              'Error while calculating progress: ' + err,
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            );
+            throw new HttpException('Error while calculating progress: ' + err, HttpStatus.INTERNAL_SERVER_ERROR);
           }),
         ),
     );

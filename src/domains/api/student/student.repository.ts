@@ -7,10 +7,7 @@ import { StudentDto } from './dtos/student.dto';
 export class StudentRepository {
   constructor(private prisma: PrismaService) {}
 
-  async createStudent(
-    data: StudentRequestDto,
-    authId: string,
-  ): Promise<StudentDto> {
+  async createStudent(data: StudentRequestDto, authId: string): Promise<StudentDto> {
     const student = await this.prisma.student.create({
       data: {
         ...data,

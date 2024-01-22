@@ -15,11 +15,7 @@ async function bootstrap() {
 }
 
 function swagger(app: INestApplication) {
-  const config = new DocumentBuilder()
-    .setTitle('Lerni')
-    .setDescription('The Lerni API description')
-    .setVersion('1.0')
-    .build();
+  const config = new DocumentBuilder().setTitle('Lerni').setDescription('The Lerni API').setVersion('1.0').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 }

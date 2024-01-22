@@ -18,13 +18,7 @@ import { configuration } from '../../../../config/configuration';
       load: [configuration],
     }),
   ],
-  providers: [
-    PrismaService,
-    PillService,
-    PillRepository,
-    StudentRepository,
-    AttachStudentDataInterceptor,
-  ],
+  providers: [PrismaService, PillService, PillRepository, StudentRepository, AttachStudentDataInterceptor],
   exports: [PillService, PillRepository],
 })
 export class PillModule {}

@@ -56,10 +56,7 @@ describe('StudentController', () => {
       await controller.createStudent(req as any, studentDTO);
 
       // Assert
-      expect(studentService.createStudent).toHaveBeenCalledWith(
-        studentDTO,
-        'authId123',
-      );
+      expect(studentService.createStudent).toHaveBeenCalledWith(studentDTO, 'authId123');
     });
 
     it('should throw an error if student already exists', async () => {
@@ -79,9 +76,7 @@ describe('StudentController', () => {
       };
 
       // Act and Assert
-      await expect(
-        controller.createStudent(req as any, studentDTO),
-      ).rejects.toThrow(HttpException);
+      await expect(controller.createStudent(req as any, studentDTO)).rejects.toThrow(HttpException);
     });
   });
 });
