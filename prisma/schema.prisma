@@ -21,9 +21,11 @@ model Auth {
 
 model Student {
   id         String   @id @default(uuid())
-  name       String
-  lastname   String
+  name       String?
+  lastname   String?
+  carreer    String?
   profession String?
+  city       String?
   image      String?
   createdAt  DateTime @default(now())
 
@@ -148,7 +150,7 @@ model Pill {
   name           String
   description    String
   teacherComment String
-  PillVersion    PillVersion[]
+  pillVersion    PillVersion[]
 }
 
 model PillVersion {
@@ -162,11 +164,11 @@ model PillVersion {
   pillId String
   pill   Pill   @relation(fields: [pillId], references: [id])
 
-  PillObjectives PillObjective[]
+  pillObjectives PillObjective[]
 
-  ProgramVersions ProgramVersionPillVersion[]
+  programVersions ProgramVersionPillVersion[]
 
-  PillSubmissions PillSubmission[]
+  pillSubmissions PillSubmission[]
 }
 
 model PillObjective {
@@ -200,7 +202,7 @@ model PillSubmission {
   pillVersionId String
   pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
 
-  PillAnswers PillAnswer[]
+  pillAnswers PillAnswer[]
 }
 
 model PillAnswer {

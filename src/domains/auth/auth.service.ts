@@ -19,38 +19,23 @@ export class AuthService {
 
   public async register(registerDTO: RegisterRequestDto): Promise<JwtDto> {
     const auth = await this.authRepository.findAuthByEmail(registerDTO.email);
-    if (auth)
-      throw new HttpException('Email already in use', HttpStatus.CONFLICT);
+    if (auth) throw new HttpException('Email already in use', HttpStatus.CONFLICT);
     const hashedPassword = await this.hashPassword(registerDTO.password);
     const authCreated = await this.authRepository.createAuth({
       ...registerDTO,
       password: hashedPassword,
     });
-    const jwt = await this.jwtService.signAsync(
-      { sub: authCreated.id },
-      { secret: this.configService.get<string>('JWT_SECRET') },
-    );
+    const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
     await this.mailService.sendMail(authCreated.email);
     return new JwtDto(jwt);
   }
 
   public async login(loginDTO: LoginRequestDto): Promise<JwtDto> {
     const auth = await this.authRepository.findAuthByEmail(loginDTO.email);
-    if (!auth)
-      throw new HttpException(
-        'User with provided email not found',
-        HttpStatus.NOT_FOUND,
-      );
-    const isCorrectPassword = await this.comparePassword(
-      loginDTO.password,
-      auth.password,
-    );
-    if (!isCorrectPassword)
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-    const jwt = await this.jwtService.signAsync(
-      { sub: auth.id },
-      { secret: this.configService.get<string>('JWT_SECRET') },
-    );
+    if (!auth) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
+    const isCorrectPassword = await this.comparePassword(loginDTO.password, auth.password);
+    if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    const jwt = await this.jwtService.signAsync({ sub: auth.id }, { secret: this.configService.get<string>('JWT_SECRET') });
     return new JwtDto(jwt);
   }
 
@@ -59,10 +44,7 @@ export class AuthService {
     return await bcrypt.hash(password, saltOrRounds);
   }
 
-  private async comparePassword(
-    password: string,
-    hash: string,
-  ): Promise<boolean> {
+  private async comparePassword(password: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(password, hash);
   }
 }

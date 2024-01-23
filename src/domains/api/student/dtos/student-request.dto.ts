@@ -19,12 +19,7 @@ export class StudentRequestDto {
   @IsString({ message: 'Image should be a string' })
   image?: string;
 
-  constructor(
-    name: string,
-    lastname: string,
-    profession?: string,
-    image?: string,
-  ) {
+  constructor(name: string, lastname: string, profession?: string, image?: string) {
     this.name = name;
     this.lastname = lastname;
     this.profession = profession;

@@ -24,21 +24,12 @@ describe('AuthController', () => {
       imports: [
         MailModule,
         ConfigModule.forRoot({
-          envFilePath: `${process.cwd()}/config/env/${
-            process.env.NODE_ENV
-          }.env`,
+          envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
           load: [configuration],
         }),
       ],
       controllers: [AuthController],
-      providers: [
-        AuthService,
-        AuthRepository,
-        JwtService,
-        ConfigService,
-        PrismaService,
-        MailService,
-      ],
+      providers: [AuthService, AuthRepository, JwtService, ConfigService, PrismaService, MailService],
     })
       .overrideProvider(PrismaService)
       .useValue(mockDeep<PrismaService>())
@@ -57,11 +48,9 @@ describe('AuthController', () => {
         createdAt: new Date(),
       } as any);
 
-      expect(
-        authController.register(
-          new RegisterRequestDto('test@mail.com', 'Password12'),
-        ),
-      ).rejects.toThrow(new HttpException('Email already in use', 409));
+      expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
+        new HttpException('Email already in use', 409),
+      );
     });
     it('should return token successfully when not found', () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
@@ -70,11 +59,9 @@ describe('AuthController', () => {
         email: 'test@mail.com',
         password: 'Password12',
       } as any);
-      expect(
-        authController.register(
-          new RegisterRequestDto('test@mail.com', 'Password12'),
-        ),
-      ).resolves.toEqual({ token: expect.any(String) });
+      expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({
+        token: expect.any(String),
+      });
     });
   });
 
@@ -82,11 +69,7 @@ describe('AuthController', () => {
     it('should return 404 when user is not found', () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
 
-      expect(
-        authController.register(
-          new RegisterRequestDto('test@mail.com', 'Password12'),
-        ),
-      ).rejects.toThrow(
+      expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
         new HttpException('User with provided email not found', 404),
       );
     });
@@ -97,11 +80,7 @@ describe('AuthController', () => {
         email: 'test@mail.com',
         password: 'Password12',
       } as any);
-      expect(
-        authController.login(
-          new LoginRequestDto('test@mail.com', 'Password12'),
-        ),
-      ).resolves.toEqual({ token: expect.any(String) });
+      expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({ token: expect.any(String) });
     });
 
     it('should return 401 when entered invalid password', () => {
@@ -110,11 +89,9 @@ describe('AuthController', () => {
         email: 'test@mail.com',
         password: 'Password12',
       } as any);
-      expect(
-        authController.login(
-          new LoginRequestDto('test@mail.com', 'Password12'),
-        ),
-      ).rejects.toThrow(new HttpException('Invalid credentials', 401));
+      expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
+        new HttpException('Invalid credentials', 401),
+      );
     });
   });
 });

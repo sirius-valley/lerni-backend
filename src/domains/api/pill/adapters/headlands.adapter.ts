@@ -1,10 +1,4 @@
-import {
-  ElementType,
-  FormType,
-  PillForm,
-  PillNode,
-  QuestionType,
-} from '../interfaces/pill.interface';
+import { ElementType, FormType, PillForm, PillNode, QuestionType } from '../interfaces/pill.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -26,16 +20,8 @@ export class HeadlandsAdapter {
         return;
       }
       if (array.length === index) return;
-      const processedElementResult = this.processElement(
-        element,
-        array[index + 1],
-        pill,
-        variableToQuestionMap,
-      );
-      if (
-        processedElementResult.pillNode.length !== 0 &&
-        pill.elements.length !== 0
-      ) {
+      const processedElementResult = this.processElement(element, array[index + 1], pill, variableToQuestionMap);
+      if (processedElementResult.pillNode.length !== 0 && pill.elements.length !== 0) {
         pill.relations.push({
           from: pill.elements[pill.elements.length - 1].id,
           to: processedElementResult.pillNode[0].id,
@@ -73,10 +59,7 @@ export class HeadlandsAdapter {
           skip: false,
         };
       case 'multiple_choice_question':
-        const pillNodes3 = this.processMultipleChoiceQuestion(
-          element,
-          variableToQuestionMap,
-        );
+        const pillNodes3 = this.processMultipleChoiceQuestion(element, variableToQuestionMap);
         this.addSequentialRelation(pillNodes3, pill);
         return {
           pillNode: pillNodes3,
@@ -84,12 +67,7 @@ export class HeadlandsAdapter {
         };
       case 'conditional':
         return {
-          pillNode: this.processConditional(
-            element,
-            nextElement,
-            pill,
-            variableToQuestionMap,
-          ),
+          pillNode: this.processConditional(element, nextElement, pill, variableToQuestionMap),
           skip: true,
         };
       default:
@@ -137,32 +115,24 @@ export class HeadlandsAdapter {
       question_type: QuestionType.TEXTINPUT,
     });
 
-    const appearTogetherElements = this.processAppearTogether(
-      element.responses[0].objects[0],
-    );
+    const appearTogetherElements = this.processAppearTogether(element.responses[0].objects[0]);
     elements.push(...appearTogetherElements);
 
     return elements;
   }
 
-  private processMultipleChoiceQuestion(
-    element: any,
-    variableToQuestionMap: any,
-  ): PillNode[] {
+  private processMultipleChoiceQuestion(element: any, variableToQuestionMap: any): PillNode[] {
     const elements: PillNode[] = [];
 
     const options = element.options.map((response: any) => response.text);
 
-    if (!variableToQuestionMap[element.save_to_variable])
-      variableToQuestionMap[element.save_to_variable] = element;
+    if (!variableToQuestionMap[element.save_to_variable]) variableToQuestionMap[element.save_to_variable] = element;
 
     elements.push({
       id: element.id,
       type: ElementType.QUESTION,
       name: element.question,
-      question_type: element.properties.may_select_multiple
-        ? QuestionType.MULTIPLECHOICE
-        : QuestionType.SINGLECHOICE,
+      question_type: element.properties.may_select_multiple ? QuestionType.MULTIPLECHOICE : QuestionType.SINGLECHOICE,
       metadata: {
         options,
       },
@@ -176,12 +146,7 @@ export class HeadlandsAdapter {
     return elements;
   }
 
-  private processConditional(
-    element: any,
-    nextElement: any,
-    pill: PillForm,
-    variableToQuestionMap: any,
-  ): PillNode[] {
+  private processConditional(element: any, nextElement: any, pill: PillForm, variableToQuestionMap: any): PillNode[] {
     const elements: PillNode[] = [];
 
     element.branches.forEach((element: any) => {
@@ -193,14 +158,7 @@ export class HeadlandsAdapter {
           return;
         }
         if (array.length === index) return;
-        elements.push(
-          ...this.processElement(
-            object,
-            array[index + 1],
-            pill,
-            variableToQuestionMap,
-          ).pillNode,
-        );
+        elements.push(...this.processElement(object, array[index + 1], pill, variableToQuestionMap).pillNode);
       });
 
       element.objects.forEach((object: any, index: number, array: any[]) => {
@@ -217,9 +175,7 @@ export class HeadlandsAdapter {
 
       if (variableToQuestionMap[testVarName]) {
         const parent = variableToQuestionMap[testVarName];
-        const parentOption = parent.options.find(
-          (option: any) => option.id === branchId,
-        );
+        const parentOption = parent.options.find((option: any) => option.id === branchId);
         pill.relations.push({
           from: parent.id,
           to: element.objects[0].id,
@@ -227,12 +183,7 @@ export class HeadlandsAdapter {
         });
         pill.relations.push({
           from: element.objects[element.objects.length - 1].id,
-          to: this.processElement(
-            nextElement,
-            null,
-            pill,
-            variableToQuestionMap,
-          ).pillNode[0].id,
+          to: this.processElement(nextElement, null, pill, variableToQuestionMap).pillNode[0].id,
         });
       }
     });

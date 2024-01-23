@@ -11,9 +11,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(
-    @Body() registerRequestDTO: RegisterRequestDto,
-  ): Promise<JwtDto> {
+  async register(@Body() registerRequestDTO: RegisterRequestDto): Promise<JwtDto> {
     return this.authService.register(registerRequestDTO);
   }
 

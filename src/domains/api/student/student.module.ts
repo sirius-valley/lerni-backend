@@ -7,12 +7,7 @@ import { AttachStudentDataInterceptor } from '../../../interceptors/attach-stude
 
 @Module({
   controllers: [StudentController],
-  providers: [
-    PrismaService,
-    StudentService,
-    StudentRepository,
-    AttachStudentDataInterceptor,
-  ],
+  providers: [PrismaService, StudentService, StudentRepository, AttachStudentDataInterceptor],
   exports: [StudentService, StudentRepository],
 })
 export class StudentModule {}

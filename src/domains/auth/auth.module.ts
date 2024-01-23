@@ -22,13 +22,7 @@ import { JwtStrategy } from './strategies/jwt-strategy';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  providers: [
-    AuthService,
-    AuthRepository,
-    PrismaService,
-    MailService,
-    JwtStrategy,
-  ],
+  providers: [AuthService, AuthRepository, PrismaService, MailService, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

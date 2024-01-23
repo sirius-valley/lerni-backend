@@ -6,6 +6,7 @@ import { HttpException } from '@nestjs/common';
 import { StudentRepository } from './student.repository';
 import { PrismaService } from '../../../prisma.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
+import { ApiRequest } from '../../../types/api-request.interface';
 
 describe('StudentController', () => {
   let controller: StudentController;
@@ -52,13 +53,10 @@ describe('StudentController', () => {
       };
 
       // Act
-      await controller.createStudent(req, studentDTO);
+      await controller.createStudent(req as any, studentDTO);
 
       // Assert
-      expect(studentService.createStudent).toHaveBeenCalledWith(
-        studentDTO,
-        'authId123',
-      );
+      expect(studentService.createStudent).toHaveBeenCalledWith(studentDTO, 'authId123');
     });
 
     it('should throw an error if student already exists', async () => {
@@ -73,14 +71,12 @@ describe('StudentController', () => {
       const req = {
         user: {
           authId: 'authId123',
-          studentId: 'studentId123',
+          id: 'studentId123',
         },
       };
 
       // Act and Assert
-      await expect(controller.createStudent(req, studentDTO)).rejects.toThrow(
-        HttpException,
-      );
+      await expect(controller.createStudent(req as any, studentDTO)).rejects.toThrow(HttpException);
     });
   });
 });
