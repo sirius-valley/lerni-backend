@@ -11,6 +11,8 @@ export class PillService {
     private readonly springPillService: SpringPillService,
   ) {}
 
+  public async getIntroduction(authorization: string, student: StudentDto) {}
+
   public async getPillVersionByPillId(authorization: string, student: StudentDto, pillId: string) {
     const pill = await this.pillRepository.getPillByPillIdAndStudentId(pillId, student.id);
     if (!pill) throw new HttpException('Pill not found', HttpStatus.NOT_FOUND);

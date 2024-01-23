@@ -12,6 +12,11 @@ import { ApiRequest } from '../../../types/api-request.interface';
 export class PillController {
   constructor(private readonly pillService: PillService) {}
 
+  @Get('introduction')
+  async getIntroduction(@Request() req: ApiRequest) {
+    return await this.pillService.getIntroduction((req.headers as any).authorization, req.user);
+  }
+
   @Get(':id')
   async getPillVersionByPillId(@Request() req: ApiRequest, @Param('id') id: string) {
     return await this.pillService.getPillVersionByPillId((req.headers as any).authorization, req.user, id);
