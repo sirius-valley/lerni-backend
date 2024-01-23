@@ -23,15 +23,20 @@ export class PillService {
       ) || [];
     const springProgress = await this.springPillService.getSpringProgress(pill.block, authorization, answers);
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
+    const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
 
     return {
       pill: {
         ...pill.pill,
         version: pill.version,
         completionTimeMinutes: pill.completionTimeMinutes,
-        data: springProgress,
+        data: replacedPill,
       },
       teacher,
     };
+  }
+
+  private replaceFullName(pill: any, fullName: string) {
+    return JSON.parse(JSON.stringify(pill).replace('@fullname', fullName));
   }
 }
