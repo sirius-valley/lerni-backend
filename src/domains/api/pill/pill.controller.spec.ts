@@ -50,45 +50,73 @@ describe('PillController', () => {
   };
 
   describe('Pill controller', () => {
-    it("should return 404 when pill doesn't exist", async () => {
-      (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce(null);
+    describe('getPillVersionByPillId', () => {
+      it("should return 404 when pill doesn't exist", async () => {
+        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce(null);
 
-      await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(new HttpException('Pill not found', 404));
-    });
-    it("should fail when pill-external-api doesn't respond", async () => {
-      (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
-        id: '1',
-        pillId: '123',
-        version: 1,
-      } as any);
-      (springPillService as any).getSpringProgress.mockRejectedValueOnce(new HttpException('Error while calculating progress', 500));
+        await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(new HttpException('Pill not found', 404));
+      });
+      it("should fail when pill-external-api doesn't respond", async () => {
+        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
+          id: '1',
+          pillId: '123',
+          version: 1,
+        } as any);
+        (springPillService as any).getSpringProgress.mockRejectedValueOnce(new HttpException('Error while calculating progress', 500));
 
-      await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(
-        new HttpException('Error while calculating progress', 500),
-      );
-    });
-    it('should return pill version when pill exists', async () => {
-      (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
-        id: '1',
-        pillId: '123',
-        version: 1,
-        completionTimeMinutes: 10,
-      } as any);
-      (springPillService as any).getSpringProgress.mockResolvedValueOnce({
-        progress: 0.5,
-        finished: false,
-      } as any);
-
-      await expect(pillController.getPillVersionByPillId(req as any, '123')).resolves.toEqual({
-        pill: {
+        await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(
+          new HttpException('Error while calculating progress', 500),
+        );
+      });
+      it('should return pill version when pill exists', async () => {
+        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
+          id: '1',
+          pillId: '123',
           version: 1,
           completionTimeMinutes: 10,
-          data: {
-            progress: 0.5,
-            finished: false,
+        } as any);
+        (springPillService as any).getSpringProgress.mockResolvedValueOnce({
+          progress: 0.5,
+          finished: false,
+        } as any);
+
+        await expect(pillController.getPillVersionByPillId(req as any, '123')).resolves.toEqual({
+          pill: {
+            version: 1,
+            completionTimeMinutes: 10,
+            data: {
+              progress: 0.5,
+              finished: false,
+            },
           },
-        },
-        teacher: undefined,
+          teacher: undefined,
+        });
+      });
+    });
+    describe('getIntroduction', () => {
+      it('should return introductionPill', async () => {
+        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
+          id: '1',
+          pillId: '123',
+          version: 1,
+          completionTimeMinutes: 10,
+        } as any);
+        (springPillService as any).getSpringProgress.mockResolvedValueOnce({
+          progress: 0.5,
+          finished: false,
+        } as any);
+
+        await expect(pillController.getIntroduction(req as any)).resolves.toEqual({
+          pill: {
+            version: 1,
+            completionTimeMinutes: 10,
+            data: {
+              progress: 0.5,
+              finished: false,
+            },
+          },
+          teacher: null,
+        });
       });
     });
   });

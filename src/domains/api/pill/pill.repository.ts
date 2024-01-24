@@ -5,6 +5,25 @@ import { Injectable } from '@nestjs/common';
 export class PillRepository {
   constructor(private prisma: PrismaService) {}
 
+  public async getById(id: string, studentId: string) {
+    return this.prisma.pillVersion.findFirst({
+      where: {
+        pillId: id,
+      },
+      include: {
+        pill: true,
+        pillSubmissions: {
+          where: {
+            studentId: studentId,
+          },
+          include: {
+            pillAnswers: true,
+          },
+        },
+      },
+    });
+  }
+
   public async getPillByPillIdAndStudentId(pillId: string, studentId: string) {
     return this.prisma.pillVersion.findFirst({
       where: {
