@@ -43,6 +43,7 @@ describe('StudentController', () => {
         name: 'John',
         lastname: 'Doe',
         profession: 'Student',
+        city: 'London',
         image: 'profile.jpg',
       };
 
@@ -65,6 +66,7 @@ describe('StudentController', () => {
         name: 'John',
         lastname: 'Doe',
         profession: 'Student',
+        city: 'London',
         image: 'profile.jpg',
       };
 

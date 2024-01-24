@@ -16,13 +16,24 @@ export class StudentRequestDto {
   profession?: string;
 
   @IsOptional()
+  @IsString({ message: 'Carreer should be a string' })
+  carreer?: string;
+
+  @IsNotEmpty({ message: 'City should not be empty' })
+  @IsString({ message: 'City should be a string' })
+  @MaxLength(50, { message: 'City should not exceed 50 characters' })
+  city: string;
+
+  @IsOptional()
   @IsString({ message: 'Image should be a string' })
   image?: string;
 
-  constructor(name: string, lastname: string, profession?: string, image?: string) {
+  constructor(name: string, lastname: string, city: string, profession?: string, carreer?: string, image?: string) {
     this.name = name;
     this.lastname = lastname;
     this.profession = profession;
+    this.carreer = carreer;
+    this.city = city;
     this.image = image;
   }
 }

@@ -6,9 +6,14 @@ import { RegisterRequestDto } from './dtos/register-request.dto';
 export class AuthRepository {
   constructor(private prisma: PrismaService) {}
 
-  async createAuth(data: RegisterRequestDto) {
+  async createAuthAndStudent(data: RegisterRequestDto) {
     return this.prisma.auth.create({
-      data,
+      data: {
+        ...data,
+        user: {
+          create: {},
+        },
+      },
     });
   }
 
