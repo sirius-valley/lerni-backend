@@ -18,7 +18,6 @@ process.env.NODE_ENV = 'development';
 describe('AuthController', () => {
   let authController: AuthController;
   let prismaService: DeepMockProxy<PrismaService>;
-  let mailService: DeepMockProxy<MailService>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -40,7 +39,6 @@ describe('AuthController', () => {
 
     authController = app.get(AuthController);
     prismaService = app.get(PrismaService);
-    mailService = app.get(MailService);
   });
 
   describe('root', () => {
@@ -63,7 +61,6 @@ describe('AuthController', () => {
         email: 'test@mail.com',
         password: 'Password12',
       } as any);
-      // mailService.sendMail.mockResolvedValueOnce(null);
       await expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({
         token: expect.any(String),
       });
