@@ -18,6 +18,7 @@ process.env.NODE_ENV = 'development';
 describe('AuthController', () => {
   let authController: AuthController;
   let prismaService: DeepMockProxy<PrismaService>;
+  let mailService: DeepMockProxy<MailService>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -33,14 +34,17 @@ describe('AuthController', () => {
     })
       .overrideProvider(PrismaService)
       .useValue(mockDeep<PrismaService>())
+      .overrideProvider(MailService)
+      .useValue(mockDeep<MailService>())
       .compile();
 
     authController = app.get(AuthController);
     prismaService = app.get(PrismaService);
+    mailService = app.get(MailService);
   });
 
   describe('root', () => {
-    it('should return 403 when mail in use', () => {
+    it('should return 403 when mail in use', async () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce({
         id: '1',
         email: 'test@mail.com',
@@ -48,48 +52,51 @@ describe('AuthController', () => {
         createdAt: new Date(),
       } as any);
 
-      expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
+      await expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
         new HttpException('Email already in use', 409),
       );
     });
-    it('should return token successfully when not found', () => {
+    it('should return token successfully when not found', async () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
       (prismaService.auth as any).create.mockResolvedValueOnce({
         id: 1,
         email: 'test@mail.com',
         password: 'Password12',
       } as any);
-      expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({
+      // mailService.sendMail.mockResolvedValueOnce(null);
+      await expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({
         token: expect.any(String),
       });
     });
   });
 
   describe('login', () => {
-    it('should return 404 when user is not found', () => {
+    it('should return 404 when user is not found', async () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
 
-      expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
+      await expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
         new HttpException('User with provided email not found', 404),
       );
     });
 
-    it('should return token when successfully logged in', () => {
+    it('should return token when successfully logged in', async () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce({
         id: 1,
         email: 'test@mail.com',
-        password: 'Password12',
+        password: '$2b$10$g4aIAoxVYBx/CcSgUE7lue32ImLYKYIhY09djyIwKs4m1bcC/C/2i',
       } as any);
-      expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({ token: expect.any(String) });
+      await expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).resolves.toEqual({
+        token: expect.any(String),
+      });
     });
 
     it('should return 401 when entered invalid password', () => {
       (prismaService.auth as any).findUnique.mockResolvedValueOnce({
         id: 1,
         email: 'test@mail.com',
-        password: 'Password12',
+        password: '$2b$10$g4aIAoxVYBx/CcSgUE7lue32ImLYKYIhY09djyIwKs4m1bcC/C/2i',
       } as any);
-      expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
+      expect(authController.login(new LoginRequestDto('test@mail.com', 'WrongPassword'))).rejects.toThrow(
         new HttpException('Invalid credentials', 401),
       );
     });
