@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
-import { StudentRequestDto } from './dtos/student-request.dto';
-import { HttpException } from '@nestjs/common';
 import { StudentRepository } from './student.repository';
 import { PrismaService } from '../../../prisma.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
-import { ApiRequest } from '../../../types/api-request.interface';
+import { ConfigModule } from '@nestjs/config';
+
+process.env.NODE_ENV = 'development';
 
 describe('StudentController', () => {
   let controller: StudentController;
@@ -14,71 +14,99 @@ describe('StudentController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [StudentController],
-      providers: [
-        {
-          provide: StudentService,
-          useValue: {
-            createStudent: jest.fn(),
-          },
-        },
-        StudentRepository,
-        PrismaService,
-        AttachStudentDataInterceptor,
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
+        }),
       ],
+      controllers: [StudentController],
+      providers: [StudentService, StudentRepository, PrismaService, AttachStudentDataInterceptor],
     }).compile();
 
     controller = module.get<StudentController>(StudentController);
     studentService = module.get<StudentService>(StudentService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-
-  describe('createStudent', () => {
-    it('should create a new student', async () => {
+  describe('getStudentDetails', () => {
+    it('should return student details', async () => {
       // Arrange
-      const studentDTO: StudentRequestDto = {
+      const req = {
+        user: {
+          id: 'studentId123',
+          name: 'John',
+          lastname: 'Doe',
+          profession: 'Student',
+          city: 'London',
+          image: 'profile.jpg',
+        },
+      };
+
+      // Assert
+      await expect(controller.getStudentDetails(req as any)).resolves.toEqual({
+        id: 'studentId123',
         name: 'John',
         lastname: 'Doe',
         profession: 'Student',
+        career: undefined,
         city: 'London',
         image: 'profile.jpg',
-      };
+        hasCompletedIntroduction: true,
+      });
+    });
 
+    it('should return student details without optional fields', async () => {
+      // Arrange
       const req = {
         user: {
-          authId: 'authId123',
+          id: 'studentId123',
+          name: 'John',
+          lastname: 'Doe',
+          city: 'London',
         },
       };
 
       // Act
-      await controller.createStudent(req as any, studentDTO);
+      const result = await controller.getStudentDetails(req as any);
 
       // Assert
-      expect(studentService.createStudent).toHaveBeenCalledWith(studentDTO, 'authId123');
-    });
-
-    it('should throw an error if student already exists', async () => {
-      // Arrange
-      const studentDTO: StudentRequestDto = {
+      expect(result).toEqual({
+        id: 'studentId123',
         name: 'John',
         lastname: 'Doe',
-        profession: 'Student',
         city: 'London',
-        image: 'profile.jpg',
-      };
+        profession: undefined,
+        career: undefined,
+        image: undefined,
+        hasCompletedIntroduction: false,
+      });
+    });
 
+    it('should return student details without necessary fields', async () => {
+      // Arrange
       const req = {
         user: {
-          authId: 'authId123',
           id: 'studentId123',
+          lastname: 'Doe',
+          profession: 'Student',
+          city: 'London',
+          image: 'profile.jpg',
         },
       };
 
-      // Act and Assert
-      await expect(controller.createStudent(req as any, studentDTO)).rejects.toThrow(HttpException);
+      // Act
+      const result = await controller.getStudentDetails(req as any);
+
+      // Assert
+      expect(result).toEqual({
+        id: 'studentId123',
+        name: undefined,
+        lastname: 'Doe',
+        city: 'London',
+        profession: 'Student',
+        career: undefined,
+        image: 'profile.jpg',
+        hasCompletedIntroduction: false,
+      });
     });
   });
 });
