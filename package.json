@@ -91,6 +91,7 @@
     "typescript": "^5.3.3"
   },
   "jest": {
+    "watchman": false,
     "moduleFileExtensions": [
       "js",
       "json",

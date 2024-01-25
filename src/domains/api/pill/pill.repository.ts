@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 export class PillRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async getById(id: string, studentId: string) {
+  public async getPillVersionByPillIdAndStudentId(id: string, studentId: string) {
     return this.prisma.pillVersion.findFirst({
       where: {
         pillId: id,
@@ -20,6 +20,16 @@ export class PillRepository {
             pillAnswers: true,
           },
         },
+      },
+    });
+  }
+
+  public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string) {
+    return this.prisma.pillAnswer.create({
+      data: {
+        pillSubmissionId,
+        questionId,
+        value,
       },
     });
   }
@@ -46,6 +56,23 @@ export class PillRepository {
     });
   }
 
+  public async getStudentProgramByStudentIdAndPillId(studentId: string, pillId: string) {
+    return this.prisma.studentProgram.findFirst({
+      where: {
+        studentId: studentId,
+        programVersion: {
+          programVersionPillVersions: {
+            some: {
+              pillVersion: {
+                pillId: pillId,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   public async getTeacherByPillId(pillId: string) {
     return this.prisma.teacher.findFirst({
       where: {
@@ -66,6 +93,23 @@ export class PillRepository {
     });
   }
 
+  public async createPillSubmission(pillVersionId: string, studentId: string) {
+    return this.prisma.pillSubmission.create({
+      data: {
+        studentId,
+        pillVersionId,
+      },
+      include: {
+        pillAnswers: true,
+        pillVersion: {
+          include: {
+            pill: true,
+          },
+        },
+      },
+    });
+  }
+
   public async getPillSubmissionByPillIdAndStudentId(pillId: string, studentId: string) {
     return this.prisma.pillSubmission.findFirst({
       where: {
@@ -79,6 +123,11 @@ export class PillRepository {
       },
       include: {
         pillAnswers: true,
+        pillVersion: {
+          include: {
+            pill: true,
+          },
+        },
       },
     });
   }
