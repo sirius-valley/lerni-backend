@@ -23,4 +23,14 @@ export class StudentRepository {
     });
     return student ? new StudentDto(student) : null;
   }
+
+  async updateStudent(studentId: string, field: string, value: string) {
+    const student = await this.prisma.student.update({
+      where: { id: studentId },
+      data: {
+        [field]: value,
+      },
+    });
+    return student ? new StudentDto(student) : null;
+  }
 }

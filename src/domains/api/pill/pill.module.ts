@@ -6,11 +6,12 @@ import { PillService } from './pill.service';
 import { PillRepository } from './pill.repository';
 import { StudentRepository } from '../student/student.repository';
 import { SpringPillModule } from '../pill-external-api/spring-pill.module';
+import { StudentModule } from '../student/student.module';
 
 @Module({
   controllers: [PillController],
-  imports: [SpringPillModule],
-  providers: [PrismaService, PillService, PillRepository, StudentRepository, AttachStudentDataInterceptor],
+  imports: [SpringPillModule, StudentModule],
+  providers: [PrismaService, PillService, PillRepository, StudentRepository, AttachStudentDataInterceptor, StudentRepository],
   exports: [PillService, PillRepository],
 })
 export class PillModule {}
