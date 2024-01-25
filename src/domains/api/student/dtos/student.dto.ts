@@ -3,7 +3,7 @@ export class StudentDto {
   name?: string;
   lastname?: string;
   profession?: string;
-  carreer?: string;
+  career?: string;
   city?: string;
   image?: string;
   authId: string;
@@ -13,7 +13,7 @@ export class StudentDto {
     this.name = data.name;
     this.lastname = data.lastname;
     this.profession = data.profession;
-    this.carreer = data.carreer;
+    this.career = data.career;
     this.city = data.city;
     this.image = data.image;
     this.authId = data.authId;

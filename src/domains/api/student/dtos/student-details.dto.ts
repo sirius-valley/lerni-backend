@@ -16,7 +16,7 @@ export class StudentDetailsDto {
     this.lastname = data.lastname;
     this.city = data.city;
     this.profession = data.profession;
-    this.career = data.carreer;
+    this.career = data.career;
     this.image = data.image;
     this.hasCompletedIntroduction = hasCompletedIntroduction;
   }

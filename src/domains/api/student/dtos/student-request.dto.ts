@@ -16,8 +16,8 @@ export class StudentRequestDto {
   profession?: string;
 
   @IsOptional()
-  @IsString({ message: 'Carreer should be a string' })
-  carreer?: string;
+  @IsString({ message: 'Career should be a string' })
+  career?: string;
 
   @IsNotEmpty({ message: 'City should not be empty' })
   @IsString({ message: 'City should be a string' })
@@ -28,11 +28,11 @@ export class StudentRequestDto {
   @IsString({ message: 'Image should be a string' })
   image?: string;
 
-  constructor(name: string, lastname: string, city: string, profession?: string, carreer?: string, image?: string) {
+  constructor(name: string, lastname: string, city: string, profession?: string, career?: string, image?: string) {
     this.name = name;
     this.lastname = lastname;
     this.profession = profession;
-    this.carreer = carreer;
+    this.career = career;
     this.city = city;
     this.image = image;
   }
