@@ -21,7 +21,7 @@ export class AuthService {
     const auth = await this.authRepository.findAuthByEmail(registerDTO.email);
     if (auth) throw new HttpException('Email already in use', HttpStatus.CONFLICT);
     const hashedPassword = await this.hashPassword(registerDTO.password);
-    const authCreated = await this.authRepository.createAuth({
+    const authCreated = await this.authRepository.createAuthAndStudent({
       ...registerDTO,
       password: hashedPassword,
     });
