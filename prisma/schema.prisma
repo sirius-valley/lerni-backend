@@ -158,7 +158,6 @@ model PillVersion {
   version               Int
   completionTimeMinutes Int
   block                 String
-  questionCount         Int
   createdAt             DateTime @default(now())
 
   pillId String
@@ -209,6 +208,7 @@ model PillAnswer {
   id         String   @id @default(uuid())
   questionId String
   value      String
+  isCorrect  Boolean  @default(true)
   createdAt  DateTime @default(now())
 
   pillSubmissionId String

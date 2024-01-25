@@ -8,4 +8,5 @@ export const configuration = () => ({
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   EMAIL_HOST: process.env.EMAIL_HOST,
+  SPRING_SERVICE_URL: process.env.SPRING_SERVICE_URL,
 });

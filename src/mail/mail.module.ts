@@ -28,7 +28,7 @@ import * as path from 'path';
             },
           },
           template: {
-            dir: path.join(__dirname, '../../mail/templates'),
+            dir: path.join(process.cwd(), '/src/mail/templates'),
             adapter: new HandlebarsAdapter(),
             options: {
               strict: true,
