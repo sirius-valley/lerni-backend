@@ -97,7 +97,6 @@ export class PillService {
   }
 
   private capitalizeAndTrim(str) {
-    console.log(str);
     return str.trim().replace(/\b\w/g, (c: string) => c.toUpperCase());
   }
 
