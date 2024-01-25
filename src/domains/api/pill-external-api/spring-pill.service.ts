@@ -45,7 +45,11 @@ export class SpringPillService {
         )
         .pipe(
           catchError((err) => {
-            throw new HttpException('Error while calculating progress: ' + err, err?.response?.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            console.log(err.response);
+            throw new HttpException(
+              'Error while calculating progress: ' + err?.response?.data,
+              err?.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
           }),
         ),
     );
