@@ -31,4 +31,24 @@ export class SpringPillService {
     );
     return springProgress.data;
   }
+
+  public async answerPill(authorization: string, pillBlock: any, answerRequest: PillAnswerSpringDto) {
+    const springProgress = await firstValueFrom(
+      this.httpService
+        .post(
+          this.configService.get<string>('SPRING_SERVICE_URL') + '/pill/answer',
+          {
+            answer: answerRequest,
+            pillForm: JSON.parse(pillBlock),
+          },
+          { headers: { Authorization: authorization } },
+        )
+        .pipe(
+          catchError((err) => {
+            throw new HttpException('Error while calculating progress: ' + err, err?.response?.status || HttpStatus.INTERNAL_SERVER_ERROR);
+          }),
+        ),
+    );
+    return springProgress.data;
+  }
 }

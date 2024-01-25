@@ -23,7 +23,7 @@ model Student {
   id         String   @id @default(uuid())
   name       String?
   lastname   String?
-  carreer    String?
+  career     String?
   profession String?
   city       String?
   image      String?
