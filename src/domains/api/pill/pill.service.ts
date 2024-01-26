@@ -84,7 +84,8 @@ export class PillService {
 
   private async createPillSubmission(pillId: string, studentId: string) {
     const studentProgram = await this.pillRepository.getStudentProgramByStudentIdAndPillId(studentId, pillId);
-    if (!studentProgram) throw new HttpException('Student does not have access to the pill', HttpStatus.FORBIDDEN);
+    if (!studentProgram && pillId !== introductionID)
+      throw new HttpException('Student does not have access to the pill', HttpStatus.FORBIDDEN);
     const pillVersion = await this.pillRepository.getPillVersionByPillIdAndStudentId(pillId, studentId);
     return await this.pillRepository.createPillSubmission(pillVersion.id, studentId);
   }
