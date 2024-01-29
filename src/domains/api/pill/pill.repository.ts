@@ -24,12 +24,19 @@ export class PillRepository {
     });
   }
 
-  public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string) {
-    return this.prisma.pillAnswer.create({
+  public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string, progress: number) {
+    return this.prisma.pillSubmission.update({
       data: {
-        pillSubmissionId,
-        questionId,
-        value,
+        pillAnswers: {
+          create: {
+            questionId,
+            value,
+          },
+        },
+        progress,
+      },
+      where: {
+        id: pillSubmissionId,
       },
     });
   }

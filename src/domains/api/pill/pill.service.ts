@@ -60,7 +60,7 @@ export class PillService {
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
 
-    await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer);
+    await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer, springProgress.progress);
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
     if (answerRequest.pillId === introductionID) await this.saveIntroductionProgress(student, answerRequest);
 
@@ -79,7 +79,6 @@ export class PillService {
   }
 
   private mergeData(springProgress: any, pillBlock: any) {
-    console.log(springProgress.nodes);
     return springProgress.nodes.map((node) => {
       const element = pillBlock.elements.find((element) => {
         return element.id === node.nodeId;

@@ -194,6 +194,7 @@ model ProgramVersionPillVersion {
 model PillSubmission {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
+  progress  Int      @default(0)
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])
