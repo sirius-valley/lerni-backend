@@ -42,9 +42,11 @@ services:
     volumes:
       - ./src:/app/src
     command:
-      - npm
-      - run
-      - seed:dev
+      - sh
+      - -c
+      - |
+        npm run seed:dev && npm run start:dev
+
 
 
 volumes:
