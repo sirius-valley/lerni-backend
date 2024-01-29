@@ -41,6 +41,11 @@ services:
       - app_network
     volumes:
       - ./src:/app/src
+    command:
+      - npm
+      - run
+      - seed:dev
+
 
 volumes:
   db-data:
