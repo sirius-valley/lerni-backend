@@ -128,7 +128,7 @@ export class PillService {
   private async saveIntroductionProgress(studentDto: StudentDto, answerRequest: AnswerRequestDto) {
     const varName = introductionVariables[answerRequest.questionId];
     if (!varName) return;
-    if (varName === 'lastname') studentDto.lastname = this.capitalizeAndTrim(answerRequest.answer);
+    Object.keys(studentDto).forEach((key) => (studentDto[key] = this.capitalizeAndTrim(studentDto[key])));
     await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
   }
 
