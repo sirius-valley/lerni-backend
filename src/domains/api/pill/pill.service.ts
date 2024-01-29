@@ -24,14 +24,11 @@ export class PillService {
     if (!introduction) throw new HttpException('Introduction not found', HttpStatus.NOT_FOUND);
     const answers = introduction.pillSubmissions?.length === 1 ? introduction.pillSubmissions[0].pillAnswers : [];
     const springProgress = await this.springPillService.getSpringProgress(introduction.block, authorization, answers);
+    const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
+    const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(introduction.block));
 
     return {
-      pill: {
-        ...introduction.pill,
-        version: introduction.version,
-        completionTimeMinutes: introduction.completionTimeMinutes,
-        data: this.replaceFullName(springProgress, student.name + ' ' + student.lastname),
-      },
+      pill: new PillDto(introduction.pill, introduction, formattedPillBlock),
       teacher: null,
     };
   }
@@ -47,9 +44,10 @@ export class PillService {
     const springProgress = await this.springPillService.getSpringProgress(pillVersion.block, authorization, answers);
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
+    const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillVersion.block));
 
     return {
-      pill: new PillDto(pillVersion.pill, pillVersion, replacedPill),
+      pill: new PillDto(pillVersion.pill, pillVersion, formattedPillBlock),
       teacher: new TeacherDto(teacher),
     };
   }
@@ -62,13 +60,50 @@ export class PillService {
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
 
-    await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer);
+    await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer, springProgress.progress);
+    const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
     if (answerRequest.pillId === introductionID) await this.saveIntroductionProgress(student, answerRequest);
 
     return {
-      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, replacedPill),
+      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
       teacher: undefined,
     };
+  }
+
+  private formatPillBlock(springProgress: any, pillBlock: any) {
+    return {
+      completed: springProgress.completed,
+      progress: springProgress.progress,
+      bubbles: this.mergeData(springProgress, pillBlock),
+    };
+  }
+
+  private mergeData(springProgress: any, pillBlock: any) {
+    return springProgress.nodes.map((node) => {
+      const element = pillBlock.elements.find((element) => {
+        return element.id === node.nodeId;
+      });
+      const type = element?.metadata?.lerni_question_type ?? 'text';
+      return {
+        id: node.nodeId,
+        type: type,
+        ...this.calculateExtraAttributes(node, type),
+      };
+    });
+  }
+
+  private calculateExtraAttributes(node: any, type: string) {
+    switch (type) {
+      case 'text':
+      case 'image':
+        return { content: node.nodeContent.content };
+      case 'free-text':
+        return { content: node.answer };
+      case 'single-choice':
+      case 'multiple-choice':
+      case 'carousel':
+        return { value: node.answer, options: node.nodeContent.metadata.options };
+    }
   }
 
   private async getSpringProgress(authorization: string, pillSubmission: any, answerRequest: AnswerRequestDto) {

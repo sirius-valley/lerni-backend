@@ -6,18 +6,21 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.pillVersion.upsert({
-    where: { id: '7cf767b2-9ac5-4420-8680-a9e000438d94' },
+    where: { id: introductionID },
     update: {},
     create: {
       block: introductionBlock,
       version: 1,
       completionTimeMinutes: 5,
       pill: {
-        create: {
-          id: introductionID,
-          name: 'Introduction',
-          description: 'Introduction',
-          teacherComment: 'This is the introduction pill. It\'s a good place to start!',
+        connectOrCreate: {
+          where: { id: introductionID },
+          create: {
+            id: introductionID,
+            name: 'Introduction',
+            description: 'Introduction',
+            teacherComment: 'This is the introduction pill. It\'s a good place to start!',
+          },
         },
       },
     },

@@ -7,7 +7,9 @@ export class PillDto {
   teacherComment: string;
   version: number;
   completionTimeMinutes: number;
-  data: any;
+  completed: boolean;
+  progress: number;
+  bubbles: BubbleDto[];
 
   constructor(pill: Pill, pillVersion: PillVersion, data: any) {
     this.id = pill.id;
@@ -16,6 +18,8 @@ export class PillDto {
     this.teacherComment = pill.teacherComment;
     this.version = pillVersion.version;
     this.completionTimeMinutes = pillVersion.completionTimeMinutes;
-    this.data = data;
+    this.completed = data.completed;
+    this.progress = data.progress;
+    this.bubbles = data.bubbles;
   }
 }

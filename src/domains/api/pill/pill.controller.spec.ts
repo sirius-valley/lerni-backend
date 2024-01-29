@@ -84,6 +84,7 @@ describe('PillController', () => {
             teacherComment: 'teacherComment',
           },
           completionTimeMinutes: 10,
+          block: '{"elements": []}',
         } as any);
         (prismaService.teacher as any).findFirst.mockResolvedValueOnce({
           id: '1',
@@ -93,22 +94,22 @@ describe('PillController', () => {
           image: 'image',
         } as any);
         (springPillService as any).getSpringProgress.mockResolvedValueOnce({
-          progress: 0.5,
+          progress: 1,
           completed: false,
+          nodes: [],
         } as any);
 
         await expect(pillController.getPillVersionByPillId(req as any, '123')).resolves.toMatchObject<PillProgressResponseDto>({
           pill: {
             version: 1,
             completionTimeMinutes: 10,
-            data: {
-              progress: 0.5,
-              completed: false,
-            },
             id: '123',
             name: 'name',
             description: 'description',
             teacherComment: 'teacherComment',
+            completed: false,
+            progress: 1,
+            bubbles: [],
           },
           teacher: {
             id: '1',
@@ -129,6 +130,8 @@ describe('PillController', () => {
             pillId: '123',
             version: 1,
             completionTimeMinutes: 10,
+            block: '{"elements": []}',
+            progress: 0,
             pill: {
               id: '123',
               name: 'name',
@@ -139,8 +142,9 @@ describe('PillController', () => {
           pillAnswers: [],
         } as any);
         (springPillService as any).answerPill.mockResolvedValueOnce({
-          progress: 0.5,
+          progress: 0.0,
           completed: false,
+          nodes: [],
         } as any);
 
         await expect(
@@ -149,14 +153,13 @@ describe('PillController', () => {
           pill: {
             version: 1,
             completionTimeMinutes: 10,
-            data: {
-              progress: 0.5,
-              completed: false,
-            },
             id: '123',
             name: 'name',
             description: 'description',
             teacherComment: 'teacherComment',
+            completed: false,
+            progress: 0,
+            bubbles: [],
           },
           teacher: undefined,
         });
@@ -170,20 +173,31 @@ describe('PillController', () => {
           pillId: '123',
           version: 1,
           completionTimeMinutes: 10,
+          block: '{"elements": []}',
+          pill: {
+            id: '123',
+            name: 'name',
+            description: 'description',
+            teacherComment: 'teacherComment',
+          },
         } as any);
         (springPillService as any).getSpringProgress.mockResolvedValueOnce({
           progress: 0.5,
           completed: false,
+          nodes: [],
         } as any);
 
-        await expect(pillController.getIntroduction(req as any)).resolves.toEqual({
+        await expect(pillController.getIntroduction(req as any)).resolves.toMatchObject<PillProgressResponseDto>({
           pill: {
             version: 1,
             completionTimeMinutes: 10,
-            data: {
-              progress: 0.5,
-              completed: false,
-            },
+            id: '123',
+            name: 'name',
+            description: 'description',
+            teacherComment: 'teacherComment',
+            completed: false,
+            progress: 0.5,
+            bubbles: [],
           },
           teacher: null,
         });
