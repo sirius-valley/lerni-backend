@@ -15,7 +15,7 @@ JWT_SECRET=secret
 EMAIL_HOST=smtp.gmail.com
 EMAIL_USER=email
 EMAIL_PASSWORD=password
-SPRING_SERVICE_URL=http://localhost:8080
+SPRING_SERVICE_URL=http://spring-service:8080
 
 PORT=3000
 ```

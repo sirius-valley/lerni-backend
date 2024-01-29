@@ -320,7 +320,7 @@ export const introductionBlock = `{
     },
     {
       "from": "736b1f08-3532-4f27-aa9c-b48075a43b33",
-      "to": "74e1cbe3-7ff8-4b17-8302-fd60b1bbeb85"
+      "to": "3add4e42-833b-4ffb-b17d-cea8c0c33301"
     },
     {
       "from": "a45869e8-bc3e-4c3e-b87a-65c6c743cac0",
