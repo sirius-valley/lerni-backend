@@ -15,6 +15,11 @@ jobs:
 
     steps:
 
+      - name: Debug Secrets
+        run: |
+            echo "Available secrets: ${{ toJson(secrets) }}"
+            echo "My Secret: ${{ secrets.MY_SECRET }}"
+
       - name: Check out code
         uses: actions/checkout@v2
 
