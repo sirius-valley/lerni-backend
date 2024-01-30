@@ -69,4 +69,4 @@ jobs:
             sudo docker system prune --force
             AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REPO:$IMAGE_TAG
             sudo docker pull $ECR_REPO:$IMAGE_TAG
-            sudo docker run -d -p 3000:3000 $ECR_REPO:$IMAGE_TAG|
+            sudo docker run -d -p 3000:3000 $ECR_REPO:$IMAGE_TAG
