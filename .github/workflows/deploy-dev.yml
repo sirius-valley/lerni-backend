@@ -4,22 +4,17 @@ on:
   push:
     branches:
       - dev
-
+# add environment
 jobs:
 
   deploy-dev:
+    environment: development
 
     name: Build Image
     runs-on: ubuntu-latest
 
 
     steps:
-
-      - name: Debug Secrets
-        run: |
-            echo "Available secrets: ${{ toJson(secrets) }}"
-            echo "My Secret: ${{ secrets.MY_SECRET }}"
-
       - name: Check out code
         uses: actions/checkout@v2
 
