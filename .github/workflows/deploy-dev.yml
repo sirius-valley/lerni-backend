@@ -1,0 +1,72 @@
+name: Deploy Dockerized App to EC2 (Dev)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+
+  deploy-dev:
+
+    name: Build Image
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Build and push Docker image to ECR
+        env:
+          ECR_REPO: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+          PORT: 3000
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+          JWT_SECRET: ${{secrets.JWT_SECRET}}
+          SPRING_SERVICE_URL: ${{secrets.SPRING_SERVICE_URL}}
+          EMAIL_HOST: ${{secrets.EMAIL_HOST}}
+          EMAIL_USER: ${{secrets.EMAIL_USER}}
+          ENVIRONMENT: development
+        run: |
+          docker build --build-arg PORT=$PORT --build-arg DATABASE_URL=$DATABASE_URL --build-arg POSTGRES_USER=$POSTGRES_USER --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD --build-arg JWT_SECRET=$JWT_SECRET --build-arg SPRING_SERVICE_URL=$SPRING_SERVICE_URL --build-arg EMAIL_HOST=$EMAIL_HOST --build-arg EMAIL_USER=$EMAIL_USER --build-arg ENVIRONMENT=$ENVIRONMENT -t $ECR_REPO:$IMAGE_TAG .
+          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
+          docker push $ECR_REPO:$IMAGE_TAG
+          docker push $ECR_REPO:latest
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REPO: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          host: ${{ secrets.EC2_HOST_DNS }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,ECR_REPO,IMAGE_TAG
+          script: |
+            for container_id in $(sudo docker ps -q); do sudo docker kill $container_id; done;
+            for container_id in $(sudo docker images -q); do sudo docker rmi -f $container_id; done;
+            sudo docker system prune --force
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO:$IMAGE_TAG
+            docker pull $ECR_REPO:$IMAGE_TAG
+            docker run -d -p 3000:3000 $ECR_REPO:$IMAGE_TAG|
