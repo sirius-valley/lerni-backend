@@ -1,4 +1,4 @@
-type BubbleDto =
+export type BubbleDto =
   | {
       id: string;
       type: 'text';

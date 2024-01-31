@@ -1,4 +1,5 @@
 import { Pill, PillVersion } from '@prisma/client';
+import { BubbleDto } from '../interfaces/bubble';
 
 export class PillDto {
   id: string;

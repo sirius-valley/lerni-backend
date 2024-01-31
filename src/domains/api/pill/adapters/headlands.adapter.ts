@@ -1,6 +1,4 @@
 import { ElementType, FormType, PillForm, PillNode, QuestionType } from '../interfaces/pill.interface';
-import { UuidFactory } from '@nestjs/core/inspector/uuid-factory';
-import { pipe } from 'rxjs';
 // import { Injectable } from '@nestjs/common';
 //
 // @Injectable()
@@ -62,7 +60,7 @@ export class HeadlandsAdapter {
           skip: false,
         };
       case 'free_text_question':
-        const pillNodes2 = this.processFreeTextQuestion(element, pill);
+        const pillNodes2 = this.processFreeTextQuestion(element);
         this.addSequentialRelation(pillNodes2, pill);
         return {
           pillNode: pillNodes2,
@@ -115,7 +113,7 @@ export class HeadlandsAdapter {
     return elements;
   }
 
-  private processFreeTextQuestion(element: any, pill: PillForm): PillNode[] {
+  private processFreeTextQuestion(element: any): PillNode[] {
     const elements: PillNode[] = [];
     const uuid = this.generateUUID();
 

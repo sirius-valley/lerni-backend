@@ -14,7 +14,6 @@ import { LoginRequestDto } from './dtos/login-request.dto';
 import { MailModule } from '../../mail/mail.module';
 import { MailService } from '../../mail/mail.service';
 
-
 process.env.JWT_SECRET = 'test_secret_long';
 describe('AuthController', () => {
   let authController: AuthController;

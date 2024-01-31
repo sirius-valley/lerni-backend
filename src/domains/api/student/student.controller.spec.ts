@@ -1,16 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
-import { StudentService } from './student.service';
-import { StudentRepository } from './student.repository';
-import { PrismaService } from '../../../prisma.service';
-import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 import { ConfigModule } from '@nestjs/config';
+import { StudentModule } from './student.module';
 
 process.env.NODE_ENV = 'development';
 
 describe('StudentController', () => {
   let controller: StudentController;
-  let studentService: StudentService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,13 +14,12 @@ describe('StudentController', () => {
         ConfigModule.forRoot({
           envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,
         }),
+        StudentModule,
       ],
       controllers: [StudentController],
-      providers: [StudentService, StudentRepository, PrismaService, AttachStudentDataInterceptor],
     }).compile();
 
     controller = module.get<StudentController>(StudentController);
-    studentService = module.get<StudentService>(StudentService);
   });
 
   describe('getStudentDetails', () => {

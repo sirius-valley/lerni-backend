@@ -1,6 +1,5 @@
-import { Body, Controller, Get, HttpException, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
-import { StudentRequestDto } from './dtos/student-request.dto';
 import { StudentService } from './student.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 import { ApiTags } from '@nestjs/swagger';

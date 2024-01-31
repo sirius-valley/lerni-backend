@@ -1,5 +1,17 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm test || exit 1
-npm run lint && npm run format && git diff --cached --quiet || git add -u
+# Run linting
+npm run lint
+
+# Check linting status
+if [ $? -eq 0 ]; then
+  # If linting passed, proceed with tests, formatting, and staging changes
+  npm test || exit 1
+  npm run format
+  git diff --cached --quiet || git add -u
+else
+  # If linting failed, print a message and prevent the commit
+  echo "Linting failed. Please fix the linting issues before committing."
+  exit 1
+fi
