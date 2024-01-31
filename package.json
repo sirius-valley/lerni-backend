@@ -31,7 +31,7 @@
     "db:migrate": "npx prisma migrate dev",
     "db:apply": "npx prisma migrate deploy",
     "db:dev": "npm run db:generate && npm run db:apply",
-    "dev": "npm run db:apply && npm run start:dev",
+    "dev": "npm run migrate:postgres:deploy && npm run seed:dev && npm run start:dev:no-watch",
     "prod": "npm run db:apply && npm run start:prod"
   },
   "dependencies": {

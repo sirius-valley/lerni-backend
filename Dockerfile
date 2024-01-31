@@ -75,4 +75,4 @@ WORKDIR /app
 
 COPY package.json ./
 
-CMD ["sh", "-c", "npm run migrate:postgres:deploy && npm run seed:dev && npm run dev"]
+CMD ["sh", "-c", "npm run dev"]
