@@ -91,4 +91,4 @@ jobs:
             sudo docker pull $ECR_REPO:$IMAGE_TAG
             
             # Run the updated container
-            sudo docker run -d -p 3000:3000 --name=nest_container --network=my_network $ECR_REPO:$IMAGE_TAG
+            sudo docker run -d -p 3000:3000 --name=nest-container --network=my_network $ECR_REPO:$IMAGE_TAG
