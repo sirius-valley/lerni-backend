@@ -83,7 +83,7 @@ jobs:
             fi
             
             # Clean up other containers and images
-            sudo docker image prune --force
+            sudo docker image prune -a -f
             sudo docker container prune --force
             
             # Login to ECR and pull the updated image
