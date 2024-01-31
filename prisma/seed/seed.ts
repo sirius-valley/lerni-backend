@@ -9,6 +9,7 @@ async function main() {
     where: { id: introductionID },
     update: {},
     create: {
+      id: introductionID,
       block: introductionBlock,
       version: 1,
       completionTimeMinutes: 5,
