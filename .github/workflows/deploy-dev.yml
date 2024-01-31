@@ -77,6 +77,11 @@ jobs:
               sudo docker rmi -f $IMAGE_ID
             fi
             
+            NETWORK_EXISTS=$(sudo docker network ls --filter "name=my_network" --quiet)
+            if [ -z "$NETWORK_EXISTS" ]; then
+            sudo docker network create my_network
+            fi
+            
             # Clean up other containers and images
             sudo docker image prune --force
             sudo docker container prune --force
@@ -86,4 +91,4 @@ jobs:
             sudo docker pull $ECR_REPO:$IMAGE_TAG
             
             # Run the updated container
-            sudo docker run -d -p 3000:3000 $ECR_REPO:$IMAGE_TAG
+            sudo docker run -d -p 3000:3000 --name=spring_container --network=my_network $ECR_REPO:$IMAGE_TAG
