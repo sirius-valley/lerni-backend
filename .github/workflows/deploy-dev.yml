@@ -64,20 +64,26 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,ECR_REPO,IMAGE_TAG
           script: |
-            # Stop and remove previous containers from the same repository
-            sudo docker ps -q --filter ancestor=$ECR_REPO:$IMAGE_TAG | xargs -r sudo docker stop
-            sudo docker ps -aq --filter ancestor=$ECR_REPO:$IMAGE_TAG | xargs -r sudo docker rm
-
-            # Remove previous images from the same repository
-            sudo docker images -q --filter reference=$ECR_REPO:$IMAGE_TAG | xargs -r sudo docker rmi -f
-
-            # Prune unused images and containers
+            # Stop and remove the existing container
+            CONTAINER_ID=$(sudo docker ps -q --filter "publish=3000")
+            if [ ! -z "$CONTAINER_ID" ]; then
+              sudo docker stop $CONTAINER_ID
+              sudo docker rm $CONTAINER_ID
+            fi
+            
+            # Remove the existing image
+            IMAGE_ID=$(sudo docker images -q $ECR_REPO:$IMAGE_TAG)
+            if [ ! -z "$IMAGE_ID" ]; then
+              sudo docker rmi -f $IMAGE_ID
+            fi
+            
+            # Clean up other containers and images
             sudo docker image prune --force
             sudo docker container prune --force
             
-            # Log in to ECR and pull the latest image
+            # Login to ECR and pull the updated image
             AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REPO:$IMAGE_TAG
             sudo docker pull $ECR_REPO:$IMAGE_TAG
-
+            
             # Run the updated container
             sudo docker run -d -p 3000:3000 $ECR_REPO:$IMAGE_TAG
