@@ -58,11 +58,14 @@ export class PillService {
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
-    const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
 
     await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer, springProgress.progress);
+    if (answerRequest.pillId === introductionID) {
+      student = await this.saveIntroductionProgress(student, answerRequest);
+    }
+
+    const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
-    if (answerRequest.pillId === introductionID) await this.saveIntroductionProgress(student, answerRequest);
 
     return {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
@@ -127,16 +130,16 @@ export class PillService {
 
   private async saveIntroductionProgress(studentDto: StudentDto, answerRequest: AnswerRequestDto) {
     const varName = introductionVariables[answerRequest.questionId];
-    if (!varName) return;
+    if (!varName) return studentDto;
     Object.keys(studentDto).forEach((key) => {
-      if (!studentDto[key]) return;
+      if (!studentDto[key] || !Object.values(introductionVariables).includes(studentDto[key])) return studentDto;
       studentDto[key] = this.capitalizeAndTrim(studentDto[key]);
     });
-    await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
+    return await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
   }
 
   private capitalizeAndTrim(str) {
-    return str.trim().replace(/\b\w/g, (c: string) => c.toUpperCase());
+    return str.trim().replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase());
   }
 
   private replaceFullName(pill: any, fullName: string) {
