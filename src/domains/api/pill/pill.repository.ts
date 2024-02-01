@@ -138,4 +138,28 @@ export class PillRepository {
       },
     });
   }
+
+  async getProgramVersionPillVersion(studentId: string, programVersionId: string) {
+    return this.prisma.programVersionPillVersion.findMany({
+      where: {
+        programVersionId,
+      },
+      include: {
+        pillVersion: {
+          include: {
+            pill: true,
+            pillSubmissions: {
+              where: {
+                studentId,
+              },
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+            },
+          },
+        },
+      },
+    });
+  }
 }

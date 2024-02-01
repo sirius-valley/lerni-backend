@@ -134,6 +134,8 @@ model StudentProgram {
 
   programVersionId String
   programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  @@unique([programVersionId, studentId])
 }
 
 model PorgramObjective {
