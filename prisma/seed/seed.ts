@@ -7,7 +7,11 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.pillVersion.upsert({
     where: { id: introductionID },
-    update: {},
+    update: {
+      block: introductionBlock,
+      version: 1,
+      completionTimeMinutes: 5,
+    },
     create: {
       id: introductionID,
       block: introductionBlock,

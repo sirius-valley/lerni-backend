@@ -191,11 +191,6 @@ export const introductionBlock = `{
       "name": "<p>Al finalizar cada programa, vas a tener la oportunidad de desafiar a alguno de tus compañeros, con el fin de ganar puntos!</p>"
     },
     {
-      "id": "85246626-e932-4e95-a736-82c959b01767",
-      "type": "ACTION",
-      "name": "<p><br></p>"
-    },
-    {
       "id": "b5f63627-598c-40a9-8556-046793b77cea",
       "type": "QUESTION",
       "name": "",
@@ -356,12 +351,8 @@ export const introductionBlock = `{
       "to": "a108fd28-e17a-4e56-a67f-58093c5fc12f"
     },
     {
-      "from": "85246626-e932-4e95-a736-82c959b01767",
-      "to": "b5f63627-598c-40a9-8556-046793b77cea"
-    },
-    {
       "from": "7226020f-ef52-4ee2-894e-7677cffb3e49",
-      "to": "85246626-e932-4e95-a736-82c959b01767"
+      "to": "b5f63627-598c-40a9-8556-046793b77cea"
     },
     {
       "from": "107458f3-ec6b-4035-ae28-7e6aa2e61c8d",
