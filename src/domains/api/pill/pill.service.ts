@@ -57,6 +57,9 @@ export class PillService {
     if (this.questionAlreadyAnswered(pillSubmission.pillAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
+    const teacher = await this.pillRepository.getTeacherByPillId(answerRequest.pillId);
+    if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
 
     await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer, springProgress.progress);
@@ -69,7 +72,7 @@ export class PillService {
 
     return {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
-      teacher: undefined,
+      teacher: answerRequest.pillId === introductionID ? introductionTeacher : new TeacherDto(teacher),
     };
   }
 
