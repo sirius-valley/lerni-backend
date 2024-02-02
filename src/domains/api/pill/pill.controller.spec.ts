@@ -142,6 +142,13 @@ describe('PillController', () => {
           },
           pillAnswers: [],
         } as any);
+        (prismaService.teacher as any).findFirst.mockResolvedValueOnce({
+          id: '1',
+          name: 'name',
+          lastname: 'lastname',
+          profession: 'profession',
+          image: 'image',
+        } as any);
         (springPillService as any).answerPill.mockResolvedValueOnce({
           progress: 0.0,
           completed: false,
@@ -162,7 +169,13 @@ describe('PillController', () => {
             progress: 0,
             bubbles: [],
           },
-          teacher: undefined,
+          teacher: {
+            id: '1',
+            name: 'name',
+            lastname: 'lastname',
+            profession: 'profession',
+            image: 'image',
+          },
         });
       });
     });
