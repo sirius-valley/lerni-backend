@@ -144,6 +144,9 @@ export class PillRepository {
       where: {
         programVersionId,
       },
+      orderBy: {
+        order: 'asc',
+      },
       include: {
         pillVersion: {
           include: {

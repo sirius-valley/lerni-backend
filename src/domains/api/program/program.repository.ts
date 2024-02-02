@@ -17,9 +17,32 @@ export class ProgramRepository {
         programVersion: {
           include: {
             objectives: true,
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
           },
         },
+      },
+    });
+  }
+
+  async getLastProgramVersion(programId: string) {
+    return this.prisma.programVersion.findFirst({
+      where: {
+        programId,
+      },
+      include: {
+        objectives: true,
+        program: {
+          include: {
+            teacher: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }

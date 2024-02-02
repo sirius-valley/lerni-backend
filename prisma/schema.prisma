@@ -73,6 +73,7 @@ model PointLog {
 model Program {
   id              String   @id @default(uuid())
   name            String
+  description     String?
   hoursToComplete Int
   pointsReward    Int
   icon            String
@@ -120,7 +121,7 @@ model ProgramVersion {
 
   studentPrograms StudentProgram[]
 
-  objectives PorgramObjective[]
+  objectives ProgramObjective[]
 
   programVersionPillVersions ProgramVersionPillVersion[]
 }
@@ -138,7 +139,7 @@ model StudentProgram {
   @@unique([programVersionId, studentId])
 }
 
-model PorgramObjective {
+model ProgramObjective {
   id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())

@@ -6,6 +6,7 @@ import { configuration } from '../../config/configuration';
 import { StudentModule } from '../domains/api/student/student.module';
 import { StudentController } from '../domains/api/student/student.controller';
 import { PillModule } from '../domains/api/pill/pill.module';
+import { ProgramModule } from '../domains/api/program/program.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PillModule } from '../domains/api/pill/pill.module';
     AuthModule,
     StudentModule,
     PillModule,
+    ProgramModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],
