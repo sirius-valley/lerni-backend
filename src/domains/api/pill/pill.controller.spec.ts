@@ -12,6 +12,7 @@ import { HttpException } from '@nestjs/common';
 import { StudentModule } from '../student/student.module';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
+import { introductionTeacher } from '../../../const';
 
 process.env.NODE_ENV = 'development';
 describe('PillController', () => {
@@ -199,14 +200,7 @@ describe('PillController', () => {
             progress: 0.5,
             bubbles: [],
           },
-          teacher: {
-            id: '7cf767b2-9ac5-4420-8680-a9e000438d94',
-            name: 'Maestro',
-            lastname: 'Maestro',
-            profession: 'Maestro',
-            image:
-              'https://cdn.discordapp.com/attachments/411201278031560708/1202968844369403975/profesor_image_profile.jpg?ex=65cf630a&is=65bcee0a&hm=628bafab9a6eb64c54c3048967a3d75c5b661b9b44011b73d99a5b0a61342ef5&',
-          },
+          teacher: introductionTeacher,
         });
       });
     });
