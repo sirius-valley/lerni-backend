@@ -10,3 +10,12 @@ export const introductionVariables = {
   '3dc9d90b-5e24-4ccc-9ed8-a21509b50ba6': 'profession',
   '736b1f08-3532-4f27-aa9c-b48075a43b33': 'career',
 };
+
+export const introductionTeacher = {
+  id: '7cf767b2-9ac5-4420-8680-a9e000438d94',
+  name: 'Maestro',
+  lastname: 'Maestro',
+  profession: 'Maestro',
+  image:
+    'https://cdn.discordapp.com/attachments/411201278031560708/1202968844369403975/profesor_image_profile.jpg?ex=65cf630a&is=65bcee0a&hm=628bafab9a6eb64c54c3048967a3d75c5b661b9b44011b73d99a5b0a61342ef5&',
+};
