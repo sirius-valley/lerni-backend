@@ -6,12 +6,12 @@ export const introductionBlock = `{
     {
       "id": "796c43a6-5cf7-442b-9d78-249ffe087d9f",
       "type": "ACTION",
-      "name": "<p>Bienvenido</p>"
+      "name": "<p>Bienvenido 🙌🏻</p>"
     },
     {
       "id": "4917003f-dad9-4fa1-839e-babdf94ea513",
       "type": "ACTION",
-      "name": "<p>Esta es una aplicacion que te va a ayudar a poder repasar, practicar y aprender de forma innovadora y adaptada a vos!</p>"
+      "name": "<p>Esta es una aplicación que te va a ayudar a poder repasar 🔎, prácticar 🎯 y aprender 💡de forma innovadora y adaptada a vos!</p>"
     },
     {
       "id": "cfe7696d-6b3e-44c2-ac4d-fcab99ead69e",
@@ -21,7 +21,7 @@ export const introductionBlock = `{
     {
       "id": "cf3af498-b8d2-4281-ba5a-57be15d28cdd",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Cual es tu nombre?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Cuál es tu nombre?</span></p>"
     },
     {
       "id": "0e64b123-5fcb-46db-a2cf-5e39f0b90ed7",
@@ -37,7 +37,7 @@ export const introductionBlock = `{
     {
       "id": "6bc4b333-9e25-4fea-903c-45d0419f89c8",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Cual es tu apellido?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Cuál es tu apellido?</span></p>"
     },
     {
       "id": "6bc4b333-9e25-4fea-903c-45d0419f89c9",
@@ -52,12 +52,12 @@ export const introductionBlock = `{
     {
       "id": "3b1c350e-7412-4334-9fd9-87eb6f8e802c",
       "type": "ACTION",
-      "name": "<p>Genial! Hola @fullname</p>"
+      "name": "<p>Genial! Hola @fullname! 👋🏻</p>"
     },
     {
       "id": "67c8021c-89fb-4f16-aaca-d35c828fda49",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Contanos, de donde sos?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Contanos, ¿de dónde sos?</span></p>"
     },
     {
       "id": "70b6b4a9-a50d-4f19-8833-08f1763b9409",
@@ -77,7 +77,7 @@ export const introductionBlock = `{
     {
       "id": "9debd3fe-e1a0-4e0f-b4b9-efd6e320a049",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Y trabajas o estudias?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Y ¿trabajas 💼 o estudias 📚?</span></p>"
     },
     {
       "id": "a45869e8-bc3e-4c3e-b87a-65c6c743cac0",
@@ -96,7 +96,7 @@ export const introductionBlock = `{
     {
       "id": "d0e30634-80e0-4b0e-a7ef-34309dfec3d1",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">Que estudias?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">¿Qué estudias? 📚</span></p>"
     },
     {
       "id": "bd7b151f-a1f1-406d-898b-f8dfb2f89ec5",
@@ -111,7 +111,7 @@ export const introductionBlock = `{
     {
       "id": "f5f7be10-08d4-4011-9dbb-66ae56715cbc",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">De que trabajas?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">¿De qué trabajas? 💼</span></p>"
     },
     {
       "id": "3dc9d90b-5e24-4ccc-9ed8-a21509b50ba6",
@@ -126,7 +126,7 @@ export const introductionBlock = `{
     {
       "id": "6e7e497e-3227-4c9b-8f7b-eadc4680ab97",
       "type": "ACTION",
-      "name": "<p>Que estudias?</p>"
+      "name": "<p>¿Qué estudias? 📚</p>"
     },
     {
       "id": "736b1f08-3532-4f27-aa9c-b48075a43b33",
@@ -141,7 +141,7 @@ export const introductionBlock = `{
     {
       "id": "3add4e42-833b-4ffb-b17d-cea8c0c33301",
       "type": "ACTION",
-      "name": "<p>De que trabajas?</p>"
+      "name": "<p>¿De qué trabajas? 💼</p>"
     },
     {
       "id": "74e1cbe3-7ff8-4b17-8302-fd60b1bbeb85",
@@ -161,7 +161,7 @@ export const introductionBlock = `{
     {
       "id": "7ddb432c-c022-4495-bead-7c778f407b2e",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Ahora que nos conocemos, dejame comentarte como va a ser la metodologia!</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Ahora que nos conocemos, dejame comentarte como va a ser la metodologia!♟️</span></p>"
     },
     {
       "id": "699d0cb2-95ae-46b7-b7e7-a5da1b49a20d",
@@ -178,22 +178,17 @@ export const introductionBlock = `{
     {
       "id": "a108fd28-e17a-4e56-a67f-58093c5fc12f",
       "type": "ACTION",
-      "name": "<p>Como pudiste ver, la forma va a ser mediante una conversacion de no mas de 10 minutos con tu profesor, donde este te enseñara un tema en particular</p>"
+      "name": "<p>Como pudiste ver, la forma va a ser mediante una conversación de no mas de 10 minutos ⌛️con tu profesor, donde este te enseñará un tema en particular</p>"
     },
     {
       "id": "39a36669-7053-4eab-a5e5-ce38e033252b",
       "type": "ACTION",
-      "name": "<p>Para eso, nos proponemos hacerlo lo mas llevadero posible proponiendo una experiencia innovadora y hasta competitiva!</p>"
+      "name": "<p>Para eso, nos proponemos hacerlo lo mas llevadero posible proponiendo una experiencia innovadora 💡 y hasta competitiva ⚔️!</p>"
     },
     {
       "id": "7226020f-ef52-4ee2-894e-7677cffb3e49",
       "type": "ACTION",
       "name": "<p>Al finalizar cada programa, vas a tener la oportunidad de desafiar a alguno de tus compañeros, con el fin de ganar puntos!</p>"
-    },
-    {
-      "id": "85246626-e932-4e95-a736-82c959b01767",
-      "type": "ACTION",
-      "name": "<p><br></p>"
     },
     {
       "id": "b5f63627-598c-40a9-8556-046793b77cea",
@@ -203,7 +198,7 @@ export const introductionBlock = `{
       "metadata": {
         "lerni_question_type": "single-choice",
         "options": [
-          "Que puedo hacer con los puntos?"
+          "¿Qué puedo hacer con los puntos?"
         ]
       }
     },
@@ -215,12 +210,12 @@ export const introductionBlock = `{
     {
       "id": "c0e604e5-1700-4678-adfe-450759cf2dd8",
       "type": "ACTION",
-      "name": "<p>Con los puntos que vayas ganando, vas a aparecer en el leaderboard del programa, canjear a futuro para customizar tu perfil y hasta poder subir algun punto en la nota de cursada!</p>"
+      "name": "<p>Con los puntos que vayas ganando, vas a aparecer en el leaderboard del programa 🥇, canjear a futuro para customizar tu perfil 👤 y hasta poder subir algun punto en la nota de cursada 🧾!</p>"
     },
     {
       "id": "7b5caa8a-7800-4e63-8f93-a44aba4bc169",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Estas list@?</span></p>"
+      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Estas listo?!</span></p>"
     },
     {
       "id": "b4355579-f828-48b3-afa7-190d7ff3ab01",
@@ -356,12 +351,8 @@ export const introductionBlock = `{
       "to": "a108fd28-e17a-4e56-a67f-58093c5fc12f"
     },
     {
-      "from": "85246626-e932-4e95-a736-82c959b01767",
-      "to": "b5f63627-598c-40a9-8556-046793b77cea"
-    },
-    {
       "from": "7226020f-ef52-4ee2-894e-7677cffb3e49",
-      "to": "85246626-e932-4e95-a736-82c959b01767"
+      "to": "b5f63627-598c-40a9-8556-046793b77cea"
     },
     {
       "from": "107458f3-ec6b-4035-ae28-7e6aa2e61c8d",
@@ -380,4 +371,4 @@ export const introductionBlock = `{
       "to": "7b5caa8a-7800-4e63-8f93-a44aba4bc169"
     }
   ]
-}`
+}`;

@@ -7,7 +7,18 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.pillVersion.upsert({
     where: { id: introductionID },
-    update: {},
+    update: {
+      block: introductionBlock,
+      version: 1,
+      completionTimeMinutes: 5,
+      pill: {
+        update: {
+          name: 'Introducción',
+          description: 'Introducción',
+          teacherComment: 'Esta es la píldora de introducción, es un buen lugar para comenzar.',
+        }
+      }
+    },
     create: {
       id: introductionID,
       block: introductionBlock,
@@ -18,9 +29,9 @@ async function main() {
           where: { id: introductionID },
           create: {
             id: introductionID,
-            name: 'Introduction',
-            description: 'Introduction',
-            teacherComment: 'This is the introduction pill. It\'s a good place to start!',
+            name: 'Introducción',
+            description: 'Introducción',
+            teacherComment: 'Esta es la píldora de introducción, es un buen lugar para comenzar.',
           },
         },
       },

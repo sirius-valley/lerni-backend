@@ -12,6 +12,7 @@ import { HttpException } from '@nestjs/common';
 import { StudentModule } from '../student/student.module';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
+import { introductionTeacher } from '../../../const';
 
 process.env.NODE_ENV = 'development';
 describe('PillController', () => {
@@ -141,6 +142,13 @@ describe('PillController', () => {
           },
           pillAnswers: [],
         } as any);
+        (prismaService.teacher as any).findFirst.mockResolvedValueOnce({
+          id: '1',
+          name: 'name',
+          lastname: 'lastname',
+          profession: 'profession',
+          image: 'image',
+        } as any);
         (springPillService as any).answerPill.mockResolvedValueOnce({
           progress: 0.0,
           completed: false,
@@ -161,7 +169,13 @@ describe('PillController', () => {
             progress: 0,
             bubbles: [],
           },
-          teacher: undefined,
+          teacher: {
+            id: '1',
+            name: 'name',
+            lastname: 'lastname',
+            profession: 'profession',
+            image: 'image',
+          },
         });
       });
     });
@@ -199,7 +213,7 @@ describe('PillController', () => {
             progress: 0.5,
             bubbles: [],
           },
-          teacher: null,
+          teacher: introductionTeacher,
         });
       });
     });

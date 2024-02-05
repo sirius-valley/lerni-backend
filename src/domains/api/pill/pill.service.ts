@@ -3,7 +3,7 @@ import { StudentDto } from '../student/dtos/student.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
-import { introductionID, introductionVariables } from '../../../const';
+import { introductionID, introductionTeacher, introductionVariables } from '../../../const';
 import { PillAnswer } from '@prisma/client';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
@@ -29,7 +29,7 @@ export class PillService {
 
     return {
       pill: new PillDto(introduction.pill, introduction, formattedPillBlock),
-      teacher: null,
+      teacher: introductionTeacher,
     };
   }
 
@@ -57,6 +57,8 @@ export class PillService {
     if (this.questionAlreadyAnswered(pillSubmission.pillAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
+    const teacher = await this.pillRepository.getTeacherByPillId(answerRequest.pillId);
+
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
 
     await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer, springProgress.progress);
@@ -69,7 +71,7 @@ export class PillService {
 
     return {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
-      teacher: undefined,
+      teacher: answerRequest.pillId === introductionID ? introductionTeacher : teacher ? new TeacherDto(teacher) : undefined,
     };
   }
 
