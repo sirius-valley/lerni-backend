@@ -17,7 +17,6 @@ export class ProgramService {
     const programVersion = await this.getProgramVersion(studentId, programId);
     const programVersionPillVersions = await this.pillRepository.getProgramVersionPillVersion(studentId, programVersion.id);
     const pillVersions = this.getPillVersions(programVersionPillVersions);
-    console.log('here');
     return new ProgramDetailsDto(programVersion.objectives, programVersion.program, pillVersions);
   }
 
