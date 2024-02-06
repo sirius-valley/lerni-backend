@@ -43,21 +43,21 @@ describe('AuthController', () => {
 
   describe('root', () => {
     it('should return 403 when mail in use', async () => {
-      (prismaService.auth as any).findUnique.mockResolvedValueOnce({
+      prismaService.auth.findUnique.mockResolvedValueOnce({
         id: '1',
         email: 'test@mail.com',
         password: 'Password12',
         createdAt: new Date(),
-      } as any);
+      });
 
       await expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
         new HttpException('Email already in use', 409),
       );
     });
     it('should return token successfully when not found', async () => {
-      (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
-      (prismaService.auth as any).create.mockResolvedValueOnce({
-        id: 1,
+      prismaService.auth.findUnique.mockResolvedValueOnce(null);
+      prismaService.auth.create.mockResolvedValueOnce({
+        id: '1',
         email: 'test@mail.com',
         password: 'Password12',
       } as any);
@@ -69,7 +69,7 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should return 404 when user is not found', async () => {
-      (prismaService.auth as any).findUnique.mockResolvedValueOnce(null);
+      prismaService.auth.findUnique.mockResolvedValueOnce(null);
 
       await expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
         new HttpException('User with provided email not found', 404),
@@ -77,8 +77,8 @@ describe('AuthController', () => {
     });
 
     it('should return token when successfully logged in', async () => {
-      (prismaService.auth as any).findUnique.mockResolvedValueOnce({
-        id: 1,
+      prismaService.auth.findUnique.mockResolvedValueOnce({
+        id: '1',
         email: 'test@mail.com',
         password: '$2b$10$g4aIAoxVYBx/CcSgUE7lue32ImLYKYIhY09djyIwKs4m1bcC/C/2i',
       } as any);
@@ -88,8 +88,8 @@ describe('AuthController', () => {
     });
 
     it('should return 401 when entered invalid password', () => {
-      (prismaService.auth as any).findUnique.mockResolvedValueOnce({
-        id: 1,
+      prismaService.auth.findUnique.mockResolvedValueOnce({
+        id: '1',
         email: 'test@mail.com',
         password: '$2b$10$g4aIAoxVYBx/CcSgUE7lue32ImLYKYIhY09djyIwKs4m1bcC/C/2i',
       } as any);

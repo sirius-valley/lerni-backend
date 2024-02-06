@@ -97,6 +97,13 @@ export class PillRepository {
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        profession: true,
+        image: true,
+      },
     });
   }
 

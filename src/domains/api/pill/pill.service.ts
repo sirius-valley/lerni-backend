@@ -37,6 +37,7 @@ export class PillService {
     const pillVersion = await this.pillRepository.getPillByPillIdAndStudentId(pillId, student.id);
     if (!pillVersion) throw new HttpException('Pill not found', HttpStatus.NOT_FOUND);
     const teacher = await this.pillRepository.getTeacherByPillId(pillId);
+    if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
     const answers =
       (await this.pillRepository.getPillSubmissionByPillIdAndStudentId(pillId, student.id))?.pillAnswers?.map(
         (answer) => new PillAnswerSpringDto(answer.questionId, answer.value),
@@ -69,10 +70,18 @@ export class PillService {
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
 
+    const teacherDto = this.getTeacher(answerRequest, teacher);
+
     return {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
-      teacher: answerRequest.pillId === introductionID ? introductionTeacher : teacher ? new TeacherDto(teacher) : undefined,
+      teacher: answerRequest.pillId === introductionID ? introductionTeacher : teacherDto,
     };
+  }
+
+  private getTeacher(answerRequest: AnswerRequestDto, teacher: TeacherDto | null) {
+    if (introductionID === answerRequest.pillId) teacher = introductionTeacher as any;
+    if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+    return new TeacherDto(teacher);
   }
 
   private formatPillBlock(springProgress: any, pillBlock: any) {
@@ -127,6 +136,7 @@ export class PillService {
     if (!studentProgram && pillId !== introductionID)
       throw new HttpException('Student does not have access to the pill', HttpStatus.FORBIDDEN);
     const pillVersion = await this.pillRepository.getPillVersionByPillIdAndStudentId(pillId, studentId);
+    if (!pillVersion) throw new HttpException('Pill version not found', HttpStatus.NOT_FOUND);
     return await this.pillRepository.createPillSubmission(pillVersion.id, studentId);
   }
 
@@ -137,7 +147,9 @@ export class PillService {
       if (!studentDto[key] || !Object.values(introductionVariables).includes(studentDto[key])) return studentDto;
       studentDto[key] = this.capitalizeAndTrim(studentDto[key]);
     });
-    return await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
+    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
+    if (!updatedStudent) throw new HttpException('Error while updating student', HttpStatus.INTERNAL_SERVER_ERROR);
+    return updatedStudent;
   }
 
   private capitalizeAndTrim(str) {

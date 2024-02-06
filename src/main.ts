@@ -10,7 +10,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   swagger(app);
 
-  await app.listen(configService.get('PORT'));
+  await app.listen(configService.get('PORT') ?? 3000);
   console.log(`Environment: ${configService.get<string>('ENVIRONMENT')}`);
 }
 
