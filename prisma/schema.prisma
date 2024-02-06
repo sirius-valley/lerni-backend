@@ -39,6 +39,8 @@ model Student {
   programs StudentProgram[]
 
   pillSubmissions PillSubmission[]
+
+  questionnaireSubmissions QuestionnaireSubmission[]
 }
 
 model Teacher {
@@ -212,9 +214,58 @@ model PillAnswer {
   id         String   @id @default(uuid())
   questionId String
   value      String
-  isCorrect  Boolean  @default(true)
   createdAt  DateTime @default(now())
 
   pillSubmissionId String
   pillSubmission   PillSubmission @relation(fields: [pillSubmissionId], references: [id])
+}
+
+model Questionnaire {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+
+  questions QuestionnaireVersion[]
+}
+
+model QuestionnaireVersion {
+  id                String   @id @default(uuid())
+  version           Int
+  passsing_score    Int
+  cooldownInMinutes Int
+  block             String
+  questionCount     Int
+  createdAt         DateTime @default(now())
+
+  questionnaireId String
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
+
+  questionnaireSubmissions QuestionnaireSubmission[]
+}
+
+model QuestionnaireSubmission {
+  id               String   @id @default(uuid())
+  createdAt        DateTime @default(now())
+  finishedDateTime DateTime
+  progress         Int      @default(0)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  questionnaireVersionId String
+  questionnaireVersion   QuestionnaireVersion @relation(fields: [questionnaireVersionId], references: [id])
+
+  questionnaireAnswers QuestionnaireAnswer[]
+}
+
+model QuestionnaireAnswer {
+  id         String   @id @default(uuid())
+  questionId String
+  value      String
+  isCorrect  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  questionnaireSubmissionId String
+  questionnaireSubmission   QuestionnaireSubmission @relation(fields: [questionnaireSubmissionId], references: [id])
 }
