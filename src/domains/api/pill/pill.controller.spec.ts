@@ -55,18 +55,24 @@ describe('PillController', () => {
   describe('Pill controller', () => {
     describe('getPillVersionByPillId', () => {
       it("should return 404 when pill doesn't exist", async () => {
-        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce(null);
+        prismaService.pillVersion.findFirst.mockResolvedValueOnce(null);
 
         await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(new HttpException('Pill not found', 404));
       });
 
       it("should fail when pill-external-api doesn't respond", async () => {
-        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
+        prismaService.pillVersion.findFirst.mockResolvedValueOnce({
           id: '1',
           pillId: '123',
           version: 1,
         } as any);
-        (springPillService as any).getSpringProgress.mockRejectedValueOnce(new HttpException('Error while calculating progress', 500));
+        prismaService.teacher.findFirst.mockResolvedValueOnce({
+          id: '1',
+          name: 'name',
+          lastname: 'lastname',
+          profession: 'profession',
+        } as any);
+        springPillService.getSpringProgress.mockRejectedValueOnce(new HttpException('Error while calculating progress', 500));
 
         await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(
           new HttpException('Error while calculating progress', 500),
@@ -74,7 +80,7 @@ describe('PillController', () => {
       });
 
       it('should return pill version when pill exists', async () => {
-        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
+        prismaService.pillVersion.findFirst.mockResolvedValueOnce({
           id: '1',
           pillId: '123',
           version: 1,
@@ -87,14 +93,14 @@ describe('PillController', () => {
           completionTimeMinutes: 10,
           block: '{"elements": []}',
         } as any);
-        (prismaService.teacher as any).findFirst.mockResolvedValueOnce({
+        prismaService.teacher.findFirst.mockResolvedValueOnce({
           id: '1',
           name: 'name',
           lastname: 'lastname',
           profession: 'profession',
           image: 'image',
         } as any);
-        (springPillService as any).getSpringProgress.mockResolvedValueOnce({
+        springPillService.getSpringProgress.mockResolvedValueOnce({
           progress: 1,
           completed: false,
           nodes: [],
@@ -125,7 +131,7 @@ describe('PillController', () => {
 
     describe('answerPill', () => {
       it('should return pill version when pill exists', async () => {
-        (prismaService.pillSubmission as any).findFirst.mockResolvedValueOnce({
+        prismaService.pillSubmission.findFirst.mockResolvedValueOnce({
           pillVersion: {
             id: '1',
             pillId: '123',
@@ -142,14 +148,14 @@ describe('PillController', () => {
           },
           pillAnswers: [],
         } as any);
-        (prismaService.teacher as any).findFirst.mockResolvedValueOnce({
+        prismaService.teacher.findFirst.mockResolvedValueOnce({
           id: '1',
           name: 'name',
           lastname: 'lastname',
           profession: 'profession',
           image: 'image',
         } as any);
-        (springPillService as any).answerPill.mockResolvedValueOnce({
+        springPillService.answerPill.mockResolvedValueOnce({
           progress: 0.0,
           completed: false,
           nodes: [],
@@ -182,7 +188,7 @@ describe('PillController', () => {
 
     describe('getIntroduction', () => {
       it('should return introductionPill', async () => {
-        (prismaService.pillVersion as any).findFirst.mockResolvedValueOnce({
+        prismaService.pillVersion.findFirst.mockResolvedValueOnce({
           id: '1',
           pillId: '123',
           version: 1,
@@ -195,7 +201,7 @@ describe('PillController', () => {
             teacherComment: 'teacherComment',
           },
         } as any);
-        (springPillService as any).getSpringProgress.mockResolvedValueOnce({
+        springPillService.getSpringProgress.mockResolvedValueOnce({
           progress: 0.5,
           completed: false,
           nodes: [],

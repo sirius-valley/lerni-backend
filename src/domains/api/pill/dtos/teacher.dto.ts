@@ -1,5 +1,3 @@
-import { Teacher } from '@prisma/client';
-
 export class TeacherDto {
   id: string;
   name: string;
@@ -7,7 +5,7 @@ export class TeacherDto {
   profession: string;
   image: string | null;
 
-  constructor(teacher: Teacher) {
+  constructor(teacher: TeacherDto) {
     this.id = teacher.id;
     this.name = teacher.name;
     this.lastname = teacher.lastname;
