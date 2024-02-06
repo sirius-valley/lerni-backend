@@ -126,6 +126,8 @@ model ProgramVersion {
   objectives ProgramObjective[]
 
   programVersionPillVersions ProgramVersionPillVersion[]
+
+  programVersionQuestionnaireVersions ProgramVersionQuestionnaireVersion[]
 }
 
 model StudentProgram {
@@ -241,6 +243,8 @@ model QuestionnaireVersion {
   questionnaireId String
   questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
 
+  programVersions ProgramVersionQuestionnaireVersion[]
+
   questionnaireSubmissions QuestionnaireSubmission[]
 }
 
@@ -268,4 +272,16 @@ model QuestionnaireAnswer {
 
   questionnaireSubmissionId String
   questionnaireSubmission   QuestionnaireSubmission @relation(fields: [questionnaireSubmissionId], references: [id])
+}
+
+model ProgramVersionQuestionnaireVersion {
+  id        String   @id @default(uuid())
+  order     Int
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  questionnaireVersionId String
+  questionnaireVersion   QuestionnaireVersion @relation(fields: [questionnaireVersionId], references: [id])
 }
