@@ -1,6 +1,6 @@
 import { SimplePillDto } from './simple-pill.dto';
 import { TeacherDto } from '../../pill/dtos/teacher.dto';
-import { Program, ProgramObjective, Teacher } from '@prisma/client';
+import { SimpleQuestionnaireDto } from './simple-questionnaire.dto';
 
 export class ProgramDetailsDto {
   id: string;
@@ -14,27 +14,20 @@ export class ProgramDetailsDto {
   programDescription: string;
   programObjectives: string[];
   pills: SimplePillDto[];
+  questionnaires: SimpleQuestionnaireDto[];
 
-  constructor(
-    objectives: ProgramObjective[],
-    program: Program & { teacher: Teacher },
-    pillVersions: {
-      pv: any;
-      order: number;
-    }[],
-  ) {
-    this.id = program.id;
-    this.programName = program.name;
-    this.teacher = new TeacherDto(program.teacher);
-    this.progress = pillVersions.reduce((acc, pvPillV) => acc + (pvPillV.pv.pillSubmissions[0]?.progress || 0), 0) / pillVersions.length;
-    this.pillCount = pillVersions.length;
-    this.icon = program.icon;
-    this.estimatedHours = program.hoursToComplete;
-    this.points = program.pointsReward;
-    this.programDescription = program.description ?? '';
-    this.programObjectives = objectives.map((o) => o.name);
-    this.pills = pillVersions.map((pvPillV) => {
-      return new SimplePillDto(pvPillV.pv.pill, pvPillV.pv.pillSubmissions[0]?.progress || 0);
-    });
+  constructor(programDetailsDto: ProgramDetailsDto) {
+    this.id = programDetailsDto.id;
+    this.programName = programDetailsDto.programName;
+    this.teacher = programDetailsDto.teacher;
+    this.progress = programDetailsDto.progress;
+    this.pillCount = programDetailsDto.pillCount;
+    this.icon = programDetailsDto.icon;
+    this.estimatedHours = programDetailsDto.estimatedHours;
+    this.points = programDetailsDto.points;
+    this.programDescription = programDetailsDto.programDescription;
+    this.programObjectives = programDetailsDto.programObjectives;
+    this.pills = programDetailsDto.pills;
+    this.questionnaires = programDetailsDto.questionnaires;
   }
 }

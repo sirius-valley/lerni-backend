@@ -10,7 +10,7 @@ import { HttpException } from '@nestjs/common';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { PillModule } from '../pill/pill.module';
 
-describe('PillController', () => {
+describe('Program Controller', () => {
   let programController: ProgramController;
   let prismaService: DeepMockProxy<PrismaService>;
 
@@ -71,127 +71,97 @@ describe('PillController', () => {
                 image: 'image',
               },
             },
-          },
-        } as any);
-
-        prismaService.programVersion.findFirst.mockResolvedValueOnce({
-          id: '2',
-          programVersion: {
-            id: '2',
-            objectives: [
+            programVersionQuestionnaireVersions: [
               {
                 id: '1',
-                name: 'Objective 1',
-                createdAt: '2024-02-05T12:00:00Z',
+                order: 1,
+                questionnaireVersion: {
+                  id: '1',
+                  questionnaire: {
+                    id: '1',
+                    name: 'questionnaire 1',
+                  },
+                  questionnaireSubmissions: [
+                    {
+                      id: '1',
+                      createdAt: new Date(),
+                      progress: 15,
+                      questionnaireAnswers: [
+                        {
+                          id: '1',
+                        },
+                        {
+                          id: '2',
+                        },
+                        {
+                          id: '3',
+                        },
+                        {
+                          id: '4',
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
               {
                 id: '2',
-                name: 'Objective 2',
-                createdAt: '2024-02-05T12:30:00Z',
+                order: 2,
+                questionnaireVersion: {
+                  id: '2',
+                  questionnaire: {
+                    id: '2',
+                    name: 'questionnaire 2',
+                  },
+                  questionnaireSubmissions: [
+                    {
+                      id: '2',
+                      createdAt: new Date(),
+                      progress: 0,
+                    },
+                  ],
+                },
               },
             ],
-            program: {
-              pointsReward: 20,
-              hoursToComplete: 5,
-              name: 'Another Program',
-              description: 'Another Description',
-              icon: 'another-icon',
-              id: '2',
-              teacher: {
-                id: '2',
-                name: 'Another Teacher',
-                lastname: 'Surname',
-                profession: 'Another Profession',
-                image: 'another-image',
-              },
-            },
-          },
-        } as any);
-
-        prismaService.programVersionPillVersion.findMany.mockResolvedValueOnce([
-          {
-            id: '1',
-            pillVersion: {
-              id: '1',
-              pill: {
+            programVersionPillVersions: [
+              {
                 id: '1',
-                name: 'pill 1',
-              },
-              pillSubmissions: [
-                {
+                pillVersion: {
                   id: '1',
-                  createdAt: new Date(),
-                  progress: 15,
+                  pill: {
+                    id: '1',
+                    name: 'pill 1',
+                  },
+                  pillSubmissions: [
+                    {
+                      id: '1',
+                      createdAt: new Date(),
+                      progress: 100,
+                    },
+                  ],
                 },
-              ],
-            },
-            order: 1,
-          },
-          {
-            id: '4',
-            pillVersion: {
-              id: '4',
-              pill: {
-                id: '4',
-                name: 'pill 1',
+                order: 1,
               },
-              pillSubmissions: [
-                {
+              {
+                id: '4',
+                pillVersion: {
                   id: '4',
-                  createdAt: new Date(),
-                  progress: 100,
+                  pill: {
+                    id: '4',
+                    name: 'pill 1',
+                  },
+                  pillSubmissions: [
+                    {
+                      id: '4',
+                      createdAt: new Date(),
+                      progress: 100,
+                    },
+                  ],
                 },
-              ],
-            },
-            order: 2,
+                order: 2,
+              },
+            ],
           },
-        ] as any);
-
-        await expect(programController.getProgramById(req, '123')).resolves.toEqual({
-          estimatedHours: 3,
-          icon: 'icon',
-          id: '1',
-          pillCount: 2,
-          pills: [
-            {
-              id: '1',
-              pillName: 'pill 1',
-              pillProgress: 15,
-            },
-            {
-              id: '4',
-              pillName: 'pill 1',
-              pillProgress: 100,
-            },
-          ],
-          points: 15,
-          programDescription: 'description',
-          programName: 'name',
-          programObjectives: [],
-          progress: 57.5,
-          teacher: {
-            id: '1',
-            image: 'image',
-            lastname: 'lastname',
-            name: 'teacher',
-            profession: 'profession',
-          },
-        });
-      });
-
-      it('Should return the last program version when user has no relation with the program', async () => {
-        prismaService.program.findFirst.mockResolvedValueOnce(null);
-        const req: ApiRequest = {
-          user: {
-            id: '1',
-            authId: '',
-          },
-        } as any;
-
-        prismaService.studentProgram.findFirst.mockResolvedValueOnce(null);
-
-        prismaService.programVersion.findFirst.mockResolvedValueOnce({
-          id: '2',
           objectives: [
             {
               id: '1',
@@ -204,90 +174,52 @@ describe('PillController', () => {
               createdAt: '2024-02-05T12:30:00Z',
             },
           ],
-          program: {
-            pointsReward: 20,
-            hoursToComplete: 5,
-            name: 'Another Program',
-            description: 'Another Description',
-            icon: 'another-icon',
-            id: '2',
-            teacher: {
-              id: '2',
-              name: 'Another Teacher',
-              lastname: 'Surname',
-              profession: 'Another Profession',
-              image: 'another-image',
-            },
-          },
         } as any);
 
-        prismaService.programVersionPillVersion.findMany.mockResolvedValueOnce([
-          {
-            id: '1',
-            pillVersion: {
-              id: '1',
-              pill: {
-                id: '1',
-                name: 'pill 1',
-              },
-              pillSubmissions: [
-                {
-                  id: '1',
-                  createdAt: new Date(),
-                  progress: 15,
-                },
-              ],
-            },
-            order: 1,
-          },
-          {
-            id: '4',
-            pillVersion: {
-              id: '4',
-              pill: {
-                id: '4',
-                name: 'pill 1',
-              },
-              pillSubmissions: [
-                {
-                  id: '4',
-                  createdAt: new Date(),
-                  progress: 100,
-                },
-              ],
-            },
-            order: 2,
-          },
-        ] as any);
-
         await expect(programController.getProgramById(req, '123')).resolves.toEqual({
-          estimatedHours: 5,
-          icon: 'another-icon',
-          id: '2',
+          estimatedHours: 3,
+          icon: 'icon',
+          id: '1',
           pillCount: 2,
           pills: [
             {
               id: '1',
               pillName: 'pill 1',
-              pillProgress: 15,
+              pillProgress: 100,
+              isLocked: false,
             },
             {
               id: '4',
               pillName: 'pill 1',
               pillProgress: 100,
+              isLocked: false,
             },
           ],
-          points: 20,
-          programDescription: 'Another Description',
-          programName: 'Another Program',
-          programObjectives: ['Objective 1', 'Objective 2'],
-          progress: 57.5,
+          questionnaires: [
+            {
+              id: '1',
+              isLocked: false,
+              questionnaireName: 'questionnaire 1',
+              questionnaireProgress: 15,
+            },
+            {
+              id: '2',
+              isLocked: true,
+              questionnaireName: 'questionnaire 2',
+              questionnaireProgress: 0,
+            },
+          ],
+          points: 15,
+          programDescription: 'description',
+          programName: 'name',
+          programObjectives: [],
+          progress: 53.75,
           teacher: {
-            id: '2',
-            image: 'another-image',
-            lastname: 'Surname',
-            name: 'Another Teacher',
-            profession: 'Another Profession',
+            id: '1',
+            image: 'image',
+            lastname: 'lastname',
+            name: 'teacher',
+            profession: 'profession',
           },
         });
       });
