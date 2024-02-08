@@ -12,6 +12,7 @@ import { PillDto } from './dtos/pill.dto';
 import { StudentRepository } from '../student/student.repository';
 import { HeadlandsAdapter } from './adapters/headlands.adapter';
 import { PillBlockDto } from './dtos/pill-block.dto';
+import { ThreadRequestDto } from './dtos/thread-request.dto';
 
 @Injectable()
 export class PillService {
@@ -81,9 +82,9 @@ export class PillService {
     };
   }
 
-  public async adaptHeadlandsThreadToPillBlock(headlandsThread: any): Promise<PillBlockDto> {
+  public async adaptHeadlandsThreadToPillBlock(headlandsThread: ThreadRequestDto): Promise<PillBlockDto> {
     try {
-      return this.headlandsAdapter.adaptThreadIntoPill(headlandsThread);
+      return this.headlandsAdapter.adaptThreadIntoPill(headlandsThread.thread);
     } catch (e) {
       throw new HttpException('Thread does not follow required format', HttpStatus.BAD_REQUEST);
     }
