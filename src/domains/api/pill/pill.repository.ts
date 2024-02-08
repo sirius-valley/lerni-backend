@@ -24,7 +24,8 @@ export class PillRepository {
     });
   }
 
-  public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string, progress: number) {
+  public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string | string[], progress: number) {
+    value = JSON.stringify(value);
     return this.prisma.pillSubmission.update({
       data: {
         pillAnswers: {
