@@ -6,7 +6,7 @@ export class AnswerRequestDto {
   @IsNotEmpty()
   questionId: string;
   @IsNotEmpty()
-  answer: string;
+  answer: string | string[];
 
   constructor(pillId: string, questionId: string, answer: string) {
     this.pillId = pillId;
