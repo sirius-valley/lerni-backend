@@ -126,8 +126,13 @@ export class PillService {
         return { content: node.answer };
       case 'single-choice':
       case 'multiple-choice':
-      case 'carousel':
         return { value: node.answer, options: node.nodeContent.metadata.options };
+      case 'carousel':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          optionDescriptions: node.nodeContent.metadata.optionDescriptions,
+        };
     }
   }
 

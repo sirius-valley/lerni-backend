@@ -31,4 +31,5 @@ export type BubbleDto =
       type: 'carousel';
       options: string[];
       value: string[];
+      optionDescriptions: string[];
     };
