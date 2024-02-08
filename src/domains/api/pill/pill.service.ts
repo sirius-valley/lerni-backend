@@ -10,6 +10,8 @@ import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
 import { TeacherDto } from './dtos/teacher.dto';
 import { PillDto } from './dtos/pill.dto';
 import { StudentRepository } from '../student/student.repository';
+import { HeadlandsAdapter } from './adapters/headlands.adapter';
+import { PillBlockDto } from './dtos/pill-block.dto';
 
 @Injectable()
 export class PillService {
@@ -17,6 +19,7 @@ export class PillService {
     private readonly pillRepository: PillRepository,
     private readonly springPillService: SpringPillService,
     private readonly studentRepository: StudentRepository,
+    private readonly headlandsAdapter: HeadlandsAdapter,
   ) {}
 
   public async getIntroduction(authorization: string, student: StudentDto) {
@@ -76,6 +79,14 @@ export class PillService {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
       teacher: answerRequest.pillId === introductionID ? introductionTeacher : teacherDto,
     };
+  }
+
+  public async adaptHeadlandsThreadToPillBlock(headlandsThread: any): Promise<PillBlockDto> {
+    try {
+      return this.headlandsAdapter.adaptThreadIntoPill(headlandsThread);
+    } catch (e) {
+      throw new HttpException('Thread does not follow required format', HttpStatus.BAD_REQUEST);
+    }
   }
 
   private getTeacher(answerRequest: AnswerRequestDto, teacher: TeacherDto | null) {
