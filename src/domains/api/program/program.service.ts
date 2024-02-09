@@ -5,6 +5,7 @@ import { ProgramDetailsDto } from './dtos/program-details.dto';
 import { GetFindResult } from 'prisma/prisma-client/runtime/library';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { ProgramHomeDto } from './dtos/program-home.dto';
 
 @Injectable()
 export class ProgramService {
@@ -18,6 +19,27 @@ export class ProgramService {
     const programVersionPillVersions = await this.pillRepository.getProgramVersionPillVersion(studentId, programVersion.id);
     const pillVersions = this.getPillVersions(programVersionPillVersions);
     return new ProgramDetailsDto(programVersion.objectives, programVersion.program, pillVersions);
+  }
+
+  public async getProgramsByStudentId(studentId: string) {
+    const studentPrograms = await this.programRepository.getStudentProgramsByStudentId(studentId);
+    const programVersionPillVersion = studentPrograms.map((studentProgram) =>
+      this.pillRepository.getProgramVersionPillVersion(studentId, studentProgram.programVersionId),
+    );
+    const pillVersions = (await Promise.all(programVersionPillVersion)).map((programVersionPillVersion) =>
+      this.getPillVersions(programVersionPillVersion),
+    );
+
+    const programs = studentPrograms.map((studentProgram, index) => {
+      const pillVersion = pillVersions[index];
+      const progress = pillVersion.reduce((acc, pvPillV) => acc + (pvPillV.pv.pillSubmissions[0]?.progress || 0), 0) / pillVersion.length;
+      return {
+        program: studentProgram.programVersion.program,
+        progress: progress,
+      };
+    });
+
+    return new ProgramHomeDto(programs);
   }
 
   private async getProgramVersion(studentId: string, programId: string) {

@@ -46,4 +46,20 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getStudentProgramsByStudentId(studentId: string) {
+    return this.prisma.studentProgram.findMany({
+      where: {
+        studentId,
+      },
+      include: {
+        programVersion: {
+          include: {
+            objectives: true,
+            program: true,
+          },
+        },
+      },
+    });
+  }
 }
