@@ -62,4 +62,132 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getProgramsCompletedByStudentId(studentId: string) {
+    return this.prisma.studentProgram.findMany({
+      where: {
+        studentId,
+        programVersion: {
+          programVersionPillVersions: {
+            every: {
+              pillVersion: {
+                pillSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      include: {
+        programVersion: {
+          include: {
+            program: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getStudentProgramsInProgressByStudentId(studentId: string) {
+    return this.prisma.studentProgram.findMany({
+      where: {
+        studentId,
+        AND: [
+          {
+            // if there are no submissions it is not in progress
+            NOT: {
+              programVersion: {
+                programVersionPillVersions: {
+                  none: {
+                    pillVersion: {
+                      pillSubmissions: {
+                        some: {
+                          studentId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            NOT: {
+              // if all submissions are 100% it is not in progress
+              programVersion: {
+                programVersionPillVersions: {
+                  every: {
+                    pillVersion: {
+                      pillSubmissions: {
+                        some: {
+                          studentId,
+                          progress: 100,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        programVersion: {
+          include: {
+            program: true,
+            programVersionPillVersions: {
+              include: {
+                pillVersion: {
+                  include: {
+                    pillSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getProgramsNotStartedByStudentId(studentId: string) {
+    return this.prisma.studentProgram.findMany({
+      where: {
+        studentId,
+        programVersion: {
+          programVersionPillVersions: {
+            none: {
+              pillVersion: {
+                pillSubmissions: {
+                  some: {
+                    studentId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      include: {
+        programVersion: {
+          include: {
+            program: true,
+          },
+        },
+      },
+    });
+  }
 }

@@ -22,22 +22,22 @@ export class ProgramService {
   }
 
   public async getProgramsByStudentId(studentId: string) {
-    const studentPrograms = await this.programRepository.getStudentProgramsByStudentId(studentId);
-    const programVersionPillVersion = studentPrograms.map((studentProgram) =>
-      this.pillRepository.getProgramVersionPillVersion(studentId, studentProgram.programVersionId),
-    );
-    const pillVersions = (await Promise.all(programVersionPillVersion)).map((programVersionPillVersion) =>
-      this.getPillVersions(programVersionPillVersion),
-    );
-
-    const programs = studentPrograms.map((studentProgram, index) => {
-      const pillVersion = pillVersions[index];
-      const progress = pillVersion.reduce((acc, pvPillV) => acc + (pvPillV.pv.pillSubmissions[0]?.progress || 0), 0) / pillVersion.length;
-      return {
-        program: studentProgram.programVersion.program,
-        progress: progress,
-      };
+    const programsCompleted = await this.programRepository
+      .getProgramsCompletedByStudentId(studentId)
+      .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
+    const inProgress = await this.programRepository.getStudentProgramsInProgressByStudentId(studentId);
+    const programsInProgress = inProgress.map((studentProgram) => {
+      const progress =
+        studentProgram.programVersion.programVersionPillVersions.reduce(
+          (acc, pvPillV) => acc + (pvPillV.pillVersion.pillSubmissions[0]?.progress || 0),
+          0,
+        ) / studentProgram.programVersion.programVersionPillVersions.length;
+      return { program: studentProgram.programVersion.program, progress };
     });
+    const programsNotStarted = await this.programRepository
+      .getProgramsNotStartedByStudentId(studentId)
+      .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
+    const programs = { programsCompleted, programsInProgress, programsNotStarted };
 
     return new ProgramHomeDto(programs);
   }

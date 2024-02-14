@@ -6,11 +6,13 @@ export class ProgramHomeDto {
   programsInProgress: SimpleProgramDto[];
   programsNotStarted: SimpleProgramDto[];
 
-  constructor(programs: { program: Program; progress: number }[]) {
-    this.programsCompleted = programs.filter((p) => p.progress === 100).map((p) => new SimpleProgramDto(p.program, p.progress));
-    this.programsInProgress = programs
-      .filter((p) => p.progress < 100 && p.progress > 0)
-      .map((p) => new SimpleProgramDto(p.program, p.progress));
-    this.programsNotStarted = programs.filter((p) => p.progress === 0).map((p) => new SimpleProgramDto(p.program, p.progress));
+  constructor(programs: {
+    programsCompleted: Program[];
+    programsInProgress: { program: Program; progress: number }[];
+    programsNotStarted: Program[];
+  }) {
+    this.programsCompleted = programs.programsCompleted.map((program) => new SimpleProgramDto(program, 100));
+    this.programsInProgress = programs.programsInProgress.map((program) => new SimpleProgramDto(program.program, program.progress));
+    this.programsNotStarted = programs.programsNotStarted.map((program) => new SimpleProgramDto(program, 0));
   }
 }

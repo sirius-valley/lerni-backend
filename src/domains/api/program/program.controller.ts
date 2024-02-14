@@ -12,13 +12,13 @@ import { ApiRequest } from '../../../types/api-request.interface';
 export class ProgramController {
   constructor(private programService: ProgramService) {}
 
+  @Get('home')
+  async getProgramsByStudentId(@Request() req: ApiRequest) {
+    return await this.programService.getProgramsByStudentId(req.user.id);
+  }
+
   @Get(':id')
   async getProgramById(@Request() req: ApiRequest, @Param('id') id: string) {
     return await this.programService.getProgramById(req.user.id, id);
-  }
-
-  @Get('/home')
-  async getProgramsByStudentId(@Request() req: ApiRequest) {
-    return await this.programService.getProgramsByStudentId(req.user.id);
   }
 }
