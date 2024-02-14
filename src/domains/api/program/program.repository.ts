@@ -27,11 +27,12 @@ export class ProgramRepository {
                     questionnaireSubmissions: {
                       where: {
                         studentId,
-                        finishedDateTime: null,
                       },
-                      orderBy: {
-                        createdAt: 'desc',
-                      },
+                      orderBy: [
+                        {
+                          createdAt: 'desc',
+                        },
+                      ],
                       take: 1,
                     },
                   },

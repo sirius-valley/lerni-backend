@@ -75,11 +75,14 @@ export class ProgramService {
         );
       const previousElement = questionnaireVersions[index - 1].questionnaireVersion.questionnaireSubmissions[0];
       const previousProgress = previousElement?.progress;
+      console.log(previousProgress === 100);
       const isPreviousQuestionnaireCompleted = previousProgress === 100;
+      const hasPassedCoolDown = this.hasPassedCoolDown(qvQuestionnaireV);
+      console.log(pillsCompleted, isPreviousQuestionnaireCompleted, hasPassedCoolDown);
       return new SimpleQuestionnaireDto(
         qvQuestionnaireV.questionnaireVersion.questionnaire,
         qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
-        !pillsCompleted || !isPreviousQuestionnaireCompleted,
+        !pillsCompleted || !isPreviousQuestionnaireCompleted || !hasPassedCoolDown,
       );
     });
   }
@@ -88,7 +91,21 @@ export class ProgramService {
     return pillVersions.map((pvPillV: any, index: any) => {
       const previousProgress = index > 0 ? pillVersions[index - 1].pillVersion.pillSubmissions[0]?.progress : 100;
       const isPreviousPillCompleted = previousProgress === 100;
+      console.log('pvPillV.pillVersion.pillSubmissions[0]?.progress ', pvPillV.pillVersion.pillSubmissions[0]?.progress);
       return new SimplePillDto(pvPillV.pillVersion.pill, pvPillV.pillVersion.pillSubmissions[0]?.progress || 0, !isPreviousPillCompleted);
     });
+  }
+
+  private hasPassedCoolDown(qvQuestionnaireV: any) {
+    const lastSubmission = qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0];
+    if (!lastSubmission) return true;
+    console.log(lastSubmission.finishedDateTime);
+    const lastSubmissionDate = new Date(lastSubmission.finishedDateTime);
+    const coolDown = qvQuestionnaireV.questionnaireVersion.cooldownInMinutes;
+    console.log(coolDown);
+    const now = new Date();
+    console.log(qvQuestionnaireV.questionnaireVersion.id);
+    console.log(now.getUTCHours(), lastSubmissionDate.getUTCHours());
+    return now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
   }
 }
