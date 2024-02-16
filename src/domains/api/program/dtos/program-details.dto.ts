@@ -14,7 +14,7 @@ export class ProgramDetailsDto {
   programDescription: string;
   programObjectives: string[];
   pills: SimplePillDto[];
-  questionnaires: SimpleQuestionnaireDto[];
+  questionnaire: SimpleQuestionnaireDto[];
 
   constructor(programDetailsDto: ProgramDetailsDto) {
     this.id = programDetailsDto.id;
@@ -28,6 +28,6 @@ export class ProgramDetailsDto {
     this.programDescription = programDetailsDto.programDescription;
     this.programObjectives = programDetailsDto.programObjectives;
     this.pills = programDetailsDto.pills;
-    this.questionnaires = programDetailsDto.questionnaires;
+    this.questionnaire = programDetailsDto.questionnaire;
   }
 }
