@@ -27,7 +27,6 @@ export class ProgramService {
   private createProgramDetailsDto(programVersion: any) {
     const {
       program,
-      objectives,
       programVersionPillVersions: pillVersions,
       programVersionQuestionnaireVersions: questionnaireVersions,
     } = programVersion;
@@ -44,7 +43,6 @@ export class ProgramService {
       estimatedHours: program.hoursToComplete,
       points: program.pointsReward,
       programDescription: program.description ?? '',
-      programObjectives: objectives.map((o: any) => o.name),
       pills: pills,
       questionnaire: this.calculateSimpleQuestionnairesDtos(
         questionnaireVersions,

@@ -12,7 +12,6 @@ export class ProgramDetailsDto {
   estimatedHours: number;
   points: number;
   programDescription: string;
-  programObjectives: string[];
   pills: SimplePillDto[];
   questionnaire: SimpleQuestionnaireDto[];
 
@@ -26,7 +25,6 @@ export class ProgramDetailsDto {
     this.estimatedHours = programDetailsDto.estimatedHours;
     this.points = programDetailsDto.points;
     this.programDescription = programDetailsDto.programDescription;
-    this.programObjectives = programDetailsDto.programObjectives;
     this.pills = programDetailsDto.pills;
     this.questionnaire = programDetailsDto.questionnaire;
   }
