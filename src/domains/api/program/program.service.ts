@@ -38,7 +38,7 @@ export class ProgramService {
       id: program.id,
       programName: program.name,
       teacher: new TeacherDto(program.teacher),
-      progress: this.calculateProgress(pillVersions, questionnaireVersions),
+      progress: this.calculateProgress(pillVersions, questionnaireVersions[0]),
       pillCount: pillVersions.length,
       icon: program.icon,
       estimatedHours: program.hoursToComplete,
@@ -53,16 +53,14 @@ export class ProgramService {
     });
   }
 
-  private calculateProgress(pillVersions: any, questionnaireVersions: any) {
+  private calculateProgress(pillVersions: any, questionnaireVersion: any) {
     const totalPillProgress = pillVersions.reduce(
       (acc: number, pvPillV: any) => acc + (pvPillV.pillVersion.pillSubmissions[0]?.progress || 0),
       0,
     );
-    const totalQuestionnaireProgress = questionnaireVersions.reduce(
-      (acc: number, qvQuestionnaireV: any) => acc + (qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0),
-      0,
+    return (
+      (totalPillProgress + questionnaireVersion.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0) / (pillVersions.length + 1)
     );
-    return (totalPillProgress + totalQuestionnaireProgress) / (pillVersions.length + questionnaireVersions.length);
   }
 
   private calculateSimpleQuestionnairesDtos(questionnaireVersions: any, pillsCompleted: boolean) {
