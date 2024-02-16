@@ -47,22 +47,6 @@ export class ProgramRepository {
     });
   }
 
-  async getStudentProgramsByStudentId(studentId: string) {
-    return this.prisma.studentProgram.findMany({
-      where: {
-        studentId,
-      },
-      include: {
-        programVersion: {
-          include: {
-            objectives: true,
-            program: true,
-          },
-        },
-      },
-    });
-  }
-
   async getProgramsCompletedByStudentId(studentId: string) {
     return this.prisma.studentProgram.findMany({
       where: {
@@ -82,6 +66,10 @@ export class ProgramRepository {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 6,
       include: {
         programVersion: {
           include: {
@@ -136,6 +124,10 @@ export class ProgramRepository {
           },
         ],
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 9,
       include: {
         programVersion: {
           include: {
@@ -181,6 +173,10 @@ export class ProgramRepository {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 6,
       include: {
         programVersion: {
           include: {
