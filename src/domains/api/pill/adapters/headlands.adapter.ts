@@ -131,7 +131,9 @@ export class HeadlandsAdapter {
       type: ElementType.ACTION,
       name: object.value,
       metadata: {
-        lerni_question_type: 'image',
+        metadata: {
+          lerni_question_type: 'image',
+        },
       },
     };
   }
@@ -152,7 +154,9 @@ export class HeadlandsAdapter {
       name: '',
       question_type: QuestionType.TEXTINPUT,
       metadata: {
-        lerni_question_type: 'free-text',
+        metadata: {
+          lerni_question_type: 'free-text',
+        },
         regex: '.*',
       },
     });
@@ -190,16 +194,18 @@ export class HeadlandsAdapter {
       name: '',
       question_type: element.properties.may_select_multiple ? QuestionType.MULTIPLECHOICE : QuestionType.SINGLECHOICE,
       metadata: {
-        lerni_question_type: element.properties.may_select_multiple ? 'multiple-choice' : 'single-choice',
+        metadata: {
+          lerni_question_type: element.properties.may_select_multiple ? 'multiple-choice' : 'single-choice',
+        },
         options,
       },
     };
     if (correctAnswer) {
-      questionNode.metadata.correct_answer = correctAnswer;
+      questionNode.metadata.metadata.correct_answer = correctAnswer;
     }
     if (optionDescriptions) {
-      questionNode.metadata.lerni_question_type = 'carousel';
-      questionNode.metadata.option_descriptions = optionDescriptions;
+      questionNode.metadata.metadata.lerni_question_type = 'carousel';
+      questionNode.metadata.metadata.option_descriptions = optionDescriptions;
     }
 
     elements.push(questionNode);

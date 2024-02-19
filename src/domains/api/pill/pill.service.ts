@@ -109,7 +109,7 @@ export class PillService {
       const element = pillBlock.elements.find((element) => {
         return element.id === node.nodeId;
       });
-      const type = element?.metadata?.lerni_question_type ?? 'text';
+      const type = element?.metadata?.metadata.lerni_question_type ?? 'text';
       return {
         id: node.nodeId,
         type: type,
@@ -132,7 +132,7 @@ export class PillService {
         return {
           value: node.answer,
           options: node.nodeContent.metadata.options,
-          optionDescriptions: node.nodeContent.metadata.optionDescriptions,
+          optionDescriptions: node.nodeContent.metadata.metadata.optionDescriptions,
         };
     }
   }
