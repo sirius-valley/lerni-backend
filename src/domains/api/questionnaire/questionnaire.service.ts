@@ -5,9 +5,11 @@ import { AnswerRequestDto } from '../pill/dtos/answer-request.dto';
 import { QuestionnaireAnswer, QuestionnaireVersion } from '@prisma/client';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
-import { QuestionnaireProgressDto, QuestionnaireState } from './dtos/questionnaire-progress.dto';
+import { QuestionnaireDto, QuestionnaireState } from './dtos/questionnaire.dto';
 import { PillService } from '../pill/pill.service';
 import { questionnaireAnswerPoints } from '../../../const';
+import { QuestionnaireProgressResponseDto } from './dtos/questionnaire-progress-response.dto';
+import { TeacherDto } from '../pill/dtos/teacher.dto';
 
 @Injectable()
 export class QuestionnaireService {
@@ -17,13 +19,16 @@ export class QuestionnaireService {
     private readonly pillService: PillService,
   ) {}
 
-  public async answerQuestionnaire(authorization: string, student: StudentDto, answerRequest: AnswerRequestDto) {
+  public async answerQuestionnaire(
+    authorization: string,
+    student: StudentDto,
+    answerRequest: AnswerRequestDto,
+  ): Promise<QuestionnaireProgressResponseDto> {
     const questionnaireSubmission = await this.getQuestionnaireSubmission(answerRequest.pillId, student.id);
     if (this.questionAlreadyAnswered(questionnaireSubmission.questionnaireAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
     const springProgress = await this.getSpringProgress(authorization, questionnaireSubmission, answerRequest);
-    console.log(springProgress, 'springProgress');
 
     const updatedSubmission = await this.questionnaireRepository.createQuestionnaireAnswer(
       questionnaireSubmission.id,
@@ -33,6 +38,8 @@ export class QuestionnaireService {
       springProgress.progress,
     );
 
+    const teacher = await this.getTeacher(answerRequest.pillId);
+
     if (this.isQuestionnaireFailed(updatedSubmission.questionnaireAnswers, updatedSubmission.questionnaireVersion)) {
       const data = {
         bubbles: [],
@@ -40,7 +47,8 @@ export class QuestionnaireService {
         progress: springProgress.progress,
         state: QuestionnaireState.Failed,
       };
-      return new QuestionnaireProgressDto(data);
+      await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
+      return { questionnaire: new QuestionnaireDto(data), teacher };
     }
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
@@ -51,7 +59,7 @@ export class QuestionnaireService {
       await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(updatedSubmission.id, pointsAwarded);
     }
 
-    return new QuestionnaireProgressDto(formattedBlock);
+    return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
   }
 
   private async getQuestionnaireSubmission(questionnaireId: string, studentId: string) {
@@ -105,5 +113,11 @@ export class QuestionnaireService {
 
   private calculatePointsAwarded(questionnaireAnswers: QuestionnaireAnswer[]) {
     return questionnaireAnswers.filter((questionnaireAnswer) => questionnaireAnswer.isCorrect).length * questionnaireAnswerPoints;
+  }
+
+  private async getTeacher(questionnaireId: string) {
+    const teacher = await this.questionnaireRepository.getTeacherByQuestionnaireId(questionnaireId);
+    if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+    return new TeacherDto(teacher);
   }
 }

@@ -125,4 +125,42 @@ export class QuestionnaireRepository {
       },
     });
   }
+
+  public async setQuestionnaireSubmissionCompletedDateTime(questionnaireSubmissionId: string) {
+    return this.prisma.questionnaireSubmission.update({
+      data: {
+        finishedDateTime: new Date(),
+      },
+      where: {
+        id: questionnaireSubmissionId,
+      },
+    });
+  }
+
+  public async getTeacherByQuestionnaireId(questionnaireId: string) {
+    return this.prisma.teacher.findFirst({
+      where: {
+        programs: {
+          some: {
+            versions: {
+              some: {
+                programVersionQuestionnaireVersions: {
+                  some: {
+                    questionnaireVersionId: questionnaireId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        profession: true,
+        image: true,
+      },
+    });
+  }
 }

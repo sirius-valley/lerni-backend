@@ -6,7 +6,7 @@ export enum QuestionnaireState {
   Completed = 'Completed',
 }
 
-export class QuestionnaireProgressDto {
+export class QuestionnaireDto {
   questionnaireState: QuestionnaireState;
   isCorrect: boolean;
   progress: number;
