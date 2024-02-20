@@ -45,7 +45,8 @@ export class QuestionnaireService {
         bubbles: [],
         isCorrect: false,
         progress: springProgress.progress,
-        state: QuestionnaireState.Failed,
+        pointsAwarded: 0,
+        state: QuestionnaireState.FAILED,
       };
       await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
       return { questionnaire: new QuestionnaireDto(data), teacher };
@@ -54,7 +55,7 @@ export class QuestionnaireService {
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(updatedSubmission.questionnaireVersion.block));
 
-    if (formattedBlock.state === QuestionnaireState.Completed) {
+    if (formattedBlock.state === QuestionnaireState.COMPLETED) {
       const pointsAwarded = this.calculatePointsAwarded(updatedSubmission.questionnaireAnswers);
       await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(updatedSubmission.id, pointsAwarded);
     }
@@ -105,8 +106,9 @@ export class QuestionnaireService {
   private formatQuestionnaireBlock(springProgress: any, questionnaireBlock: any) {
     return {
       isCorrect: springProgress.correct,
-      state: springProgress.completed ? QuestionnaireState.Completed : QuestionnaireState.InProgress,
+      state: springProgress.completed ? QuestionnaireState.COMPLETED : QuestionnaireState.INPROGRESS,
       progress: springProgress.progress,
+      pointsAwarded: springProgress.correct ? questionnaireAnswerPoints : 0,
       bubbles: this.pillService.mergeData(springProgress, questionnaireBlock),
     };
   }
