@@ -4,6 +4,7 @@ import { TeacherDto } from '../pill/dtos/teacher.dto';
 import { SimplePillDto } from './dtos/simple-pill.dto';
 import { SimpleQuestionnaireDto } from './dtos/simple-questionnaire.dto';
 import { ProgramDetailsDto } from './dtos/program-details.dto';
+import { ProgramHomeDto } from './dtos/program-home.dto';
 
 @Injectable()
 export class ProgramService {
@@ -12,6 +13,27 @@ export class ProgramService {
   public async getProgramById(studentId: string, programId: string) {
     const programVersion = await this.getProgramVersion(studentId, programId);
     return this.createProgramDetailsDto(programVersion);
+  }
+
+  public async getProgramsByStudentId(studentId: string) {
+    const programsCompleted = await this.programRepository
+      .getProgramsCompletedByStudentId(studentId)
+      .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
+    const inProgress = await this.programRepository.getStudentProgramsInProgressByStudentId(studentId);
+    const programsInProgress = inProgress.map((studentProgram) => {
+      const progress =
+        studentProgram.programVersion.programVersionPillVersions.reduce(
+          (acc, pvPillV) => acc + (pvPillV.pillVersion.pillSubmissions[0]?.progress || 0),
+          0,
+        ) / studentProgram.programVersion.programVersionPillVersions.length;
+      return { program: studentProgram.programVersion.program, progress };
+    });
+    const programsNotStarted = await this.programRepository
+      .getProgramsNotStartedByStudentId(studentId)
+      .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
+    const programs = { programsCompleted, programsInProgress, programsNotStarted };
+
+    return new ProgramHomeDto(programs);
   }
 
   private async getProgramVersion(studentId: string, programId: string) {
