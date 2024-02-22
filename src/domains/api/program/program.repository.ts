@@ -59,7 +59,7 @@ export class ProgramRepository {
       },
       cursor: options.after ? { id: options.after } : options.before ? { id: options.before } : undefined,
       skip: options.after ?? options.before ? 1 : undefined,
-      take: options.limit ? (options.before ? -options.limit : options.limit) : undefined,
+      take: options.limit ? options.limit : 10,
       include: {
         student: true,
       },
