@@ -5,6 +5,8 @@ import { SimplePillDto } from './dtos/simple-pill.dto';
 import { SimpleQuestionnaireDto } from './dtos/simple-questionnaire.dto';
 import { ProgramDetailsDto } from './dtos/program-details.dto';
 import { ProgramHomeDto } from './dtos/program-home.dto';
+import { CursorPagination } from '../../../types/cursor-pagination.interface';
+import { CommentDto } from './dtos/comment.dto';
 
 @Injectable()
 export class ProgramService {
@@ -34,6 +36,13 @@ export class ProgramService {
     const programs = { programsCompleted, programsInProgress, programsNotStarted };
 
     return new ProgramHomeDto(programs);
+  }
+
+  public async getProgramComments(studentId: string, programId: string, options: CursorPagination) {
+    const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramId(studentId, programId);
+    if (!studentProgram) throw new HttpException('Program not found', 404);
+    const comments = await this.programRepository.getProgramPublicComments(programId, options);
+    return comments.map((comment) => new CommentDto(comment)).reverse();
   }
 
   private async getProgramVersion(studentId: string, programId: string) {
