@@ -104,7 +104,7 @@ export class PillService {
     };
   }
 
-  private mergeData(springProgress: any, pillBlock: any) {
+  public mergeData(springProgress: any, pillBlock: any) {
     return springProgress.nodes.map((node) => {
       const element = pillBlock.elements.find((element) => {
         return element.id === node.nodeId;
