@@ -26,7 +26,7 @@ export class ProgramService {
     const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramId(studentId, programId);
     if (!studentProgram) throw new HttpException('Program not found', 404);
     const comments = await this.programRepository.getProgramPublicComments(programId, options);
-    return comments.map((comment) => new CommentDto(comment));
+    return comments.map((comment) => new CommentDto(comment)).reverse();
   }
 
   private async getProgramVersion(studentId: string, programId: string) {
