@@ -7,6 +7,7 @@ import { StudentModule } from '../domains/api/student/student.module';
 import { StudentController } from '../domains/api/student/student.controller';
 import { PillModule } from '../domains/api/pill/pill.module';
 import { ProgramModule } from '../domains/api/program/program.module';
+import { QuestionnaireModule } from '../domains/api/questionnaire/questionnaire.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ProgramModule } from '../domains/api/program/program.module';
     StudentModule,
     PillModule,
     ProgramModule,
+    QuestionnaireModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],

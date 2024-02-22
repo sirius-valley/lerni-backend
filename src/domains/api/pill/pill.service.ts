@@ -92,12 +92,12 @@ export class PillService {
     };
   }
 
-  private mergeData(springProgress: any, pillBlock: any) {
+  public mergeData(springProgress: any, pillBlock: any) {
     return springProgress.nodes.map((node) => {
       const element = pillBlock.elements.find((element) => {
         return element.id === node.nodeId;
       });
-      const type = element?.metadata?.lerni_question_type ?? 'text';
+      const type = element?.metadata?.metadata.lerni_question_type ?? 'text';
       return {
         id: node.nodeId,
         type: type,
