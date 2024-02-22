@@ -157,7 +157,7 @@ export class PillService {
   }
 
   private replaceFullName(pill: any, fullName: string) {
-    return JSON.parse(JSON.stringify(pill).replace('@fullname', fullName));
+    return JSON.parse(JSON.stringify(pill).replaceAll('@fullname', fullName));
   }
 
   private questionAlreadyAnswered(pillAnswers: PillAnswer[], questionId: string) {
