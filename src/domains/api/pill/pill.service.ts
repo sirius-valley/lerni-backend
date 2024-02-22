@@ -10,6 +10,9 @@ import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
 import { TeacherDto } from './dtos/teacher.dto';
 import { PillDto } from './dtos/pill.dto';
 import { StudentRepository } from '../student/student.repository';
+import { HeadlandsAdapter } from './adapters/headlands.adapter';
+import { PillBlockDto } from './dtos/pill-block.dto';
+import { ThreadRequestDto } from './dtos/thread-request.dto';
 
 @Injectable()
 export class PillService {
@@ -17,6 +20,7 @@ export class PillService {
     private readonly pillRepository: PillRepository,
     private readonly springPillService: SpringPillService,
     private readonly studentRepository: StudentRepository,
+    private readonly headlandsAdapter: HeadlandsAdapter,
   ) {}
 
   public async getIntroduction(authorization: string, student: StudentDto) {
@@ -78,6 +82,14 @@ export class PillService {
     };
   }
 
+  public async adaptHeadlandsThreadToPillBlock(headlandsThread: ThreadRequestDto): Promise<PillBlockDto> {
+    try {
+      return this.headlandsAdapter.adaptThreadIntoPill(headlandsThread.thread);
+    } catch (e) {
+      throw new HttpException('Thread does not follow required format', HttpStatus.BAD_REQUEST);
+    }
+  }
+
   private getTeacher(answerRequest: AnswerRequestDto, teacher: TeacherDto | null) {
     if (introductionID === answerRequest.pillId) teacher = introductionTeacher as any;
     if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
@@ -97,7 +109,7 @@ export class PillService {
       const element = pillBlock.elements.find((element) => {
         return element.id === node.nodeId;
       });
-      const type = element?.metadata?.lerni_question_type ?? 'text';
+      const type = element?.metadata?.metadata.lerni_question_type ?? 'text';
       return {
         id: node.nodeId,
         type: type,
@@ -115,8 +127,13 @@ export class PillService {
         return { content: node.answer };
       case 'single-choice':
       case 'multiple-choice':
-      case 'carousel':
         return { value: node.answer, options: node.nodeContent.metadata.options };
+      case 'carousel':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          optionDescriptions: node.nodeContent.metadata.metadata.optionDescriptions,
+        };
     }
   }
 

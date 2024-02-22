@@ -13,6 +13,10 @@ import { StudentModule } from '../student/student.module';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
 import { introductionTeacher } from '../../../const';
+import { HeadlandsAdapter } from './adapters/headlands.adapter';
+import { ThreadRequestDto } from './dtos/thread-request.dto';
+import { PillBlockDto } from './dtos/pill-block.dto';
+import { ElementType, FormType } from './interfaces/pill.interface';
 
 process.env.NODE_ENV = 'development';
 describe('PillController', () => {
@@ -30,7 +34,7 @@ describe('PillController', () => {
         StudentModule,
       ],
       controllers: [PillController],
-      providers: [PillService, PillRepository, PrismaService, SpringPillService],
+      providers: [PillService, PillRepository, PrismaService, SpringPillService, HeadlandsAdapter],
     })
       .overrideProvider(PrismaService)
       .useValue(mockDeep<PrismaService>())
@@ -221,6 +225,78 @@ describe('PillController', () => {
           },
           teacher: introductionTeacher,
         });
+      });
+    });
+    describe('adaptThreadIntoPillBlock', () => {
+      it('should return adaptedPillBlock', async () => {
+        const thread = new ThreadRequestDto([
+          {
+            id: '3231c1f7-56f4-4c60-a474-9134970dc3bd',
+            type: 'appear_together',
+            branches: [
+              {
+                id: '03d97ddf-c5e3-4263-9ab7-a0db4de0d963',
+                objects: [
+                  {
+                    id: '796c43a6-5cf7-442b-9d78-249ffe087d9f',
+                    type: 'text',
+                    value: '<p>Bienvenido</p>',
+                  },
+                  {
+                    id: '4917003f-dad9-4fa1-839e-babdf94ea513',
+                    type: 'text',
+                    value:
+                      '<p>Esta es una aplicacion que te va a ayudar a poder repasar, practicar y aprender de forma innovadora y adaptada a vos!</p>',
+                  },
+                  {
+                    id: 'cfe7696d-6b3e-44c2-ac4d-fcab99ead69e',
+                    type: 'text',
+                    value: '<p>Para poder desbloquear los programas disponibles que tenemos para vos, necestamos conocerte</p>',
+                  },
+                ],
+                test: {
+                  var: '',
+                },
+              },
+            ],
+          },
+        ]);
+        await expect(pillController.adaptThreadToPillBlock(thread)).resolves.toMatchObject<PillBlockDto>({
+          pillBlock: {
+            id: '',
+            type: FormType.DYNAMIC,
+            initial: '796c43a6-5cf7-442b-9d78-249ffe087d9f',
+            elements: [
+              {
+                id: '796c43a6-5cf7-442b-9d78-249ffe087d9f',
+                type: ElementType.ACTION,
+                name: '<p>Bienvenido</p>',
+              },
+              {
+                id: '4917003f-dad9-4fa1-839e-babdf94ea513',
+                type: ElementType.ACTION,
+                name: '<p>Esta es una aplicacion que te va a ayudar a poder repasar, practicar y aprender de forma innovadora y adaptada a vos!</p>',
+              },
+              {
+                id: 'cfe7696d-6b3e-44c2-ac4d-fcab99ead69e',
+                type: ElementType.ACTION,
+                name: '<p>Para poder desbloquear los programas disponibles que tenemos para vos, necestamos conocerte</p>',
+              },
+            ],
+            relations: [
+              {
+                from: '796c43a6-5cf7-442b-9d78-249ffe087d9f',
+                to: '4917003f-dad9-4fa1-839e-babdf94ea513',
+              },
+              { from: '4917003f-dad9-4fa1-839e-babdf94ea513', to: 'cfe7696d-6b3e-44c2-ac4d-fcab99ead69e' },
+            ],
+          },
+        });
+      });
+      it('should return 400 when thread not valid', async () => {
+        await expect(pillController.adaptThreadToPillBlock(new ThreadRequestDto({ id: '1' }))).rejects.toThrow(
+          new HttpException('Thread does not follow required format', 400),
+        );
       });
     });
   });
