@@ -12,6 +12,7 @@ export class SpringPillService {
   ) {}
 
   public async getSpringProgress(pillBlock: any, authorization: string, answers: PillAnswerSpringDto[]) {
+    console.log(pillBlock);
     const springProgress = await firstValueFrom(
       this.httpService
         .get(this.configService.get<string>('SPRING_SERVICE_URL') + '/pill/progress', {

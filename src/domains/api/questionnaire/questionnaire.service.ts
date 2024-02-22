@@ -63,6 +63,27 @@ export class QuestionnaireService {
     return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
   }
 
+  async getQuestionnaireVersionByPillId(authorization: string, user: StudentDto, questionnaireId: string) {
+    const questionnaireVersion = await this.questionnaireRepository.getQuestionnaireVersionByQuestionnaireIdAndStudentId(
+      questionnaireId,
+      user.id,
+    );
+    if (!questionnaireVersion) throw new HttpException('Questionnaire not found', HttpStatus.NOT_FOUND);
+
+    const springProgress = await this.springPillService.getSpringProgress(
+      questionnaireVersion.block,
+      authorization,
+      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers ?? [],
+    );
+
+    const teacher = await this.getTeacher(questionnaireVersion.id);
+
+    const replacedQuestionnaire = this.replaceFullName(springProgress, user.name + ' ' + user.lastname);
+    const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(questionnaireVersion.block));
+
+    return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
+  }
+
   private async getQuestionnaireSubmission(questionnaireId: string, studentId: string) {
     const questionnaireSubmission = await this.questionnaireRepository.getQuestionnaireSubmissionByQuestionnaireIdAndStudentId(
       questionnaireId,
