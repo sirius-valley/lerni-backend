@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma.service';
+import { CursorPagination } from '../../../types/cursor-pagination.interface';
 
 @Injectable()
 export class ProgramRepository {
@@ -43,6 +44,24 @@ export class ProgramRepository {
       },
       orderBy: {
         createdAt: 'desc',
+      },
+    });
+  }
+
+  async getProgramPublicComments(programId: string, options: CursorPagination) {
+    return this.prisma.comment.findMany({
+      where: {
+        programId,
+        privacy: 'public',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      cursor: options.after ? { id: options.after } : options.before ? { id: options.before } : undefined,
+      skip: options.after ?? options.before ? 1 : undefined,
+      take: options.limit ? (options.before ? -options.limit : options.limit) : undefined,
+      include: {
+        student: true,
       },
     });
   }
