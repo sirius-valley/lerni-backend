@@ -44,7 +44,7 @@ export class PillService {
     if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
     const answers =
       (await this.pillRepository.getPillSubmissionByPillIdAndStudentId(pillId, student.id))?.pillAnswers?.map(
-        (answer) => new PillAnswerSpringDto(answer.questionId, answer.value),
+        (answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)),
       ) || [];
     const springProgress = await this.springPillService.getSpringProgress(pillVersion.block, authorization, answers);
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);

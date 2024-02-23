@@ -232,13 +232,14 @@ model Questionnaire {
 }
 
 model QuestionnaireVersion {
-  id                String   @id @default(uuid())
-  version           Int
-  passsing_score    Int
-  cooldownInMinutes Int
-  block             String
-  questionCount     Int
-  createdAt         DateTime @default(now())
+  id                    String   @id @default(uuid())
+  version               Int
+  passsing_score        Int
+  completionTimeMinutes Int
+  cooldownInMinutes     Int
+  block                 String
+  questionCount         Int
+  createdAt             DateTime @default(now())
 
   questionnaireId String
   questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
