@@ -10,6 +10,9 @@ import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
 import { TeacherDto } from './dtos/teacher.dto';
 import { PillDto } from './dtos/pill.dto';
 import { StudentRepository } from '../student/student.repository';
+import { HeadlandsAdapter } from './adapters/headlands.adapter';
+import { PillBlockDto } from './dtos/pill-block.dto';
+import { ThreadRequestDto } from './dtos/thread-request.dto';
 
 @Injectable()
 export class PillService {
@@ -17,6 +20,7 @@ export class PillService {
     private readonly pillRepository: PillRepository,
     private readonly springPillService: SpringPillService,
     private readonly studentRepository: StudentRepository,
+    private readonly headlandsAdapter: HeadlandsAdapter,
   ) {}
 
   public async getIntroduction(authorization: string, student: StudentDto) {
@@ -40,7 +44,7 @@ export class PillService {
     if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
     const answers =
       (await this.pillRepository.getPillSubmissionByPillIdAndStudentId(pillId, student.id))?.pillAnswers?.map(
-        (answer) => new PillAnswerSpringDto(answer.questionId, answer.value),
+        (answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)),
       ) || [];
     const springProgress = await this.springPillService.getSpringProgress(pillVersion.block, authorization, answers);
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,6 +80,14 @@ export class PillService {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
       teacher: answerRequest.pillId === introductionID ? introductionTeacher : teacherDto,
     };
+  }
+
+  public async adaptHeadlandsThreadToPillBlock(headlandsThread: ThreadRequestDto): Promise<PillBlockDto> {
+    try {
+      return this.headlandsAdapter.adaptThreadIntoPill(headlandsThread.thread);
+    } catch (e) {
+      throw new HttpException('Thread does not follow required format', HttpStatus.BAD_REQUEST);
+    }
   }
 
   private getTeacher(answerRequest: AnswerRequestDto, teacher: TeacherDto | null) {
@@ -115,12 +127,14 @@ export class PillService {
         return { content: node.answer };
       case 'single-choice':
       case 'multiple-choice':
+        return { value: node.answer, options: node.nodeContent.metadata.options };
       case 'carousel':
         return {
           value: node.answer,
           options: node.nodeContent.metadata.options,
           correct: node.correct,
           pointsAwarded: node.correct ? questionnaireAnswerPoints : 0,
+          optionDescriptions: node.nodeContent.metadata.metadata.optionDescriptions,
         };
     }
   }
@@ -162,7 +176,7 @@ export class PillService {
   }
 
   private replaceFullName(pill: any, fullName: string) {
-    return JSON.parse(JSON.stringify(pill).replace('@fullname', fullName));
+    return JSON.parse(JSON.stringify(pill).replaceAll('@fullname', fullName));
   }
 
   private questionAlreadyAnswered(pillAnswers: PillAnswer[], questionId: string) {

@@ -29,7 +29,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+        },
         "regex": ".*"
       }
     },
@@ -45,7 +47,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+          },
         "regex": ".*"
       }
     },
@@ -65,7 +69,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+        },
         "regex": ".*"
       }
     },
@@ -85,7 +91,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "SINGLECHOICE",
       "metadata": {
-        "lerni_question_type": "single-choice",
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
         "options": [
           "Estudio",
           "Trabajo",
@@ -104,7 +112,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+        },
         "regex": ".*"
       }
     },
@@ -119,7 +129,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+        },
         "regex": ".*"
       }
     },
@@ -134,7 +146,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+        },
         "regex": ".*"
       }
     },
@@ -149,7 +163,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "TEXTINPUT",
       "metadata": {
-        "lerni_question_type": "free-text",
+        "metadata": {
+          "lerni_question_type": "free-text"
+         },
         "regex": ".*"
       }
     },
@@ -169,7 +185,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "SINGLECHOICE",
       "metadata": {
-        "lerni_question_type": "single-choice",
+        "metadata": {
+          "lerni_question_type": "single-choice"
+         },
         "options": [
           "Dale!"
         ]
@@ -196,7 +214,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "SINGLECHOICE",
       "metadata": {
-        "lerni_question_type": "single-choice",
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
         "options": [
           "¿Qué puedo hacer con los puntos?"
         ]
@@ -223,7 +243,9 @@ export const introductionBlock = `{
       "name": "",
       "question_type": "SINGLECHOICE",
       "metadata": {
-        "lerni_question_type": "single-choice",
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
         "options": [
           "Siempre"
         ]

@@ -250,10 +250,10 @@ model QuestionnaireVersion {
 }
 
 model QuestionnaireSubmission {
-  id               String   @id @default(uuid())
-  createdAt        DateTime @default(now())
-  finishedDateTime DateTime
-  progress         Int      @default(0)
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now())
+  finishedDateTime DateTime?
+  progress         Int       @default(0)
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])

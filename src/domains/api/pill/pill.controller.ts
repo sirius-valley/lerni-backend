@@ -5,6 +5,7 @@ import { AttachStudentDataInterceptor } from '../../../interceptors/attach-stude
 import { ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
+import { ThreadRequestDto } from './dtos/thread-request.dto';
 
 @Controller('api/pill')
 @UseGuards(JwtGuard)
@@ -26,5 +27,10 @@ export class PillController {
   @Post('/answer')
   async answerPill(@Request() req: ApiRequest, @Body() answerRequest: AnswerRequestDto) {
     return await this.pillService.answerPill((req.headers as any).authorization, req.user, answerRequest);
+  }
+
+  @Post('/adaptToPill')
+  async adaptThreadToPillBlock(@Body() thread: ThreadRequestDto) {
+    return await this.pillService.adaptHeadlandsThreadToPillBlock(thread);
   }
 }
