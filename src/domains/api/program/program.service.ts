@@ -97,6 +97,7 @@ export class ProgramService {
       if (index === 0)
         return new SimpleQuestionnaireDto(
           qvQuestionnaireV.questionnaireVersion.questionnaire,
+          qvQuestionnaireV.questionnaireVersion.completionTimeMinutes,
           qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
           !pillsCompleted,
         );
@@ -106,6 +107,7 @@ export class ProgramService {
       const hasPassedCoolDown = this.hasPassedCoolDown(qvQuestionnaireV);
       return new SimpleQuestionnaireDto(
         qvQuestionnaireV.questionnaireVersion.questionnaire,
+        qvQuestionnaireV.questionnaireVersion.completionTimeMinutes,
         qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
         !pillsCompleted || !isPreviousQuestionnaireCompleted || !hasPassedCoolDown,
       );
@@ -116,7 +118,12 @@ export class ProgramService {
     return pillVersions.map((pvPillV: any, index: any) => {
       const previousProgress = index > 0 ? pillVersions[index - 1].pillVersion.pillSubmissions[0]?.progress : 100;
       const isPreviousPillCompleted = previousProgress === 100;
-      return new SimplePillDto(pvPillV.pillVersion.pill, pvPillV.pillVersion.pillSubmissions[0]?.progress || 0, !isPreviousPillCompleted);
+      return new SimplePillDto(
+        pvPillV.pillVersion.pill,
+        pvPillV.pillVersion.completionTimeMinutes,
+        pvPillV.pillVersion.pillSubmissions[0]?.progress || 0,
+        !isPreviousPillCompleted,
+      );
     });
   }
 
