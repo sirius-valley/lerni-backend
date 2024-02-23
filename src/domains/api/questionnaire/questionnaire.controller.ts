@@ -2,9 +2,9 @@ import { Body, Controller, Get, Param, Post, Request, UseGuards, UseInterceptors
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 
 import { ApiRequest } from '../../../types/api-request.interface';
-import { AnswerRequestDto } from '../pill/dtos/answer-request.dto';
 import { QuestionnaireService } from './questionnaire.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
+import { QuestionnaireAnswerRequestDto } from './dtos/questionnaire-answer-request.dto';
 
 @Controller('api/questionnaire')
 @UseGuards(JwtGuard)
@@ -13,7 +13,7 @@ export class QuestionnaireController {
   constructor(private readonly questionnaireService: QuestionnaireService) {}
 
   @Post('answer')
-  async answerQuestionnaire(@Request() req: ApiRequest, @Body() answerRequest: AnswerRequestDto) {
+  async answerQuestionnaire(@Request() req: ApiRequest, @Body() answerRequest: QuestionnaireAnswerRequestDto) {
     return await this.questionnaireService.answerQuestionnaire((req.headers as any).authorization, req.user, answerRequest);
   }
 

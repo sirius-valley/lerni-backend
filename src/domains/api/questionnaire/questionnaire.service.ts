@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { QuestionnaireRepository } from './questionnaire.repository';
 import { StudentDto } from '../student/dtos/student.dto';
-import { AnswerRequestDto } from '../pill/dtos/answer-request.dto';
 import { QuestionnaireAnswer, QuestionnaireVersion } from '@prisma/client';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
@@ -10,6 +9,7 @@ import { PillService } from '../pill/pill.service';
 import { questionnaireAnswerPoints } from '../../../const';
 import { QuestionnaireProgressResponseDto } from './dtos/questionnaire-progress-response.dto';
 import { TeacherDto } from '../pill/dtos/teacher.dto';
+import { QuestionnaireAnswerRequestDto } from './dtos/questionnaire-answer-request.dto';
 
 @Injectable()
 export class QuestionnaireService {
@@ -22,9 +22,9 @@ export class QuestionnaireService {
   public async answerQuestionnaire(
     authorization: string,
     student: StudentDto,
-    answerRequest: AnswerRequestDto,
+    answerRequest: QuestionnaireAnswerRequestDto,
   ): Promise<QuestionnaireProgressResponseDto> {
-    const questionnaireSubmission = await this.getQuestionnaireSubmission(answerRequest.pillId, student.id);
+    const questionnaireSubmission = await this.getQuestionnaireSubmission(answerRequest.questionnaireId, student.id);
     if (this.questionAlreadyAnswered(questionnaireSubmission.questionnaireAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
@@ -38,7 +38,7 @@ export class QuestionnaireService {
       springProgress.progress,
     );
 
-    const teacher = await this.getTeacher(answerRequest.pillId);
+    const teacher = await this.getTeacher(answerRequest.questionnaireId);
 
     if (this.isQuestionnaireFailed(updatedSubmission.questionnaireAnswers, updatedSubmission.questionnaireVersion)) {
       const data = {
@@ -73,15 +73,33 @@ export class QuestionnaireService {
     const springProgress = await this.springPillService.getSpringProgress(
       questionnaireVersion.block,
       authorization,
-      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers ?? [],
+      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers.map(
+        (answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)),
+      ) ?? [],
     );
 
     const teacher = await this.getTeacher(questionnaireVersion.id);
-
-    const replacedQuestionnaire = this.replaceFullName(springProgress, user.name + ' ' + user.lastname);
+    const formattedSpringProgress = this.formatSpringProgress(
+      springProgress,
+      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers,
+    );
+    const replacedQuestionnaire = this.replaceFullName(formattedSpringProgress, user.name + ' ' + user.lastname);
     const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(questionnaireVersion.block));
 
     return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
+  }
+
+  private formatSpringProgress(springProgress: any, answers: QuestionnaireAnswer[]) {
+    return {
+      ...springProgress,
+      nodes: springProgress.nodes.map((node) => {
+        const answer = answers.find((answer) => answer.questionId === node.nodeId);
+        return {
+          ...node,
+          correct: answer?.isCorrect,
+        };
+      }),
+    };
   }
 
   private async getQuestionnaireSubmission(questionnaireId: string, studentId: string) {
@@ -108,7 +126,7 @@ export class QuestionnaireService {
     return !!questionnaireAnswers.find((questionnaireAnswer) => questionnaireAnswer.questionId === questionId);
   }
 
-  private async getSpringProgress(authorization: string, questionnaireSubmission: any, answerRequest: AnswerRequestDto) {
+  private async getSpringProgress(authorization: string, questionnaireSubmission: any, answerRequest: QuestionnaireAnswerRequestDto) {
     const springDto = new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer);
     return await this.springPillService.answerQuestionnaire(authorization, questionnaireSubmission.questionnaireVersion.block, springDto);
   }
