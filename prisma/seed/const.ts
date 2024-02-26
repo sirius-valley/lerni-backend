@@ -394,3 +394,284 @@ export const introductionBlock = `{
     }
   ]
 }`;
+
+export const pillBlock = `{
+        "id": "",
+        "type": "DYNAMIC",
+        "initial": "bc8f376e-78cf-4e32-9f19-4c76f8e16f2d",
+        "elements": [
+            {
+                "id": "bc8f376e-78cf-4e32-9f19-4c76f8e16f2d",
+                "type": "ACTION",
+                "name": "https://cdn.dev.headlands.cloud/image/attachment/ec797a23-6eb7-41ae-a33f-4088a1abd8f3",
+                "metadata": {
+                    "metadata": {
+                        "lerni_question_type": "image"
+                    }
+                }
+            },
+            {
+                "id": "3d2fcab5-ca0b-42ab-b325-5bb6f6fe7c8e",
+                "type": "ACTION",
+                "name": "<p>This is a Multiple choice</p>"
+            },
+            {
+                "id": "084dfecd-1e63-4a10-b279-3ea382852a1c",
+                "type": "ACTION",
+                "name": ""
+            },
+            {
+                "id": "16148912-dbf2-4854-a762-17fda7b3c8b6",
+                "type": "QUESTION",
+                "name": "",
+                "question_type": "MULTIPLECHOICE",
+                "metadata": {
+                    "metadata": {
+                        "lerni_question_type": "multiple-choice"
+                    },
+                    "options": [
+                        "Opcion 1 Verdadera",
+                        "Opcion 2 Falsa",
+                        "Opcion 3 falsa",
+                        "Opcion 4 Verdadera"
+                    ]
+                }
+            },
+            {
+                "id": "52e9c061-47d2-43d1-8cd0-385889842e69",
+                "type": "ACTION",
+                "name": "<p>This is a Single choice</p>"
+            },
+            {
+                "id": "fd69e3b9-c599-4935-bce2-4a7e25b63def",
+                "type": "ACTION",
+                "name": ""
+            },
+            {
+                "id": "3fa64704-3377-4238-8b22-e64c06772e29",
+                "type": "QUESTION",
+                "name": "",
+                "question_type": "SINGLECHOICE",
+                "metadata": {
+                    "metadata": {
+                        "lerni_question_type": "single-choice"
+                    },
+                    "options": [
+                        "Opcion 1 Verdadera",
+                        "Opcion 2 Falsa",
+                        "Opcion 3 falsa",
+                        "Opcion 4 Falsa"
+                    ]
+                }
+            },
+            {
+                "id": "e520ef35-da29-429e-81a3-0370e8b5e9f4",
+                "type": "ACTION",
+                "name": "<p>This is a carousel</p>"
+            },
+            {
+                "id": "cf4e5362-f36c-4a0f-9188-8bf28aba5827",
+                "type": "ACTION",
+                "name": ""
+            },
+            {
+                "id": "0c648418-1e19-4d1f-a690-4210d4b38c33",
+                "type": "QUESTION",
+                "name": "",
+                "question_type": "MULTIPLECHOICE",
+                "metadata": {
+                    "metadata": {
+                        "lerni_question_type": "carousel",
+                        "option_descriptions": [
+                            "Opcion 1 Verdadera",
+                            "Opcion 2 Falsa",
+                            "Opcion 3 falsa",
+                            "Opcion 4 Verdadera"
+                        ]
+                    },
+                    "options": [
+                        "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
+                        "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
+                        "https://cdn.dev.headlands.cloud/image/attachment/6e8ace0b-62b5-4980-9159-d47dfa815c87",
+                        "https://cdn.dev.headlands.cloud/image/attachment/fb205a63-bcca-46b6-9237-5502e9ab29b1"
+                    ]
+                }
+            }
+        ],
+        "relations": [
+            {
+                "from": "bc8f376e-78cf-4e32-9f19-4c76f8e16f2d",
+                "to": "3d2fcab5-ca0b-42ab-b325-5bb6f6fe7c8e"
+            },
+            {
+                "from": "084dfecd-1e63-4a10-b279-3ea382852a1c",
+                "to": "16148912-dbf2-4854-a762-17fda7b3c8b6"
+            },
+            {
+                "from": "3d2fcab5-ca0b-42ab-b325-5bb6f6fe7c8e",
+                "to": "084dfecd-1e63-4a10-b279-3ea382852a1c"
+            },
+            {
+                "from": "16148912-dbf2-4854-a762-17fda7b3c8b6",
+                "to": "52e9c061-47d2-43d1-8cd0-385889842e69"
+            },
+            {
+                "from": "fd69e3b9-c599-4935-bce2-4a7e25b63def",
+                "to": "3fa64704-3377-4238-8b22-e64c06772e29"
+            },
+            {
+                "from": "52e9c061-47d2-43d1-8cd0-385889842e69",
+                "to": "fd69e3b9-c599-4935-bce2-4a7e25b63def"
+            },
+            {
+                "from": "3fa64704-3377-4238-8b22-e64c06772e29",
+                "to": "e520ef35-da29-429e-81a3-0370e8b5e9f4"
+            },
+            {
+                "from": "cf4e5362-f36c-4a0f-9188-8bf28aba5827",
+                "to": "0c648418-1e19-4d1f-a690-4210d4b38c33"
+            },
+            {
+                "from": "e520ef35-da29-429e-81a3-0370e8b5e9f4",
+                "to": "cf4e5362-f36c-4a0f-9188-8bf28aba5827"
+            }
+        ]
+    }`;
+
+export const questionnaireBlock = `{
+   "id":"",
+   "type":"DYNAMIC",
+   "initial":"78e40204-54e2-47e9-bf55-0d5737114080",
+   "elements":[
+      {
+         "id":"78e40204-54e2-47e9-bf55-0d5737114080",
+         "type":"ACTION",
+         "name":"This is a multiple choice question"
+      },
+      {
+         "id":"16148912-dbf2-4854-a762-17fda7b3c8b6",
+         "type":"QUESTION",
+         "name":"",
+         "question_type":"MULTIPLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"multiple-choice",
+               "correct_answer":[
+                  "Opcion 1 Verdadera",
+                  "Opcion 4 Verdadera"
+               ]
+            },
+            "options":[
+               "Opcion 1 Verdadera",
+               "Opcion 2 Falsa",
+               "Opcion 3 falsa",
+               "Opcion 4 Verdadera"
+            ]
+         }
+      },
+      {
+         "id":"52e9c061-47d2-43d1-8cd0-385889842e69",
+         "type":"ACTION",
+         "name":"<p>This is a Single choice</p>"
+      },
+      {
+         "id":"a6a2776d-3887-490b-8d5d-8baff07a4af5",
+         "type":"ACTION",
+         "name":"Question"
+      },
+      {
+         "id":"3fa64704-3377-4238-8b22-e64c06772e29",
+         "type":"QUESTION",
+         "name":"",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "correct_answer":"Opcion 1 Verdadera"
+            },
+            "options":[
+               "Opcion 1 Verdadera",
+               "Opcion 2 Falsa",
+               "Opcion 3 falsa",
+               "Opcion 4 Falsa"
+            ]
+         }
+      },
+      {
+         "id":"e520ef35-da29-429e-81a3-0370e8b5e9f4",
+         "type":"ACTION",
+         "name":"<p>This is a carousel</p>"
+      },
+      {
+         "id":"26868b53-3874-434d-b453-d99a6a950686",
+         "type":"ACTION",
+         "name":"Question"
+      },
+      {
+         "id":"0c648418-1e19-4d1f-a690-4210d4b38c33",
+         "type":"QUESTION",
+         "name":"",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"carousel",
+               "correct_answer": "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
+               "option_descriptions":[
+                  "Opcion 1 Verdadera",
+                  "Opcion 2 Falsa",
+                  "Opcion 3 falsa",
+                  "Opcion 4 Falsa"
+               ]
+            },
+            "options":[
+               "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
+               "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
+               "https://cdn.dev.headlands.cloud/image/attachment/6e8ace0b-62b5-4980-9159-d47dfa815c87",
+               "https://cdn.dev.headlands.cloud/image/attachment/fb205a63-bcca-46b6-9237-5502e9ab29b1"
+            ]
+         }
+      }
+   ],
+   "relations":[
+      {
+         "from":"78e40204-54e2-47e9-bf55-0d5737114080",
+         "to":"16148912-dbf2-4854-a762-17fda7b3c8b6"
+      },
+      {
+         "from":"16148912-dbf2-4854-a762-17fda7b3c8b6",
+         "to":"52e9c061-47d2-43d1-8cd0-385889842e69"
+      },
+      {
+         "from":"a6a2776d-3887-490b-8d5d-8baff07a4af5",
+         "to":"3fa64704-3377-4238-8b22-e64c06772e29"
+      },
+      {
+         "from":"52e9c061-47d2-43d1-8cd0-385889842e69",
+         "to":"a6a2776d-3887-490b-8d5d-8baff07a4af5"
+      },
+      {
+         "from":"3fa64704-3377-4238-8b22-e64c06772e29",
+         "to":"e520ef35-da29-429e-81a3-0370e8b5e9f4"
+      },
+      {
+         "from":"26868b53-3874-434d-b453-d99a6a950686",
+         "to":"0c648418-1e19-4d1f-a690-4210d4b38c33"
+      },
+      {
+         "from":"e520ef35-da29-429e-81a3-0370e8b5e9f4",
+         "to":"26868b53-3874-434d-b453-d99a6a950686"
+      }
+   ]
+}`;
+
+export const programId = 'programId';
+export const teacherId = 'teacherId';
+export const programVersionId = 'programVersionId';
+export const pillId = 'pillId';
+export const pillVersionId = 'pillVersionId';
+export const programVersionPillVersionId = 'programVersionPillVersionId';
+export const studentId = 'studentId';
+export const studentProgramId = 'studentProgramId';
+export const questionnaireId = 'questionnaireId';
+export const questionnaireVersionId = 'questionnaireVersionId';
+export const programVersionQuestionnaireVersionId = 'programVersionQuestionnaireVersionId';
