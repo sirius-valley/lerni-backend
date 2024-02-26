@@ -671,6 +671,7 @@ export const pillId = 'pillId';
 export const pillVersionId = 'pillVersionId';
 export const programVersionPillVersionId = 'programVersionPillVersionId';
 export const studentId = 'studentId';
+export const authId = 'authId';
 export const studentProgramId = 'studentProgramId';
 export const questionnaireId = 'questionnaireId';
 export const questionnaireVersionId = 'questionnaireVersionId';
