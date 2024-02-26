@@ -235,8 +235,8 @@ model QuestionnaireVersion {
   id                    String   @id @default(uuid())
   version               Int
   passsing_score        Int
-  completionTimeMinutes Int
   cooldownInMinutes     Int
+  completionTimeMinutes Int
   block                 String
   questionCount         Int
   createdAt             DateTime @default(now())

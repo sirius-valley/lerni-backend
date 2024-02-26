@@ -90,7 +90,9 @@ export class PillRepository {
               some: {
                 programVersionPillVersions: {
                   some: {
-                    pillVersionId: pillId,
+                    pillVersion: {
+                      pillId,
+                    },
                   },
                 },
               },

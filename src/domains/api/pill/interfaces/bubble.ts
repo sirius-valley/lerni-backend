@@ -19,17 +19,23 @@ export type BubbleDto =
       type: 'single-choice';
       options: string[];
       value: string;
+      correct?: boolean;
+      pointsAwarded?: number;
     }
   | {
       id: string;
       type: 'multiple-choice';
       options: string[];
       value: string[];
+      correct?: boolean;
+      pointsAwarded?: number;
     }
   | {
       id: string;
       type: 'carousel';
       options: string[];
       value: string[];
+      correct?: boolean;
+      pointsAwarded?: number;
       optionDescriptions: string[];
     };

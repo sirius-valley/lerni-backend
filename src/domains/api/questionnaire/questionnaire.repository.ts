@@ -68,6 +68,9 @@ export class QuestionnaireRepository {
           where: {
             studentId,
           },
+          orderBy: {
+            createdAt: 'desc',
+          },
           include: {
             questionnaireAnswers: true,
           },
