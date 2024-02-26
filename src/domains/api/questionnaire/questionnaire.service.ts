@@ -93,7 +93,7 @@ export class QuestionnaireService {
     return {
       ...springProgress,
       nodes: springProgress.nodes.map((node) => {
-        const answer = answers.find((answer) => answer.questionId === node.nodeId);
+        const answer = answers?.find((answer) => answer.questionId === node.nodeId);
         return {
           ...node,
           correct: answer?.isCorrect,
