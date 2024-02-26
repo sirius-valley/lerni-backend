@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { introductionID } from '../../src/const';
 import {
+  authId,
   introductionBlock,
   pillBlock,
   pillId,
@@ -156,6 +157,45 @@ async function main() {
     },
   });
 
+  await prisma.auth.upsert({
+    where: { id: authId },
+    update: {
+      email: 'monosteve123@gmail.com',
+      password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+    },
+    create: {
+      id: authId,
+      email: 'monosteve123@gmail.com',
+      password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+    },
+  });
+
+  await prisma.student.upsert({
+    where: { id: studentId },
+    update: {
+      name: 'John',
+      lastname: 'Doe',
+      career: 'Computer Science',
+      city: 'New York',
+      auth: {
+        connect: {
+          id: authId,
+        },
+      },
+    },
+    create: {
+      id: studentId,
+      name: 'John',
+      lastname: 'Doe',
+      career: 'Computer Science',
+      city: 'New York',
+      auth: {
+        connect: {
+          id: authId,
+        },
+      },
+    },
+  });
   await prisma.studentProgram.upsert({
     where: { id: studentProgramId },
     update: {
