@@ -149,7 +149,9 @@ export class QuestionnaireRepository {
               some: {
                 programVersionQuestionnaireVersions: {
                   some: {
-                    questionnaireVersionId: questionnaireId,
+                    questionnaireVersion: {
+                      questionnaireId,
+                    },
                   },
                 },
               },

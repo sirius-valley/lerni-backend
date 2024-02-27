@@ -82,7 +82,7 @@ export class QuestionnaireService {
       ) ?? [],
     );
 
-    const teacher = await this.getTeacher(questionnaireVersion.id);
+    const teacher = await this.getTeacher(questionnaireId);
     const formattedSpringProgress = this.formatSpringProgress(
       springProgress,
       questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers,
