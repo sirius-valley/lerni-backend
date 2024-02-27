@@ -7,6 +7,7 @@ import { ProgramDetailsDto } from './dtos/program-details.dto';
 import { ProgramHomeDto } from './dtos/program-home.dto';
 import { CursorPagination } from '../../../types/cursor-pagination.interface';
 import { CommentDto } from './dtos/comment.dto';
+import { CommentRequestDto } from './dtos/comment-request.dto';
 
 @Injectable()
 export class ProgramService {
@@ -43,6 +44,23 @@ export class ProgramService {
     if (!studentProgram) throw new HttpException('Program not found', 404);
     const comments = await this.programRepository.getProgramPublicComments(programId, options);
     return comments.map((comment) => new CommentDto(comment)).reverse();
+  }
+
+  public async createProgramComment(studentId: string, commentRequest: CommentRequestDto) {
+    const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithSubmissions(
+      studentId,
+      commentRequest.programId,
+    );
+    if (!studentProgram) throw new HttpException('Program not found', 404);
+    if (!this.programIsComplete(studentProgram)) throw new HttpException('Program not complete', 400);
+    await this.programRepository.createProgramComment(studentId, commentRequest);
+  }
+
+  private programIsComplete(studentProgram: any) {
+    return (
+      studentProgram.programVersion.programVersionQuestionnaireVersions[0]?.questionnaireVersion.questionnaireSubmissions[0]?.progress ===
+      100
+    );
   }
 
   private async getProgramVersion(studentId: string, programId: string) {
