@@ -10,15 +10,15 @@ export class QuestionnaireAnswerDto {
   questionnaireState: QuestionnaireState;
   isCorrect: boolean;
   progress: number;
-  correctValues: string[];
+  correctValue: string[];
   pointsAwarded: number;
   bubbles: BubbleDto[];
 
-  constructor(data: any, correctValues: string[]) {
+  constructor(data: any, correctValue: string[]) {
     this.questionnaireState = data.state;
     this.isCorrect = data.isCorrect;
     this.progress = data.progress;
-    this.correctValues = correctValues;
+    this.correctValue = correctValue;
     this.pointsAwarded = data.pointsAwarded;
     this.bubbles = data.bubbles;
   }

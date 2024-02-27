@@ -39,7 +39,7 @@ export class QuestionnaireService {
     );
 
     const teacher = await this.getTeacher(answerRequest.questionnaireId);
-    const correctValues = this.getCorrectValues(answerRequest, springProgress, JSON.parse(updatedSubmission.questionnaireVersion.block));
+    const correctValue = this.getCorrectValues(answerRequest, springProgress, JSON.parse(updatedSubmission.questionnaireVersion.block));
 
     if (this.isQuestionnaireFailed(updatedSubmission.questionnaireAnswers, updatedSubmission.questionnaireVersion)) {
       const data = {
@@ -50,7 +50,7 @@ export class QuestionnaireService {
         state: QuestionnaireState.FAILED,
       };
       await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
-      return { questionnaire: new QuestionnaireAnswerDto(data, correctValues), teacher };
+      return { questionnaire: new QuestionnaireAnswerDto(data, correctValue), teacher };
     }
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
@@ -61,7 +61,7 @@ export class QuestionnaireService {
       await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(updatedSubmission.id, pointsAwarded);
     }
 
-    return { questionnaire: new QuestionnaireAnswerDto(formattedBlock, correctValues), teacher };
+    return { questionnaire: new QuestionnaireAnswerDto(formattedBlock, correctValue), teacher };
   }
 
   async getQuestionnaireVersionByPillId(
@@ -212,7 +212,7 @@ export class QuestionnaireService {
           correct: node.correct,
           pointsAwarded: node.answer !== '' ? (node.correct ? questionnaireAnswerPoints : 0) : undefined,
           optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
-          correctValues: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
+          correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
         };
     }
   }
