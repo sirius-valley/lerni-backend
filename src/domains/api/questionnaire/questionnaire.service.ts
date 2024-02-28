@@ -4,26 +4,26 @@ import { StudentDto } from '../student/dtos/student.dto';
 import { QuestionnaireAnswer, QuestionnaireVersion } from '@prisma/client';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
-import { QuestionnaireDto, QuestionnaireState } from './dtos/questionnaire.dto';
-import { PillService } from '../pill/pill.service';
+import { QuestionnaireAnswerDto, QuestionnaireState } from './dtos/questionnaire-answer.dto';
 import { questionnaireAnswerPoints } from '../../../const';
-import { QuestionnaireProgressResponseDto } from './dtos/questionnaire-progress-response.dto';
+import { QuestionnaireAnswerResponseDto } from './dtos/questionnaire-answer-response.dto';
 import { TeacherDto } from '../pill/dtos/teacher.dto';
 import { QuestionnaireAnswerRequestDto } from './dtos/questionnaire-answer-request.dto';
+import { QuestionnaireProgressResponseDto } from './dtos/questionnaire-progress-response.dto';
+import { QuestionnaireProgressDto } from './dtos/questionnaire-progress.dto';
 
 @Injectable()
 export class QuestionnaireService {
   constructor(
     private readonly questionnaireRepository: QuestionnaireRepository,
     private readonly springPillService: SpringPillService,
-    private readonly pillService: PillService,
   ) {}
 
   public async answerQuestionnaire(
     authorization: string,
     student: StudentDto,
     answerRequest: QuestionnaireAnswerRequestDto,
-  ): Promise<QuestionnaireProgressResponseDto> {
+  ): Promise<QuestionnaireAnswerResponseDto> {
     const questionnaireSubmission = await this.getQuestionnaireSubmission(answerRequest.questionnaireId, student.id);
     if (this.questionAlreadyAnswered(questionnaireSubmission.questionnaireAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
@@ -49,7 +49,7 @@ export class QuestionnaireService {
         state: QuestionnaireState.FAILED,
       };
       await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
-      return { questionnaire: new QuestionnaireDto(data), teacher };
+      return { questionnaire: new QuestionnaireAnswerDto(data), teacher };
     }
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
@@ -60,10 +60,14 @@ export class QuestionnaireService {
       await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(updatedSubmission.id, pointsAwarded);
     }
 
-    return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
+    return { questionnaire: new QuestionnaireAnswerDto(formattedBlock), teacher };
   }
 
-  async getQuestionnaireVersionByPillId(authorization: string, user: StudentDto, questionnaireId: string) {
+  async getQuestionnaireVersionByPillId(
+    authorization: string,
+    user: StudentDto,
+    questionnaireId: string,
+  ): Promise<QuestionnaireProgressResponseDto> {
     const questionnaireVersion = await this.questionnaireRepository.getQuestionnaireVersionByQuestionnaireIdAndStudentId(
       questionnaireId,
       user.id,
@@ -86,7 +90,7 @@ export class QuestionnaireService {
     const replacedQuestionnaire = this.replaceFullName(formattedSpringProgress, user.name + ' ' + user.lastname);
     const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(questionnaireVersion.block));
 
-    return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
+    return { questionnaire: new QuestionnaireProgressDto(formattedBlock), teacher };
   }
 
   private formatSpringProgress(springProgress: any, answers: QuestionnaireAnswer[]) {
@@ -148,7 +152,7 @@ export class QuestionnaireService {
       state: springProgress.completed ? QuestionnaireState.COMPLETED : QuestionnaireState.INPROGRESS,
       progress: springProgress.progress,
       pointsAwarded: springProgress.correct ? questionnaireAnswerPoints : 0,
-      bubbles: this.pillService.mergeData(springProgress, questionnaireBlock),
+      bubbles: this.mergeData(springProgress, questionnaireBlock),
     };
   }
 
@@ -160,5 +164,62 @@ export class QuestionnaireService {
     const teacher = await this.questionnaireRepository.getTeacherByQuestionnaireId(questionnaireId);
     if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
     return new TeacherDto(teacher);
+  }
+
+  private mergeData(springProgress: any, questionnaireBlock: any) {
+    return springProgress.nodes.map((node) => {
+      const element = questionnaireBlock.elements.find((element) => {
+        return element.id === node.nodeId;
+      });
+      const type = element?.metadata?.metadata.lerni_question_type ?? 'text';
+      return {
+        id: node.nodeId,
+        type: type,
+        ...this.calculateExtraAttributes(node, type),
+      };
+    });
+  }
+
+  private calculateExtraAttributes(node: any, type: string) {
+    switch (type) {
+      case 'text':
+      case 'image':
+        return { content: node.nodeContent.content };
+      case 'free-text':
+        return { content: node.answer };
+      case 'single-choice':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          correct: node.correct,
+          pointsAwarded: node.answer !== '' ? (node.correct ? questionnaireAnswerPoints : 0) : undefined,
+          correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
+        };
+      case 'multiple-choice':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          correct: node.correct,
+          pointsAwarded: node.answer !== '' ? (node.correct ? questionnaireAnswerPoints : 0) : undefined,
+          correctValue:
+            node.answer !== '' ? this.findIntersection(node.nodeContent.metadata.metadata.correct_answer, node.answer) : undefined,
+        };
+      case 'carousel':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          correct: node.correct,
+          pointsAwarded: node.answer !== '' ? (node.correct ? questionnaireAnswerPoints : 0) : undefined,
+          optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
+          correctValues: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
+        };
+    }
+  }
+
+  private findIntersection(a: string | string[], b: string | string[]) {
+    const aSet = new Set(a);
+    const bSet = new Set(b);
+
+    return [...aSet].filter((x) => bSet.has(x));
   }
 }

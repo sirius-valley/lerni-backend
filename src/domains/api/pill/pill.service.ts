@@ -3,7 +3,7 @@ import { StudentDto } from '../student/dtos/student.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
-import { introductionID, introductionTeacher, introductionVariables, questionnaireAnswerPoints } from '../../../const';
+import { introductionID, introductionTeacher, introductionVariables } from '../../../const';
 import { PillAnswer } from '@prisma/client';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
@@ -132,9 +132,7 @@ export class PillService {
         return {
           value: node.answer,
           options: node.nodeContent.metadata.options,
-          correct: node.correct,
-          pointsAwarded: node.correct ? questionnaireAnswerPoints : 0,
-          optionDescriptions: node.nodeContent.metadata.metadata.optionDescriptions,
+          optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
         };
     }
   }
