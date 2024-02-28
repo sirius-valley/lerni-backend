@@ -57,7 +57,11 @@ export class QuestionnaireService {
 
     if (formattedBlock.state === QuestionnaireState.COMPLETED) {
       const pointsAwarded = this.calculatePointsAwarded(updatedSubmission.questionnaireAnswers);
-      await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(updatedSubmission.id, pointsAwarded);
+      await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(
+        updatedSubmission.id,
+        pointsAwarded,
+        answerRequest.questionnaireId,
+      );
     }
 
     return { questionnaire: new QuestionnaireDto(formattedBlock), teacher };
