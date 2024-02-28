@@ -5,9 +5,11 @@ import { ApiRequest } from '../../../types/api-request.interface';
 import { QuestionnaireService } from './questionnaire.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 import { QuestionnaireAnswerRequestDto } from './dtos/questionnaire-answer-request.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('api/questionnaire')
 @UseGuards(JwtGuard)
+@ApiBearerAuth('JWT-auth')
 @UseInterceptors(AttachStudentDataInterceptor)
 export class QuestionnaireController {
   constructor(private readonly questionnaireService: QuestionnaireService) {}
