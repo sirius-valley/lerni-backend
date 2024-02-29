@@ -32,7 +32,7 @@ model Student {
   authId String @unique
   auth   Auth   @relation(fields: [authId], references: [id])
 
-  points PointLog[]
+  points PointRecord[]
 
   comments Comment[]
 
@@ -61,12 +61,13 @@ enum PointEvent {
   subtracted
 }
 
-model PointLog {
+model PointRecord {
   id String @id @default(uuid())
 
-  amount    Int
-  detail    String
-  createdAt DateTime @default(now())
+  amount       Int
+  sourceEntity String
+  entityId     String
+  createdAt    DateTime @default(now())
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])

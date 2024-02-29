@@ -28,9 +28,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/app/jest-e2e.json",
     "prepare": "husky install",
-    "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev",
-    "db:apply": "npx prisma migrate deploy",
+    "db:generate": "dotenv -e config/env/development.env -- npx prisma generate",
+    "db:migrate": "dotenv -e config/env/development.env -- npx prisma migrate dev",
+    "db:apply": "dotenv -e config/env/development.env -- npx prisma migrate deploy",
     "db:dev": "npm run db:generate && npm run db:apply",
     "dev": "npm run migrate:postgres:deploy && npm run seed:dev && npm run start:dev:no-watch",
     "prod": "npm run db:apply && npm run start:prod"

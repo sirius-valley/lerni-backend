@@ -7,6 +7,10 @@ import { ProgramDetailsDto } from './dtos/program-details.dto';
 import { ProgramHomeDto } from './dtos/program-home.dto';
 import { CursorPagination } from '../../../types/cursor-pagination.interface';
 import { CommentDto } from './dtos/comment.dto';
+import { CommentRequestDto } from './dtos/comment-request.dto';
+import { ProgramLeaderboardDto } from './dtos/program-leaderboard.dto';
+import { LeaderboardItemDto } from './dtos/leaderboard-item.dto';
+import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
 
 @Injectable()
 export class ProgramService {
@@ -14,7 +18,11 @@ export class ProgramService {
 
   public async getProgramById(studentId: string, programId: string) {
     const programVersion = await this.getProgramVersion(studentId, programId);
-    return this.createProgramDetailsDto(programVersion);
+    const leaderBoard = await this.calculateLeaderBoard(
+      studentId,
+      programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
+    );
+    return this.createProgramDetailsDto(programVersion, leaderBoard);
   }
 
   public async getProgramsByStudentId(studentId: string) {
@@ -45,6 +53,57 @@ export class ProgramService {
     return comments.map((comment) => new CommentDto(comment)).reverse();
   }
 
+  public async createProgramComment(studentId: string, commentRequest: CommentRequestDto) {
+    const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithSubmissions(
+      studentId,
+      commentRequest.programId,
+    );
+    if (!studentProgram) throw new HttpException('Program not found', 404);
+    if (!this.programIsComplete(studentProgram)) throw new HttpException('Program not complete', 400);
+    await this.programRepository.createProgramComment(studentId, commentRequest);
+  }
+
+  private programIsComplete(studentProgram: any) {
+    return (
+      studentProgram.programVersion.programVersionQuestionnaireVersions[0]?.questionnaireVersion.questionnaireSubmissions[0]?.progress ===
+      100
+    );
+  }
+
+  public async getLeaderBoard(studentId: string, programId: string, options: LimitOffsetPagination) {
+    const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithQuestionnaire(studentId, programId);
+    if (!studentProgram) throw new HttpException('Program not found', 404);
+    const leaderboard: any = await this.programRepository.getPageableLeaderBoardByQuestionnaireId(
+      studentProgram.programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
+      options,
+    );
+    return this.formatLeaderBoard(leaderboard);
+  }
+
+  private async calculateLeaderBoard(studentId: string, questionnaireId: string) {
+    const leaderboard: any = await this.programRepository.getLeaderBoardByQuestionnaireId(questionnaireId, studentId);
+    const formattedLeaderboard = this.formatLeaderBoard(leaderboard);
+    const studentPosition = formattedLeaderboard.findIndex((student: any) => student.studentId === studentId);
+    if (studentPosition < 3) return new ProgramLeaderboardDto(formattedLeaderboard, []);
+    return new ProgramLeaderboardDto(
+      formattedLeaderboard.slice(0, 1),
+      formattedLeaderboard.slice(studentPosition - 1, studentPosition + 2),
+    );
+  }
+
+  private formatLeaderBoard(leaderboard: any[]): LeaderboardItemDto[] {
+    return leaderboard.map((item: any) => {
+      return {
+        id: item.pointId,
+        studentId: item.studentId,
+        profileImage: item.image,
+        rank: Number(item.pos),
+        fullName: item.name + ' ' + item.lastname,
+        points: item.amount,
+      };
+    });
+  }
+
   private async getProgramVersion(studentId: string, programId: string) {
     const studentRelatedProgramVersion = (
       await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithSubmissions(studentId, programId)
@@ -55,7 +114,7 @@ export class ProgramService {
     throw new HttpException('Program not found', 404);
   }
 
-  private createProgramDetailsDto(programVersion: any) {
+  private createProgramDetailsDto(programVersion: any, leaderBoard: ProgramLeaderboardDto) {
     const {
       program,
       programVersionPillVersions: pillVersions,
@@ -79,6 +138,7 @@ export class ProgramService {
         questionnaireVersions,
         pills.every((p: any) => p.pillProgress === 100),
       ),
+      leaderBoard: leaderBoard,
     });
   }
 
