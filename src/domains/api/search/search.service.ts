@@ -10,7 +10,7 @@ export class SearchService {
   constructor(private readonly searchRepository: SearchRepository) {}
 
   async search(student: StudentDto, query: string, filter: string, page: number): Promise<any> {
-    const options = { limit: Number(10), before: page ? String((page - 1) * 10) : '0', after: undefined };
+    const options = { limit: Number(10), offset: (page - 1) * 10 };
     switch (filter) {
       case 'program': {
         const { results, total } = await this.searchRepository.searchByPrograms(query, student.id, options);
@@ -33,7 +33,7 @@ export class SearchService {
           ...programResults.map((result) => new SearchProgramDto(result)),
           ...pillResults.map((result) => new SearchPillDto(result)),
         ];
-        return new SearchResultDto(map, Math.ceil(total / 10), page ? page : 1);
+        return new SearchResultDto(map, Math.ceil(total / 20), page ? page : 1);
       }
     }
   }

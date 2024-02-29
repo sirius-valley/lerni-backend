@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { CursorPagination } from '../../../types/cursor-pagination.interface';
+import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
 
 @Injectable()
 export class SearchRepository {
   constructor(private prisma: PrismaService) {}
 
-  async searchByPrograms(search: string, studentId: string, options: CursorPagination) {
+  async searchByPrograms(search: string, studentId: string, options: LimitOffsetPagination) {
     const total = Number(
       await this.prisma.program.count({
         where: {
@@ -37,7 +37,7 @@ export class SearchRepository {
           },
         },
       },
-      skip: Number(options.before),
+      skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
       include: {
         teacher: true,
@@ -47,7 +47,7 @@ export class SearchRepository {
     return { results, total };
   }
 
-  async searchByPills(search: string, studentId: string, options: CursorPagination) {
+  async searchByPills(search: string, studentId: string, options: LimitOffsetPagination) {
     const total = await this.prisma.pill.count({
       where: {
         name: {
@@ -79,13 +79,13 @@ export class SearchRepository {
           },
         },
       },
-      skip: Number(options.before),
+      skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
     });
     return { results, total };
   }
 
-  async searchByProfessor(search: string, options: CursorPagination) {
+  async searchByProfessor(search: string, options: LimitOffsetPagination) {
     const total = await this.prisma.program.count({
       where: {
         teacher: {
@@ -100,14 +100,14 @@ export class SearchRepository {
           name: { contains: search, mode: 'insensitive' },
         },
       },
-      skip: Number(options.before),
+      skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
     });
 
     return { results, total };
   }
 
-  async searchByAll(search: string, studentId: string, options: CursorPagination) {
+  async searchByAll(search: string, studentId: string, options: LimitOffsetPagination) {
     const totalPrograms = await this.prisma.program.count({
       where: {
         OR: [{ name: { contains: search, mode: 'insensitive' } }, { teacher: { name: { contains: search, mode: 'insensitive' } } }],
@@ -136,8 +136,8 @@ export class SearchRepository {
           },
         },
       },
+      skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
-      skip: Number(options.before),
     });
 
     const pills = await this.searchByPills(search, studentId, options);
