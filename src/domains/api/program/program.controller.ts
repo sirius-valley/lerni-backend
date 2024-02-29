@@ -2,11 +2,12 @@ import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInter
 import { ProgramService } from './program.service';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { CommentRequestDto } from './dtos/comment-request.dto';
 
 @Controller('api/program')
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtGuard)
 @UseInterceptors(AttachStudentDataInterceptor)
 @ApiTags('Program')

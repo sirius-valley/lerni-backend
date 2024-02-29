@@ -2,12 +2,13 @@ import { PillService } from './pill.service';
 import { Body, Controller, Get, Param, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { ThreadRequestDto } from './dtos/thread-request.dto';
 
 @Controller('api/pill')
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtGuard)
 @UseInterceptors(AttachStudentDataInterceptor)
 @ApiTags('Pill')

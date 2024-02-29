@@ -8,6 +8,7 @@ import { StudentController } from '../domains/api/student/student.controller';
 import { PillModule } from '../domains/api/pill/pill.module';
 import { ProgramModule } from '../domains/api/program/program.module';
 import { QuestionnaireModule } from '../domains/api/questionnaire/questionnaire.module';
+import { SearchModule } from 'src/domains/api/search/search.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { QuestionnaireModule } from '../domains/api/questionnaire/questionnaire.
     PillModule,
     ProgramModule,
     QuestionnaireModule,
+    SearchModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],
