@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
+import { CommentRequestDto } from './dtos/comment-request.dto';
 
 @Controller('api/program')
 @UseGuards(JwtGuard)
@@ -26,6 +27,11 @@ export class ProgramController {
   async getProgramComments(@Request() req: ApiRequest, @Param('id') id: string, @Query() query: any) {
     const { limit, before, after } = query as Record<string, string>;
     return await this.programService.getProgramComments(req.user.id, id, { limit: Number(limit), before, after });
+  }
+
+  @Post('comment')
+  async createProgramComment(@Request() req: ApiRequest, @Body() commentRequest: CommentRequestDto) {
+    return await this.programService.createProgramComment(req.user.id, commentRequest);
   }
 
   @Get('leaderboard/:programId')

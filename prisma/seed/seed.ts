@@ -254,6 +254,8 @@ async function main() {
       order: 1,
     },
   });
+
+  await extraPrograms();
 }
 
 main()
@@ -273,3 +275,222 @@ main()
     process.exit(1);
 
   });
+
+
+async function extraPrograms(n: number = 10) {
+  for (let i = 0; i < n; i++) {
+    const programId = 'programId ' + i;
+    const teacherId = 'teacherId ' + i;
+    const programVersionId = 'programVersionId ' + i;
+    const pillId = 'pillId ' + i;
+    const pillVersionId = 'pillVersionId ' + i;
+    const programVersionPillVersionId = 'programVersionPillVersionId ' + i;
+    const studentId = 'studentId ' + i;
+    const authId = 'authId ' + i;
+    const studentProgramId = 'studentProgramId ' + i;
+    const questionnaireId = 'questionnaireId ' + i;
+    const questionnaireVersionId = 'questionnaireVersionId ' + i;
+    const programVersionQuestionnaireVersionId = 'programVersionQuestionnaireVersionId ' + i;
+
+    await prisma.program.upsert({
+      where: { id: programId },
+      update: {
+        name: 'Programa de prueba',
+        icon: 'imagen',
+        hoursToComplete: 10,
+        pointsReward: 100,
+        teacher: {
+          connectOrCreate: {
+            where: { id: teacherId },
+            create: {
+              id: teacherId,
+              name: 'Teacher',
+              lastname: 'Teacher',
+              email: 'teacher@mail.com',
+              password: 'password',
+              profession: 'Profesor',
+            },
+          },
+        },
+      },
+      create: {
+        id: programId,
+        name: 'Programa de prueba',
+        icon: 'imagen',
+        hoursToComplete: 10,
+        pointsReward: 100,
+        teacher: {
+          connectOrCreate: {
+            where: { id: teacherId },
+            create: {
+              id: teacherId,
+              name: 'Teacher',
+              lastname: 'Teacher',
+              email: 'teacher@mail.com',
+              password: 'password',
+              profession: 'Profesor',
+            },
+          },
+        },
+      },
+    });
+
+    await prisma.programVersion.upsert({
+      where: { id: programVersionId },
+      update: {
+        programId: programId,
+        version: 1,
+      },
+      create: {
+        id: programVersionId,
+        programId: programId,
+        version: 1,
+      },
+    });
+
+    await prisma.pill.upsert({
+      where: { id: pillId },
+      update: {
+        name: 'Prueba',
+        description: 'Prueba',
+        teacherComment: 'Esta es la píldora de prueba, es un buen lugar para comenzar.',
+      },
+      create: {
+        id: pillId,
+        name: 'Prueba',
+        description: 'Prueba',
+        teacherComment: 'Esta es la píldora de prueba, es un buen lugar para comenzar.',
+      },
+    });
+
+    await prisma.pillVersion.upsert({
+      where: { id: pillVersionId },
+      update: {
+        block: pillBlock,
+        version: 1,
+        completionTimeMinutes: 5,
+        pillId: pillId,
+      },
+      create: {
+        id: pillVersionId,
+        block: pillBlock,
+        version: 1,
+        completionTimeMinutes: 5,
+        pillId: pillId,
+      },
+    });
+
+    await prisma.programVersionPillVersion.upsert({
+      where: { id: programVersionPillVersionId },
+      update: {
+        programVersionId: programVersionId,
+        pillVersionId: pillVersionId,
+        order: 1,
+      },
+      create: {
+        id: programVersionPillVersionId,
+        programVersionId: programVersionId,
+        pillVersionId: pillVersionId,
+        order: 1,
+      },
+    });
+
+    await prisma.auth.upsert({
+      where: { id: authId },
+      update: {
+        email: `monosteve123+${i}@gmail.com`,
+        password: '$2b$10$8mYwG|BbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+      },
+      create: {
+        id: authId,
+        email: `monosteve123+${i}@gmail.com`,
+        password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+      },
+    });
+
+    await prisma.student.upsert({
+      where: { id: studentId },
+      update: {
+        name: 'John',
+        lastname: 'Doe',
+        career: 'Computer Science',
+        city: 'New York',
+        auth: {
+          connect: {
+            id: authId,
+          },
+        },
+      },
+      create: {
+        id: studentId,
+        name: 'John',
+        lastname: 'Doe',
+        career: 'Computer Science',
+        city: 'New York',
+        auth: {
+          connect: {
+            id: authId,
+          },
+        },
+      },
+    });
+    await prisma.studentProgram.upsert({
+      where: { id: studentProgramId },
+      update: {
+        studentId: studentId,
+        programVersionId: programVersionId,
+      },
+      create: {
+        id: studentProgramId,
+        studentId: studentId,
+        programVersionId: programVersionId,
+      },
+    });
+
+    await prisma.questionnaire.upsert({
+      where: { id: questionnaireId },
+      update: {
+        name: 'Cuestionario de prueba',
+        description: 'Cuestionario de prueba',
+      },
+      create: {
+        id: questionnaireId,
+        name: 'Cuestionario de prueba',
+        description: 'Cuestionario de prueba',
+      },
+    });
+
+    await prisma.questionnaireVersion.upsert({
+      where: { id: questionnaireVersionId },
+      update: {
+        questionnaireId: questionnaireId,
+        version: 1,
+      },
+      create: {
+        id: questionnaireVersionId,
+        questionnaireId: questionnaireId,
+        completionTimeMinutes: 5,
+        cooldownInMinutes: 10,
+        block: questionnaireBlock,
+        questionCount: 3,
+        passsing_score: 50,
+        version: 1,
+      },
+    });
+
+    await prisma.programVersionQuestionnaireVersion.upsert({
+      where: { id: programVersionQuestionnaireVersionId },
+      update: {
+        programVersionId: programVersionId,
+        questionnaireVersionId: questionnaireVersionId,
+        order: 1,
+      },
+      create: {
+        id: programVersionQuestionnaireVersionId,
+        programVersionId: programVersionId,
+        questionnaireVersionId: questionnaireVersionId,
+        order: 1,
+      },
+    });
+  }
+}
