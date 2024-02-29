@@ -33,4 +33,13 @@ export class ProgramController {
   async createProgramComment(@Request() req: ApiRequest, @Body() commentRequest: CommentRequestDto) {
     return await this.programService.createProgramComment(req.user.id, commentRequest);
   }
+
+  @Get('leaderboard/:programId')
+  async getLeaderBoard(@Request() req: ApiRequest, @Param('programId') programId: string, @Query() query: any) {
+    const { limit, offset } = query as Record<string, string>;
+    return await this.programService.getLeaderBoard(req.user.id, programId, {
+      limit: Number(limit),
+      offset: Number(offset),
+    });
+  }
 }
