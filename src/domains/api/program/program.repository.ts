@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma.service';
 import { CursorPagination } from '../../../types/cursor-pagination.interface';
+import { CommentRequestDto } from './dtos/comment-request.dto';
 
 @Injectable()
 export class ProgramRepository {
@@ -25,6 +26,18 @@ export class ProgramRepository {
             },
           },
         },
+      },
+    });
+  }
+
+  async createProgramComment(studentId: string, commentRequest: CommentRequestDto) {
+    return this.prisma.comment.create({
+      data: {
+        studentId,
+        programId: commentRequest.programId,
+        content: commentRequest.content ?? '',
+        vote: commentRequest.vote,
+        privacy: commentRequest.privacy,
       },
     });
   }
@@ -309,6 +322,9 @@ export class ProgramRepository {
       where: {
         programId,
         privacy: 'public',
+        content: {
+          not: '',
+        },
       },
       orderBy: {
         createdAt: 'desc',
