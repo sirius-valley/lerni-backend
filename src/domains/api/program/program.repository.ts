@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma.service';
 import { CursorPagination } from '../../../types/cursor-pagination.interface';
+import { CommentRequestDto } from './dtos/comment-request.dto';
+import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
 
 @Injectable()
 export class ProgramRepository {
@@ -17,7 +19,6 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            objectives: true,
             program: {
               include: {
                 teacher: true,
@@ -27,6 +28,71 @@ export class ProgramRepository {
         },
       },
     });
+  }
+
+  async createProgramComment(studentId: string, commentRequest: CommentRequestDto) {
+    return this.prisma.comment.create({
+      data: {
+        studentId,
+        programId: commentRequest.programId,
+        content: commentRequest.content ?? '',
+        vote: commentRequest.vote,
+        privacy: commentRequest.privacy,
+      },
+    });
+  }
+
+  async getStudentProgramByStudentIdAndProgramIdWithQuestionnaire(studentId: string, programId: string) {
+    return this.prisma.studentProgram.findFirst({
+      where: {
+        studentId,
+        programVersion: {
+          programId,
+        },
+      },
+      include: {
+        programVersion: {
+          include: {
+            programVersionQuestionnaireVersions: {
+              include: {
+                questionnaireVersion: {
+                  include: {
+                    questionnaire: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getLeaderBoardByQuestionnaireId(questionnaireId: string, studentId: string) {
+    return this.prisma.$queryRaw`
+        WITH leaderboard AS (SELECT *,
+                                    "PointRecord".id as "pointId",
+                                    ROW_NUMBER()        OVER (ORDER BY amount DESC, "PointRecord"."createdAt" DESC) AS pos
+                             FROM "PointRecord"
+                                      JOIN "Student" ON "PointRecord"."studentId" = "Student"."id"
+                             WHERE "sourceEntity" = 'questionnaire'
+                               AND "entityId" = ${questionnaireId})
+        SELECT *
+        FROM (SELECT *
+              FROM leaderboard
+              WHERE pos <= 3
+              UNION
+              DISTINCT
+              SELECT *
+              FROM leaderboard
+              WHERE pos - 1 <= (
+                  SELECT pos FROM leaderboard WHERE "studentId" = ${studentId}
+                  )
+                AND pos + 1 >= (
+                  SELECT pos FROM leaderboard WHERE "studentId" = ${studentId}
+                  )
+              ORDER BY pos) AS result;
+    `;
   }
 
   async getStudentProgramByStudentIdAndProgramIdWithSubmissions(studentId: string, programId: string) {
@@ -309,6 +375,9 @@ export class ProgramRepository {
       where: {
         programId,
         privacy: 'public',
+        content: {
+          not: '',
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -320,5 +389,22 @@ export class ProgramRepository {
         student: true,
       },
     });
+  }
+
+  async getPageableLeaderBoardByQuestionnaireId(questionnaireId: string, options: LimitOffsetPagination) {
+    const limit = options.limit || 10;
+    const offset = options.offset || 0;
+    return this.prisma.$queryRaw`
+        SELECT *,
+               "PointRecord".id as "pointId",
+               ROW_NUMBER()        OVER (ORDER BY amount DESC) AS pos
+        FROM "PointRecord"
+                 JOIN "Student" ON "PointRecord"."studentId" = "Student"."id"
+        WHERE "sourceEntity" = 'questionnaire'
+          AND "entityId" = ${questionnaireId}
+        ORDER BY "amount" DESC, "PointRecord"."createdAt" DESC
+            LIMIT ${limit}
+        OFFSET ${offset * limit};
+    `;
   }
 }

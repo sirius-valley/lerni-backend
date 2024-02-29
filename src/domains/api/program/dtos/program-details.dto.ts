@@ -1,6 +1,7 @@
 import { SimplePillDto } from './simple-pill.dto';
 import { TeacherDto } from '../../pill/dtos/teacher.dto';
 import { SimpleQuestionnaireDto } from './simple-questionnaire.dto';
+import { ProgramLeaderboardDto } from './program-leaderboard.dto';
 
 export class ProgramDetailsDto {
   id: string;
@@ -14,6 +15,7 @@ export class ProgramDetailsDto {
   programDescription: string;
   pills: SimplePillDto[];
   questionnaire: SimpleQuestionnaireDto[];
+  leaderBoard: ProgramLeaderboardDto;
 
   constructor(programDetailsDto: ProgramDetailsDto) {
     this.id = programDetailsDto.id;
@@ -27,5 +29,6 @@ export class ProgramDetailsDto {
     this.programDescription = programDetailsDto.programDescription;
     this.pills = programDetailsDto.pills;
     this.questionnaire = programDetailsDto.questionnaire;
+    this.leaderBoard = programDetailsDto.leaderBoard;
   }
 }
