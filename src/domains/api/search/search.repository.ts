@@ -6,20 +6,38 @@ import { CursorPagination } from '../../../types/cursor-pagination.interface';
 export class SearchRepository {
   constructor(private prisma: PrismaService) {}
 
-  async searchByPrograms(search: string, options: CursorPagination) {
+  async searchByPrograms(search: string, studentId: string, options: CursorPagination) {
     const total = Number(
       await this.prisma.program.count({
         where: {
-          name: { contains: search },
+          name: { contains: search, mode: 'insensitive' },
+          versions: {
+            some: {
+              studentPrograms: {
+                some: {
+                  studentId,
+                },
+              },
+            },
+          },
         },
       }),
     );
 
     const results = await this.prisma.program.findMany({
       where: {
-        name: { contains: search },
+        name: { contains: search, mode: 'insensitive' },
+        versions: {
+          some: {
+            studentPrograms: {
+              some: {
+                studentId,
+              },
+            },
+          },
+        },
       },
-      skip: options.before ? 0 : undefined,
+      skip: Number(options.before),
       take: options.limit ? options.limit : 10,
       include: {
         teacher: true,
@@ -29,18 +47,39 @@ export class SearchRepository {
     return { results, total };
   }
 
-  async searchByPills(search: string, options: CursorPagination) {
-    const total = await this.prisma.program.count({
+  async searchByPills(search: string, studentId: string, options: CursorPagination) {
+    const total = await this.prisma.pill.count({
       where: {
-        name: search,
+        name: {
+          contains: search,
+          mode: 'insensitive',
+        },
       },
     });
 
-    const results = await this.prisma.program.findMany({
+    const results = await this.prisma.pill.findMany({
       where: {
-        name: search,
+        name: {
+          contains: search,
+          mode: 'insensitive',
+        },
+        pillVersion: {
+          some: {
+            programVersions: {
+              some: {
+                programVersion: {
+                  studentPrograms: {
+                    some: {
+                      studentId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
-      skip: options.before ? 1 : undefined,
+      skip: Number(options.before),
       take: options.limit ? options.limit : 10,
     });
     return { results, total };
@@ -50,7 +89,7 @@ export class SearchRepository {
     const total = await this.prisma.program.count({
       where: {
         teacher: {
-          name: { contains: search },
+          name: { contains: search, mode: 'insensitive' },
         },
       },
     });
@@ -58,30 +97,51 @@ export class SearchRepository {
     const results = await this.prisma.program.findMany({
       where: {
         teacher: {
-          name: { contains: search },
+          name: { contains: search, mode: 'insensitive' },
         },
       },
-      skip: options.before ? 1 : undefined,
+      skip: Number(options.before),
       take: options.limit ? options.limit : 10,
     });
 
     return { results, total };
   }
 
-  async searchByAll(search: string, options: CursorPagination) {
-    const total = await this.prisma.program.count({
+  async searchByAll(search: string, studentId: string, options: CursorPagination) {
+    const totalPrograms = await this.prisma.program.count({
       where: {
-        OR: [{ name: { contains: search } }, { teacher: { name: { contains: search } } }],
+        OR: [{ name: { contains: search, mode: 'insensitive' } }, { teacher: { name: { contains: search, mode: 'insensitive' } } }],
+        versions: {
+          some: {
+            studentPrograms: {
+              some: {
+                studentId,
+              },
+            },
+          },
+        },
       },
     });
 
-    const results = await this.prisma.program.findMany({
+    const programResults = await this.prisma.program.findMany({
       where: {
-        OR: [{ name: { contains: search } }, { teacher: { name: { contains: search } } }],
+        OR: [{ name: { contains: search, mode: 'insensitive' } }, { teacher: { name: { contains: search, mode: 'insensitive' } } }],
+        versions: {
+          some: {
+            studentPrograms: {
+              some: {
+                studentId,
+              },
+            },
+          },
+        },
       },
-      skip: options.before ? 1 : undefined,
       take: options.limit ? options.limit : 10,
+      skip: Number(options.before),
     });
-    return { results, total };
+
+    const pills = await this.searchByPills(search, studentId, options);
+    const total = totalPrograms + pills.total;
+    return { programResults, pillResults: pills.results, total };
   }
 }
