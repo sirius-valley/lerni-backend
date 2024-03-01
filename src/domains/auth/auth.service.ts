@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import { MailService } from '../../mail/mail.service';
+import { AdminRegisterRequestDto } from './dtos/admin-register-request.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,6 +37,27 @@ export class AuthService {
     const isCorrectPassword = await this.comparePassword(loginDTO.password, auth.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     const jwt = await this.jwtService.signAsync({ sub: auth.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+    return new JwtDto(jwt);
+  }
+
+  public async registerAdmin(adminRegisterDto: AdminRegisterRequestDto) {
+    const admin = await this.authRepository.findTeacherByEmail(adminRegisterDto.email);
+    if (admin) throw new HttpException('Email already in use', HttpStatus.CONFLICT);
+    const hashedPassword = await this.hashPassword(adminRegisterDto.password);
+    const adminCreated = await this.authRepository.createTeacher({
+      ...adminRegisterDto,
+      password: hashedPassword,
+    });
+    const jwt = await this.jwtService.signAsync({ sub: adminCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+    return new JwtDto(jwt);
+  }
+
+  public async loginAdmin(adminLoginDto: LoginRequestDto) {
+    const admin = await this.authRepository.findTeacherByEmail(adminLoginDto.email);
+    if (!admin) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
+    const isCorrectPassword = await this.comparePassword(adminLoginDto.password, admin.password);
+    if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    const jwt = await this.jwtService.signAsync({ sub: admin.id }, { secret: this.configService.get<string>('JWT_SECRET') });
     return new JwtDto(jwt);
   }
 
