@@ -79,7 +79,11 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async saveCompletedQuestionnaireSubmissionBySubmissionId(questionnaireSubmissionId: string, points: number) {
+  public async saveCompletedQuestionnaireSubmissionBySubmissionId(
+    questionnaireSubmissionId: string,
+    points: number,
+    questionnaireId: string,
+  ) {
     return this.prisma.questionnaireSubmission.update({
       data: {
         finishedDateTime: new Date(),
@@ -88,7 +92,8 @@ export class QuestionnaireRepository {
             points: {
               create: {
                 amount: points,
-                detail: 'completed questionnaire',
+                sourceEntity: 'questionnaire',
+                entityId: questionnaireId,
               },
             },
           },

@@ -34,6 +34,7 @@ services:
       - ENVIRONMENT=${ENVIRONMENT}
       - JWT_SECRET=${JWT_SECRET}
       - SPRING_SERVICE_URL=${SPRING_SERVICE_URL}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - EMAIL_HOST=${EMAIL_HOST}
       - EMAIL_USER=${EMAIL_USER}
     ports:
@@ -59,3 +60,4 @@ networks:
     app_network:
       driver: bridge
       name: app_network
+

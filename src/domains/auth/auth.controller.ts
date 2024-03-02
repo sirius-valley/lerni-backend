@@ -4,6 +4,7 @@ import { RegisterRequestDto } from './dtos/register-request.dto';
 import { JwtDto } from './dtos/jwt.dto';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AdminRegisterRequestDto } from './dtos/admin-register-request.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -19,5 +20,16 @@ export class AuthController {
   @HttpCode(200)
   async login(@Body() loginRequestDTO: LoginRequestDto): Promise<JwtDto> {
     return this.authService.login(loginRequestDTO);
+  }
+
+  @Post('/admin/register')
+  async registerAdmin(@Body() adminRegisterRequestDTO: AdminRegisterRequestDto): Promise<JwtDto> {
+    return this.authService.registerAdmin(adminRegisterRequestDTO);
+  }
+
+  @Post('/admin/login')
+  @HttpCode(200)
+  async loginAdmin(@Body() adminLoginRequestDTO: LoginRequestDto): Promise<JwtDto> {
+    return this.authService.loginAdmin(adminLoginRequestDTO);
   }
 }
