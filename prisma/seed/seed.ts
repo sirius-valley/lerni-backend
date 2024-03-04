@@ -57,10 +57,12 @@ async function main() {
   await prisma.program.upsert({
     where: { id: programId },
     update: {
-      name: 'Programa de prueba',
-      icon: 'imagen',
+      name: 'Programa para probar los componentes',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/pillimage1.png',
       hoursToComplete: 10,
       pointsReward: 100,
+      description:
+        'Esta fascinante exploración histórica nos sumerge en los intrincados acontecimientos que marcaron la historia de Argentina y Alemania en el contexto de las tierras americanas del sur durante épocas de guerra. A través de esta crónica, nos adentraremos en un viaje que revela la compleja interconexión de dos naciones distantes, pero cuyos destinos se entrelazaron de manera inesperada en el continente americano.',
       teacher: {
         connectOrCreate: {
           where: { id: teacherId },
@@ -71,16 +73,19 @@ async function main() {
             email: 'teacher@mail.com',
             password: 'password',
             profession: 'Profesor',
+            image: 'https://lerni-images-2024.s3.amazonaws.com/profesor_image_profile.jpg',
           },
         },
       },
     },
     create: {
       id: programId,
-      name: 'Programa de prueba',
-      icon: 'imagen',
+      name: 'Programa para probar los componentes',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/pillimage1.png',
       hoursToComplete: 10,
       pointsReward: 100,
+      description:
+        'Esta fascinante exploración histórica nos sumerge en los intrincados acontecimientos que marcaron la historia de Argentina y Alemania en el contexto de las tierras americanas del sur durante épocas de guerra. A través de esta crónica, nos adentraremos en un viaje que revela la compleja interconexión de dos naciones distantes, pero cuyos destinos se entrelazaron de manera inesperada en el continente americano.',
       teacher: {
         connectOrCreate: {
           where: { id: teacherId },
@@ -91,6 +96,7 @@ async function main() {
             email: 'teacher@mail.com',
             password: 'password',
             profession: 'Profesor',
+            image: 'https://lerni-images-2024.s3.amazonaws.com/profesor_image_profile.jpg',
           },
         },
       },
@@ -259,23 +265,17 @@ async function main() {
 }
 
 main()
-
   .then(async () => {
-
     await prisma.$disconnect();
-
   })
 
   .catch(async (e) => {
-
     console.error(e);
 
     await prisma.$disconnect();
 
     process.exit(1);
-
   });
-
 
 async function extraPrograms(n: number = 10) {
   for (let i = 0; i < n; i++) {
@@ -295,10 +295,12 @@ async function extraPrograms(n: number = 10) {
     await prisma.program.upsert({
       where: { id: programId },
       update: {
-        name: 'Programa de prueba',
-        icon: 'imagen',
+        name: 'Programa para probar los componentes',
+        icon: 'https://lerni-images-2024.s3.amazonaws.com/pillimage1.png',
         hoursToComplete: 10,
         pointsReward: 100,
+        description:
+          'Esta fascinante exploración histórica nos sumerge en los intrincados acontecimientos que marcaron la historia de Argentina y Alemania en el contexto de las tierras americanas del sur durante épocas de guerra. A través de esta crónica, nos adentraremos en un viaje que revela la compleja interconexión de dos naciones distantes, pero cuyos destinos se entrelazaron de manera inesperada en el continente americano.',
         teacher: {
           connectOrCreate: {
             where: { id: teacherId },
@@ -309,16 +311,19 @@ async function extraPrograms(n: number = 10) {
               email: 'teacher@mail.com',
               password: 'password',
               profession: 'Profesor',
+              image: 'https://lerni-images-2024.s3.amazonaws.com/profesor_image_profile.jpg',
             },
           },
         },
       },
       create: {
         id: programId,
-        name: 'Programa de prueba',
-        icon: 'imagen',
+        name: 'Programa para probar los componentes',
+        icon: 'https://lerni-images-2024.s3.amazonaws.com/pillimage1.png',
         hoursToComplete: 10,
         pointsReward: 100,
+        description:
+          'Esta fascinante exploración histórica nos sumerge en los intrincados acontecimientos que marcaron la historia de Argentina y Alemania en el contexto de las tierras americanas del sur durante épocas de guerra. A través de esta crónica, nos adentraremos en un viaje que revela la compleja interconexión de dos naciones distantes, pero cuyos destinos se entrelazaron de manera inesperada en el continente americano.',
         teacher: {
           connectOrCreate: {
             where: { id: teacherId },
@@ -329,6 +334,7 @@ async function extraPrograms(n: number = 10) {
               email: 'teacher@mail.com',
               password: 'password',
               profession: 'Profesor',
+              image: 'https://lerni-images-2024.s3.amazonaws.com/profesor_image_profile.jpg',
             },
           },
         },
