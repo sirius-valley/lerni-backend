@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { StudentDto } from './dtos/student.dto';
 import { StudentDetailsDto } from './dtos/student-details.dto';
 import { necessaryFields, optionalFields } from '../../../const';
+import { StudentRepository } from './student.repository';
+import { SimpleEmptyStudentDto } from './dtos/simple-empty-student.dto';
 
 @Injectable()
 export class StudentService {
-  constructor() {}
+  constructor(private readonly studentRepository: StudentRepository) {}
 
   public async getStudentDetails(studentDto: StudentDto) {
     if (!studentDto) return new StudentDetailsDto(studentDto, false);
@@ -21,5 +23,11 @@ export class StudentService {
 
   private checkOptionalFields(studentDto: StudentDto, optionalFields: string[]) {
     return optionalFields.some((field) => studentDto[field]);
+  }
+
+  public async getStudentByEmail(email: string) {
+    const data = await this.studentRepository.findStudentByEmail(email);
+    if (data.length === 0) return [Object.assign({}, new SimpleEmptyStudentDto())];
+    return data.map((item) => new StudentDto(item));
   }
 }

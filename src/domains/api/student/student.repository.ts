@@ -22,4 +22,15 @@ export class StudentRepository {
     });
     return student ? new StudentDto(student as StudentDto) : null;
   }
+
+  async findStudentByEmail(email: string): Promise<any[]> {
+    const data = await this.prisma.student.findMany({
+      where: {
+        auth: {
+          email,
+        },
+      },
+    });
+    return data;
+  }
 }
