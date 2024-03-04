@@ -418,7 +418,7 @@ export const pillBlock = `{
             {
                 "id": "084dfecd-1e63-4a10-b279-3ea382852a1c",
                 "type": "ACTION",
-                "name": ""
+                "name": "Question"
             },
             {
                 "id": "16148912-dbf2-4854-a762-17fda7b3c8b6",
@@ -445,7 +445,7 @@ export const pillBlock = `{
             {
                 "id": "fd69e3b9-c599-4935-bce2-4a7e25b63def",
                 "type": "ACTION",
-                "name": ""
+                "name": "Question"
             },
             {
                 "id": "3fa64704-3377-4238-8b22-e64c06772e29",
@@ -472,13 +472,13 @@ export const pillBlock = `{
             {
                 "id": "cf4e5362-f36c-4a0f-9188-8bf28aba5827",
                 "type": "ACTION",
-                "name": ""
+                "name": "Question"
             },
             {
                 "id": "0c648418-1e19-4d1f-a690-4210d4b38c33",
                 "type": "QUESTION",
                 "name": "",
-                "question_type": "MULTIPLECHOICE",
+                "question_type": "SINGLECHOICE",
                 "metadata": {
                     "metadata": {
                         "lerni_question_type": "carousel",

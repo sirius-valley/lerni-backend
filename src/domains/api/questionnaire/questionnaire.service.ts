@@ -39,6 +39,7 @@ export class QuestionnaireService {
     );
 
     const teacher = await this.getTeacher(answerRequest.questionnaireId);
+    const correctValue = this.getCorrectValues(answerRequest, springProgress, JSON.parse(updatedSubmission.questionnaireVersion.block));
 
     if (this.isQuestionnaireFailed(updatedSubmission.questionnaireAnswers, updatedSubmission.questionnaireVersion)) {
       const data = {
@@ -49,7 +50,7 @@ export class QuestionnaireService {
         state: QuestionnaireState.FAILED,
       };
       await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
-      return { questionnaire: new QuestionnaireAnswerDto(data), teacher };
+      return { questionnaire: new QuestionnaireAnswerDto(data, correctValue), teacher };
     }
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
@@ -64,7 +65,7 @@ export class QuestionnaireService {
       );
     }
 
-    return { questionnaire: new QuestionnaireAnswerDto(formattedBlock), teacher };
+    return { questionnaire: new QuestionnaireAnswerDto(formattedBlock, correctValue), teacher };
   }
 
   async getQuestionnaireVersionByPillId(
@@ -86,7 +87,7 @@ export class QuestionnaireService {
       ) ?? [],
     );
 
-    const teacher = await this.getTeacher(questionnaireVersion.id);
+    const teacher = await this.getTeacher(questionnaireId);
     const formattedSpringProgress = this.formatSpringProgress(
       springProgress,
       questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers,
@@ -215,7 +216,7 @@ export class QuestionnaireService {
           correct: node.correct,
           pointsAwarded: node.answer !== '' ? (node.correct ? questionnaireAnswerPoints : 0) : undefined,
           optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
-          correctValues: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
+          correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
         };
     }
   }
@@ -225,5 +226,22 @@ export class QuestionnaireService {
     const bSet = new Set(b);
 
     return [...aSet].filter((x) => bSet.has(x));
+  }
+
+  private getQuestionNode(questionId: string, questionnaireBlock: any) {
+    return questionnaireBlock.elements.find((element) => element.id === questionId);
+  }
+
+  private getCorrectValues(answerRequest: QuestionnaireAnswerRequestDto, springProgress: any, questionnaireBlock: any) {
+    const questionElement = this.getQuestionNode(answerRequest.questionId, questionnaireBlock);
+    switch (questionElement.metadata.metadata.lerni_question_type) {
+      case 'single-choice':
+      case 'carousel':
+        return springProgress.correct ? [questionElement.metadata.metadata.correct_answer] : [];
+      case 'multiple-choice':
+        return this.findIntersection(questionElement.metadata.metadata.correct_answer, answerRequest.answer);
+      default:
+        return [];
+    }
   }
 }
