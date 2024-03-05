@@ -38,27 +38,23 @@ export class PillService {
   }
 
   public async getPillVersionByPillId(authorization: string, student: StudentDto, pillId: string): Promise<PillProgressResponseDto> {
-    const pillVersion = await this.pillRepository.getPillByPillIdAndStudentId(pillId, student.id);
-    if (!pillVersion) throw new HttpException('Pill not found', HttpStatus.NOT_FOUND);
+    const pillSubmission = await this.getPillSubmission(pillId, student);
     const teacher = await this.pillRepository.getTeacherByPillId(pillId);
     if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
-    const answers =
-      (await this.pillRepository.getPillSubmissionByPillIdAndStudentId(pillId, student.id))?.pillAnswers?.map(
-        (answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)),
-      ) || [];
-    const springProgress = await this.springPillService.getSpringProgress(pillVersion.block, authorization, answers);
+    const answers = pillSubmission.pillAnswers?.map((answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)));
+    const springProgress = await this.springPillService.getSpringProgress(pillSubmission.pillVersion.block, authorization, answers);
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
-    const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillVersion.block));
-
+    const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
+    await this.pillRepository.updatePillSubmissionProgress(pillSubmission.id, formattedPillBlock.progress);
     return {
-      pill: new PillDto(pillVersion.pill, pillVersion, formattedPillBlock),
+      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
       teacher: new TeacherDto(teacher),
     };
   }
 
   public async answerPill(authorization: string, student: StudentDto, answerRequest: AnswerRequestDto): Promise<PillProgressResponseDto> {
-    const pillSubmission = await this.getPillSubmission(answerRequest, student);
+    const pillSubmission = await this.getPillSubmission(answerRequest.pillId, student);
     if (this.questionAlreadyAnswered(pillSubmission.pillAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
@@ -66,13 +62,18 @@ export class PillService {
 
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
 
-    await this.pillRepository.createPillAnswer(pillSubmission.id, answerRequest.questionId, answerRequest.answer, springProgress.progress);
     if (answerRequest.pillId === introductionID) {
       student = await this.saveIntroductionProgress(student, answerRequest);
     }
 
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
+    await this.pillRepository.createPillAnswer(
+      pillSubmission.id,
+      answerRequest.questionId,
+      answerRequest.answer,
+      formattedPillBlock.progress,
+    );
 
     const teacherDto = this.getTeacher(answerRequest, teacher);
 
@@ -99,7 +100,7 @@ export class PillService {
   private formatPillBlock(springProgress: any, pillBlock: any) {
     return {
       completed: springProgress.completed,
-      progress: springProgress.progress,
+      progress: !springProgress.completed && springProgress.progress === 100 ? 95 : springProgress.progress,
       bubbles: this.mergeData(springProgress, pillBlock),
     };
   }
@@ -142,10 +143,10 @@ export class PillService {
     return await this.springPillService.answerPill(authorization, pillSubmission.pillVersion.block, springDto);
   }
 
-  private async getPillSubmission(answerRequest: AnswerRequestDto, student: StudentDto) {
-    const pillSubmission = await this.pillRepository.getPillSubmissionByPillIdAndStudentId(answerRequest.pillId, student.id);
+  private async getPillSubmission(pillId: string, student: StudentDto) {
+    const pillSubmission = await this.pillRepository.getPillSubmissionByPillIdAndStudentId(pillId, student.id);
     if (pillSubmission) return pillSubmission;
-    return await this.createPillSubmission(answerRequest.pillId, student.id);
+    return await this.createPillSubmission(pillId, student.id);
   }
 
   private async createPillSubmission(pillId: string, studentId: string) {

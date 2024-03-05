@@ -148,4 +148,15 @@ export class PillRepository {
       },
     });
   }
+
+  public async updatePillSubmissionProgress(pillSubmissionId: string, progress: number) {
+    return this.prisma.pillSubmission.update({
+      data: {
+        progress,
+      },
+      where: {
+        id: pillSubmissionId,
+      },
+    });
+  }
 }
