@@ -88,8 +88,9 @@ export class QuestionnaireService {
       replacedQuestionnaire,
       JSON.parse(questionnaireSubmission.questionnaireVersion.block),
     );
-    await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(questionnaireSubmission.id, formattedSpringProgress.progress);
-    return { questionnaire: new QuestionnaireProgressDto(formattedBlock), teacher };
+    const totalPoints = this.calculatePointsAwarded(questionnaireSubmission.questionnaireAnswers);
+    await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(questionnaireSubmission.id, formattedBlock.progress);
+    return { questionnaire: new QuestionnaireProgressDto({ ...formattedBlock, totalPoints }), teacher };
   }
 
   private formatSpringProgress(springProgress: any, answers: QuestionnaireAnswer[]) {
