@@ -27,7 +27,8 @@ export class PillService {
     const introduction = await this.pillRepository.getPillVersionByPillIdAndStudentId(introductionID, student.id);
     if (!introduction) throw new HttpException('Introduction not found', HttpStatus.NOT_FOUND);
     const answers = introduction.pillSubmissions?.length === 1 ? introduction.pillSubmissions[0].pillAnswers : [];
-    const springProgress = await this.springPillService.getSpringProgress(introduction.block, authorization, answers);
+    const answerDtos = answers.map((answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)));
+    const springProgress = await this.springPillService.getSpringProgress(introduction.block, authorization, answerDtos);
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(introduction.block));
 
