@@ -35,7 +35,6 @@ export class QuestionnaireService {
       answerRequest.questionId,
       answerRequest.answer,
       springProgress.correct,
-      springProgress.progress,
     );
 
     const teacher = await this.getTeacher(answerRequest.questionnaireId);
@@ -55,6 +54,7 @@ export class QuestionnaireService {
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(updatedSubmission.questionnaireVersion.block));
+    await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(updatedSubmission.id, formattedBlock.progress);
 
     if (formattedBlock.state === QuestionnaireState.COMPLETED) {
       const pointsAwarded = this.calculatePointsAwarded(updatedSubmission.questionnaireAnswers);
@@ -73,28 +73,22 @@ export class QuestionnaireService {
     user: StudentDto,
     questionnaireId: string,
   ): Promise<QuestionnaireProgressResponseDto> {
-    const questionnaireVersion = await this.questionnaireRepository.getQuestionnaireVersionByQuestionnaireIdAndStudentId(
-      questionnaireId,
-      user.id,
-    );
-    if (!questionnaireVersion) throw new HttpException('Questionnaire not found', HttpStatus.NOT_FOUND);
+    const questionnaireSubmission = await this.getQuestionnaireSubmission(questionnaireId, user.id);
 
     const springProgress = await this.springPillService.getSpringProgress(
-      questionnaireVersion.block,
+      questionnaireSubmission.questionnaireVersion.block,
       authorization,
-      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers.map(
-        (answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)),
-      ) ?? [],
+      questionnaireSubmission.questionnaireAnswers.map((answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value))),
     );
 
     const teacher = await this.getTeacher(questionnaireId);
-    const formattedSpringProgress = this.formatSpringProgress(
-      springProgress,
-      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers,
-    );
+    const formattedSpringProgress = this.formatSpringProgress(springProgress, questionnaireSubmission.questionnaireAnswers);
     const replacedQuestionnaire = this.replaceFullName(formattedSpringProgress, user.name + ' ' + user.lastname);
-    const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(questionnaireVersion.block));
-
+    const formattedBlock = this.formatQuestionnaireBlock(
+      replacedQuestionnaire,
+      JSON.parse(questionnaireSubmission.questionnaireVersion.block),
+    );
+    await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(questionnaireSubmission.id, formattedSpringProgress.progress);
     return { questionnaire: new QuestionnaireProgressDto(formattedBlock), teacher };
   }
 
@@ -155,7 +149,7 @@ export class QuestionnaireService {
     return {
       isCorrect: springProgress.correct,
       state: springProgress.completed ? QuestionnaireState.COMPLETED : QuestionnaireState.INPROGRESS,
-      progress: springProgress.progress,
+      progress: !springProgress.completed && springProgress.progress === 100 ? 95 : springProgress.progress,
       pointsAwarded: springProgress.correct ? questionnaireAnswerPoints : 0,
       bubbles: this.mergeData(springProgress, questionnaireBlock),
     };
