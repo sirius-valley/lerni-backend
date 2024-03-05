@@ -3,7 +3,6 @@ import { StudentDto } from './dtos/student.dto';
 import { StudentDetailsDto } from './dtos/student-details.dto';
 import { necessaryFields, optionalFields } from '../../../const';
 import { StudentRepository } from './student.repository';
-import { SimpleEmptyStudentDto } from './dtos/simple-empty-student.dto';
 
 @Injectable()
 export class StudentService {
@@ -25,9 +24,11 @@ export class StudentService {
     return optionalFields.some((field) => studentDto[field]);
   }
 
-  public async getStudentByEmail(email: string) {
-    const data = await this.studentRepository.findStudentByEmail(email);
-    if (data.length === 0) return [Object.assign({}, new SimpleEmptyStudentDto())];
-    return data.map((item) => new StudentDto(item));
+  public async getStudentByEmail(emails: string[]) {
+    return await emails.map((email) => {
+      return this.studentRepository.findStudentByEmail(email);
+    });
+    // if (data.length === 0) return [Object.assign({}, new SimpleEmptyStudentDto())];
+    // return data.map((item) => new StudentDto(item));
   }
 }

@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail } from 'class-validator';
+import { IsArray, IsEmail } from 'class-validator';
 
 export class CheckStudent {
   @ApiProperty()
+  @IsArray()
   @IsEmail()
-  email: string;
+  emails: string[];
 
-  constructor(email: string) {
-    this.email = email;
+  constructor(emails: string[]) {
+    this.emails = emails;
   }
 }

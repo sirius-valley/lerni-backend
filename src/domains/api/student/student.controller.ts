@@ -21,6 +21,6 @@ export class StudentController {
 
   @Post('check')
   async checkStudent(@Body() data: CheckStudent) {
-    return await this.studentService.getStudentByEmail(data.email);
+    return await this.studentService.getStudentByEmail(data.emails);
   }
 }
