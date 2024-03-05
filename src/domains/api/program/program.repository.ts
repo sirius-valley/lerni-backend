@@ -247,6 +247,18 @@ export class ProgramRepository {
               },
             },
           },
+          programVersionQuestionnaireVersions: {
+            every: {
+              questionnaireVersion: {
+                questionnaireSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
         },
       },
       orderBy: {
@@ -302,6 +314,18 @@ export class ProgramRepository {
                     },
                   },
                 },
+                programVersionQuestionnaireVersions: {
+                  every: {
+                    questionnaireVersion: {
+                      questionnaireSubmissions: {
+                        some: {
+                          studentId,
+                          progress: 100,
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -320,6 +344,23 @@ export class ProgramRepository {
                 pillVersion: {
                   include: {
                     pillSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                    },
+                  },
+                },
+              },
+            },
+            programVersionQuestionnaireVersions: {
+              include: {
+                questionnaireVersion: {
+                  include: {
+                    questionnaireSubmissions: {
                       where: {
                         studentId,
                       },

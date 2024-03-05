@@ -31,11 +31,10 @@ export class ProgramService {
       .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
     const inProgress = await this.programRepository.getStudentProgramsInProgressByStudentId(studentId);
     const programsInProgress = inProgress.map((studentProgram) => {
-      const progress =
-        studentProgram.programVersion.programVersionPillVersions.reduce(
-          (acc, pvPillV) => acc + (pvPillV.pillVersion.pillSubmissions[0]?.progress || 0),
-          0,
-        ) / studentProgram.programVersion.programVersionPillVersions.length;
+      const progress = this.calculateProgress(
+        studentProgram.programVersion.programVersionPillVersions,
+        studentProgram.programVersion.programVersionQuestionnaireVersions[0],
+      );
       return { program: studentProgram.programVersion.program, progress };
     });
     const programsNotStarted = await this.programRepository
@@ -148,7 +147,8 @@ export class ProgramService {
       0,
     );
     return (
-      (totalPillProgress + questionnaireVersion.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0) / (pillVersions.length + 1)
+      (totalPillProgress + (questionnaireVersion.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0)) /
+      (pillVersions.length + 1)
     );
   }
 
