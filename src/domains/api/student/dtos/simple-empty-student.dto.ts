@@ -1,13 +1,15 @@
 export class SimpleEmptyStudentDto {
-  id: string | undefined;
-  name: string | undefined;
-  lastname: string | undefined;
-  image: string | undefined;
+  id?: string;
+  name?: string;
+  lastname?: string;
+  email: string;
+  image?: string;
 
-  constructor(data: Partial<SimpleEmptyStudentDto> = {}) {
-    this.id = data.id || undefined;
-    this.name = data.name || undefined;
-    this.lastname = data.lastname || undefined;
-    this.image = data.image || undefined;
+  constructor(data: SimpleEmptyStudentDto) {
+    this.id = data?.id;
+    this.name = data?.name;
+    this.lastname = data?.lastname;
+    this.image = data?.image;
+    this.email = data.email;
   }
 }

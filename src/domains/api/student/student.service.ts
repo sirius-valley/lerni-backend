@@ -24,11 +24,11 @@ export class StudentService {
     return optionalFields.some((field) => studentDto[field]);
   }
 
-  public async getStudentByEmail(emails: string[]) {
-    return await emails.map((email) => {
-      return this.studentRepository.findStudentByEmail(email);
-    });
-    // if (data.length === 0) return [Object.assign({}, new SimpleEmptyStudentDto())];
-    // return data.map((item) => new StudentDto(item));
+  public async getStudentsByEmail(emails: string[]) {
+    return await Promise.all(
+      emails.map(async (email) => {
+        return await this.studentRepository.findStudentByEmail(email);
+      }),
+    );
   }
 }
