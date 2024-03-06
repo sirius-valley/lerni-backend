@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { QuestionnaireRepository } from './questionnaire.repository';
 import { StudentDto } from '../student/dtos/student.dto';
-import { QuestionnaireAnswer, QuestionnaireVersion } from '@prisma/client';
+import { QuestionnaireAnswer, QuestionnaireSubmission, QuestionnaireVersion } from '@prisma/client';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
 import { QuestionnaireAnswerDto, QuestionnaireState } from './dtos/questionnaire-answer.dto';
@@ -111,8 +111,27 @@ export class QuestionnaireService {
       questionnaireId,
       studentId,
     );
-    if (questionnaireSubmission) return questionnaireSubmission;
+    if (questionnaireSubmission) {
+      if (!this.isFailed(questionnaireSubmission)) return questionnaireSubmission;
+      const checkCooldown = this.checkCooldown(
+        questionnaireSubmission.finishedDateTime,
+        questionnaireSubmission.questionnaireVersion.cooldownInMinutes,
+      );
+      if (!checkCooldown) throw new HttpException('Cooldown not finished', HttpStatus.CONFLICT);
+    }
     return await this.createQuestionnaireSubmission(questionnaireId, studentId);
+  }
+
+  private isFailed(questionnaireSubmission: QuestionnaireSubmission) {
+    return questionnaireSubmission.finishedDateTime && questionnaireSubmission.progress < 100;
+  }
+
+  private checkCooldown(finishedDate: Date | null, cooldownInMinutes: number) {
+    if (!finishedDate) return true;
+    const lastSubmissionDate = new Date(finishedDate);
+    const coolDown = cooldownInMinutes;
+    const now = new Date();
+    return now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
   }
 
   private async createQuestionnaireSubmission(questionnaireId: string, studentId: string) {

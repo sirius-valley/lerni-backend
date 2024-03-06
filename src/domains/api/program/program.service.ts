@@ -193,7 +193,8 @@ export class ProgramService {
 
   private hasPassedCoolDown(qvQuestionnaireV: any) {
     const lastSubmission = qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0];
-    if (!lastSubmission) return { passedCoolDown: true, coolDownPassDate: new Date() };
+    if (!lastSubmission) return { passedCoolDown: true, coolDownPassDate: undefined };
+    if (lastSubmission.progress === 100) return { passedCoolDown: true, coolDownPassDate: undefined };
     const lastSubmissionDate = new Date(lastSubmission.finishedDateTime);
     const coolDown = qvQuestionnaireV.questionnaireVersion.cooldownInMinutes;
     const now = new Date();
