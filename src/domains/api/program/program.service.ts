@@ -154,13 +154,16 @@ export class ProgramService {
 
   private calculateSimpleQuestionnairesDtos(questionnaireVersions: any, pillsCompleted: boolean) {
     return questionnaireVersions.map((qvQuestionnaireV: any, index: any) => {
-      if (index === 0)
+      if (index === 0) {
+        const hasPassedCoolDown = this.hasPassedCoolDown(qvQuestionnaireV);
         return new SimpleQuestionnaireDto(
           qvQuestionnaireV.questionnaireVersion.questionnaire,
           qvQuestionnaireV.questionnaireVersion.completionTimeMinutes,
           qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
-          !pillsCompleted,
+          !pillsCompleted || !hasPassedCoolDown.passedCoolDown,
+          !hasPassedCoolDown.passedCoolDown ? hasPassedCoolDown.coolDownPassDate : undefined,
         );
+      }
       const previousElement = questionnaireVersions[index - 1].questionnaireVersion.questionnaireSubmissions[0];
       const previousProgress = previousElement?.progress;
       const isPreviousQuestionnaireCompleted = previousProgress === 100;
@@ -169,7 +172,8 @@ export class ProgramService {
         qvQuestionnaireV.questionnaireVersion.questionnaire,
         qvQuestionnaireV.questionnaireVersion.completionTimeMinutes,
         qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
-        !pillsCompleted || !isPreviousQuestionnaireCompleted || !hasPassedCoolDown,
+        !pillsCompleted || !isPreviousQuestionnaireCompleted || !hasPassedCoolDown.passedCoolDown,
+        !hasPassedCoolDown.passedCoolDown ? hasPassedCoolDown.coolDownPassDate : undefined,
       );
     })[0];
   }
@@ -189,10 +193,12 @@ export class ProgramService {
 
   private hasPassedCoolDown(qvQuestionnaireV: any) {
     const lastSubmission = qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0];
-    if (!lastSubmission) return true;
+    if (!lastSubmission) return { passedCoolDown: true, coolDownPassDate: new Date() };
     const lastSubmissionDate = new Date(lastSubmission.finishedDateTime);
     const coolDown = qvQuestionnaireV.questionnaireVersion.cooldownInMinutes;
     const now = new Date();
-    return now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
+    const passedCoolDown = now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
+    const coolDownPassDate = new Date(lastSubmissionDate.getTime() + coolDown * 60 * 1000);
+    return { passedCoolDown, coolDownPassDate };
   }
 }
