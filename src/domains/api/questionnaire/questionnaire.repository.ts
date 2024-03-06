@@ -110,7 +110,6 @@ export class QuestionnaireRepository {
     questionId: string,
     value: string | string[],
     isCorrect: boolean,
-    progress: number,
   ) {
     value = JSON.stringify(value);
     return this.prisma.questionnaireSubmission.update({
@@ -122,7 +121,6 @@ export class QuestionnaireRepository {
             isCorrect,
           },
         },
-        progress,
       },
       where: {
         id: questionnaireSubmissionId,
@@ -134,10 +132,10 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async setQuestionnaireSubmissionCompletedDateTime(questionnaireSubmissionId: string) {
+  public async setQuestionnaireSubmissionCompletedDateTime(questionnaireSubmissionId: string, date: Date) {
     return this.prisma.questionnaireSubmission.update({
       data: {
-        finishedDateTime: new Date(),
+        finishedDateTime: date,
       },
       where: {
         id: questionnaireSubmissionId,
@@ -170,6 +168,17 @@ export class QuestionnaireRepository {
         lastname: true,
         profession: true,
         image: true,
+      },
+    });
+  }
+
+  public async updateQuestionnaireSubmissionProgress(questionnaireSubmissionId: string, progress: number) {
+    return this.prisma.questionnaireSubmission.update({
+      data: {
+        progress,
+      },
+      where: {
+        id: questionnaireSubmissionId,
       },
     });
   }

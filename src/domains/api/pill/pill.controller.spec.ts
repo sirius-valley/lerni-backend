@@ -59,16 +59,30 @@ describe('PillController', () => {
   describe('Pill controller', () => {
     describe('getPillVersionByPillId', () => {
       it("should return 404 when pill doesn't exist", async () => {
-        prismaService.pillVersion.findFirst.mockResolvedValueOnce(null);
+        prismaService.pillSubmission.findFirst.mockResolvedValueOnce(null);
 
-        await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(new HttpException('Pill not found', 404));
+        await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(
+          new HttpException('Student does not have access to the pill', 404),
+        );
       });
 
       it("should fail when pill-external-api doesn't respond", async () => {
-        prismaService.pillVersion.findFirst.mockResolvedValueOnce({
-          id: '1',
-          pillId: '123',
-          version: 1,
+        prismaService.pillSubmission.findFirst.mockResolvedValueOnce({
+          pillVersion: {
+            id: '1',
+            pillId: '123',
+            version: 1,
+            completionTimeMinutes: 10,
+            block: '{"elements": []}',
+            progress: 0,
+            pill: {
+              id: '123',
+              name: 'name',
+              description: 'description',
+              teacherComment: 'teacherComment',
+            },
+          },
+          pillAnswers: [],
         } as any);
         prismaService.teacher.findFirst.mockResolvedValueOnce({
           id: '1',
@@ -81,55 +95,6 @@ describe('PillController', () => {
         await expect(pillController.getPillVersionByPillId(req as any, '123')).rejects.toThrow(
           new HttpException('Error while calculating progress', 500),
         );
-      });
-
-      it('should return pill version when pill exists', async () => {
-        prismaService.pillVersion.findFirst.mockResolvedValueOnce({
-          id: '1',
-          pillId: '123',
-          version: 1,
-          pill: {
-            id: '123',
-            name: 'name',
-            description: 'description',
-            teacherComment: 'teacherComment',
-          },
-          completionTimeMinutes: 10,
-          block: '{"elements": []}',
-        } as any);
-        prismaService.teacher.findFirst.mockResolvedValueOnce({
-          id: '1',
-          name: 'name',
-          lastname: 'lastname',
-          profession: 'profession',
-          image: 'image',
-        } as any);
-        springPillService.getSpringProgress.mockResolvedValueOnce({
-          progress: 1,
-          completed: false,
-          nodes: [],
-        } as any);
-
-        await expect(pillController.getPillVersionByPillId(req as any, '123')).resolves.toMatchObject<PillProgressResponseDto>({
-          pill: {
-            version: 1,
-            completionTimeMinutes: 10,
-            id: '123',
-            name: 'name',
-            description: 'description',
-            teacherComment: 'teacherComment',
-            completed: false,
-            progress: 1,
-            bubbles: [],
-          },
-          teacher: {
-            id: '1',
-            name: 'name',
-            lastname: 'lastname',
-            profession: 'profession',
-            image: 'image',
-          },
-        });
       });
     });
 

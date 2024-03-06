@@ -31,11 +31,10 @@ export class ProgramService {
       .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
     const inProgress = await this.programRepository.getStudentProgramsInProgressByStudentId(studentId);
     const programsInProgress = inProgress.map((studentProgram) => {
-      const progress =
-        studentProgram.programVersion.programVersionPillVersions.reduce(
-          (acc, pvPillV) => acc + (pvPillV.pillVersion.pillSubmissions[0]?.progress || 0),
-          0,
-        ) / studentProgram.programVersion.programVersionPillVersions.length;
+      const progress = this.calculateProgress(
+        studentProgram.programVersion.programVersionPillVersions,
+        studentProgram.programVersion.programVersionQuestionnaireVersions[0],
+      );
       return { program: studentProgram.programVersion.program, progress };
     });
     const programsNotStarted = await this.programRepository
@@ -148,19 +147,23 @@ export class ProgramService {
       0,
     );
     return (
-      (totalPillProgress + questionnaireVersion.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0) / (pillVersions.length + 1)
+      (totalPillProgress + (questionnaireVersion.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0)) /
+      (pillVersions.length + 1)
     );
   }
 
   private calculateSimpleQuestionnairesDtos(questionnaireVersions: any, pillsCompleted: boolean) {
     return questionnaireVersions.map((qvQuestionnaireV: any, index: any) => {
-      if (index === 0)
+      if (index === 0) {
+        const hasPassedCoolDown = this.hasPassedCoolDown(qvQuestionnaireV);
         return new SimpleQuestionnaireDto(
           qvQuestionnaireV.questionnaireVersion.questionnaire,
           qvQuestionnaireV.questionnaireVersion.completionTimeMinutes,
           qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
-          !pillsCompleted,
+          !pillsCompleted || !hasPassedCoolDown.passedCoolDown,
+          !hasPassedCoolDown.passedCoolDown ? hasPassedCoolDown.coolDownPassDate : undefined,
         );
+      }
       const previousElement = questionnaireVersions[index - 1].questionnaireVersion.questionnaireSubmissions[0];
       const previousProgress = previousElement?.progress;
       const isPreviousQuestionnaireCompleted = previousProgress === 100;
@@ -169,7 +172,8 @@ export class ProgramService {
         qvQuestionnaireV.questionnaireVersion.questionnaire,
         qvQuestionnaireV.questionnaireVersion.completionTimeMinutes,
         qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
-        !pillsCompleted || !isPreviousQuestionnaireCompleted || !hasPassedCoolDown,
+        !pillsCompleted || !isPreviousQuestionnaireCompleted || !hasPassedCoolDown.passedCoolDown,
+        !hasPassedCoolDown.passedCoolDown ? hasPassedCoolDown.coolDownPassDate : undefined,
       );
     })[0];
   }
@@ -189,10 +193,13 @@ export class ProgramService {
 
   private hasPassedCoolDown(qvQuestionnaireV: any) {
     const lastSubmission = qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0];
-    if (!lastSubmission) return true;
+    if (!lastSubmission) return { passedCoolDown: true, coolDownPassDate: undefined };
+    if (lastSubmission.progress === 100) return { passedCoolDown: true, coolDownPassDate: undefined };
     const lastSubmissionDate = new Date(lastSubmission.finishedDateTime);
     const coolDown = qvQuestionnaireV.questionnaireVersion.cooldownInMinutes;
     const now = new Date();
-    return now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
+    const passedCoolDown = now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
+    const coolDownPassDate = new Date(lastSubmissionDate.getTime() + coolDown * 60 * 1000);
+    return { passedCoolDown, coolDownPassDate };
   }
 }

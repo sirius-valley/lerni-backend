@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { QuestionnaireRepository } from './questionnaire.repository';
 import { StudentDto } from '../student/dtos/student.dto';
-import { QuestionnaireAnswer, QuestionnaireVersion } from '@prisma/client';
+import { QuestionnaireAnswer, QuestionnaireSubmission, QuestionnaireVersion } from '@prisma/client';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
 import { QuestionnaireAnswerDto, QuestionnaireState } from './dtos/questionnaire-answer.dto';
@@ -35,7 +35,6 @@ export class QuestionnaireService {
       answerRequest.questionId,
       answerRequest.answer,
       springProgress.correct,
-      springProgress.progress,
     );
 
     const teacher = await this.getTeacher(answerRequest.questionnaireId);
@@ -45,16 +44,19 @@ export class QuestionnaireService {
       const data = {
         bubbles: [],
         isCorrect: false,
-        progress: springProgress.progress,
+        progress: updatedSubmission.progress,
         pointsAwarded: 0,
         state: QuestionnaireState.FAILED,
       };
-      await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
-      return { questionnaire: new QuestionnaireAnswerDto(data, correctValue), teacher };
+      const failedTime = new Date();
+      await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id, failedTime);
+      const cooldownTime = this.getCooldownPassDate(failedTime, updatedSubmission.questionnaireVersion.cooldownInMinutes);
+      return { questionnaire: new QuestionnaireAnswerDto(data, correctValue, cooldownTime), teacher };
     }
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(updatedSubmission.questionnaireVersion.block));
+    await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(updatedSubmission.id, formattedBlock.progress);
 
     if (formattedBlock.state === QuestionnaireState.COMPLETED) {
       const pointsAwarded = this.calculatePointsAwarded(updatedSubmission.questionnaireAnswers);
@@ -73,29 +75,24 @@ export class QuestionnaireService {
     user: StudentDto,
     questionnaireId: string,
   ): Promise<QuestionnaireProgressResponseDto> {
-    const questionnaireVersion = await this.questionnaireRepository.getQuestionnaireVersionByQuestionnaireIdAndStudentId(
-      questionnaireId,
-      user.id,
-    );
-    if (!questionnaireVersion) throw new HttpException('Questionnaire not found', HttpStatus.NOT_FOUND);
+    const questionnaireSubmission = await this.getQuestionnaireSubmission(questionnaireId, user.id);
 
     const springProgress = await this.springPillService.getSpringProgress(
-      questionnaireVersion.block,
+      questionnaireSubmission.questionnaireVersion.block,
       authorization,
-      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers.map(
-        (answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)),
-      ) ?? [],
+      questionnaireSubmission.questionnaireAnswers.map((answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value))),
     );
 
     const teacher = await this.getTeacher(questionnaireId);
-    const formattedSpringProgress = this.formatSpringProgress(
-      springProgress,
-      questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers,
-    );
+    const formattedSpringProgress = this.formatSpringProgress(springProgress, questionnaireSubmission.questionnaireAnswers);
     const replacedQuestionnaire = this.replaceFullName(formattedSpringProgress, user.name + ' ' + user.lastname);
-    const formattedBlock = this.formatQuestionnaireBlock(replacedQuestionnaire, JSON.parse(questionnaireVersion.block));
-
-    return { questionnaire: new QuestionnaireProgressDto(formattedBlock), teacher };
+    const formattedBlock = this.formatQuestionnaireBlock(
+      replacedQuestionnaire,
+      JSON.parse(questionnaireSubmission.questionnaireVersion.block),
+    );
+    const totalPoints = this.calculatePointsAwarded(questionnaireSubmission.questionnaireAnswers);
+    await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(questionnaireSubmission.id, formattedBlock.progress);
+    return { questionnaire: new QuestionnaireProgressDto({ ...formattedBlock, totalPoints }), teacher };
   }
 
   private formatSpringProgress(springProgress: any, answers: QuestionnaireAnswer[]) {
@@ -116,8 +113,32 @@ export class QuestionnaireService {
       questionnaireId,
       studentId,
     );
-    if (questionnaireSubmission) return questionnaireSubmission;
+    if (questionnaireSubmission) {
+      if (!this.isFailed(questionnaireSubmission)) return questionnaireSubmission;
+      const checkCooldown = this.checkCooldown(
+        questionnaireSubmission.finishedDateTime,
+        questionnaireSubmission.questionnaireVersion.cooldownInMinutes,
+      );
+      if (!checkCooldown) throw new HttpException('Cooldown not finished', HttpStatus.CONFLICT);
+    }
     return await this.createQuestionnaireSubmission(questionnaireId, studentId);
+  }
+
+  private isFailed(questionnaireSubmission: QuestionnaireSubmission) {
+    return questionnaireSubmission.finishedDateTime && questionnaireSubmission.progress < 100;
+  }
+
+  private checkCooldown(finishedDate: Date | null, cooldownInMinutes: number) {
+    if (!finishedDate) return true;
+    const lastSubmissionDate = new Date(finishedDate);
+    const now = new Date();
+    return now.getTime() - lastSubmissionDate.getTime() > cooldownInMinutes * 60 * 1000;
+  }
+
+  private getCooldownPassDate(finishedDate: Date | null, cooldownInMinutes: number) {
+    if (!finishedDate) return undefined;
+    const lastSubmissionDate = new Date(finishedDate);
+    return new Date(lastSubmissionDate.getTime() + cooldownInMinutes * 60 * 1000);
   }
 
   private async createQuestionnaireSubmission(questionnaireId: string, studentId: string) {
@@ -155,7 +176,7 @@ export class QuestionnaireService {
     return {
       isCorrect: springProgress.correct,
       state: springProgress.completed ? QuestionnaireState.COMPLETED : QuestionnaireState.INPROGRESS,
-      progress: springProgress.progress,
+      progress: !springProgress.completed && springProgress.progress === 100 ? 95 : springProgress.progress,
       pointsAwarded: springProgress.correct ? questionnaireAnswerPoints : 0,
       bubbles: this.mergeData(springProgress, questionnaireBlock),
     };
