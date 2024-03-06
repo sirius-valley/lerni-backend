@@ -44,12 +44,14 @@ export class QuestionnaireService {
       const data = {
         bubbles: [],
         isCorrect: false,
-        progress: springProgress.progress,
+        progress: updatedSubmission.progress,
         pointsAwarded: 0,
         state: QuestionnaireState.FAILED,
       };
-      await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id);
-      return { questionnaire: new QuestionnaireAnswerDto(data, correctValue), teacher };
+      const failedTime = new Date();
+      await this.questionnaireRepository.setQuestionnaireSubmissionCompletedDateTime(updatedSubmission.id, failedTime);
+      const cooldownTime = this.getCooldownPassDate(failedTime, updatedSubmission.questionnaireVersion.cooldownInMinutes);
+      return { questionnaire: new QuestionnaireAnswerDto(data, correctValue, cooldownTime), teacher };
     }
 
     const replacedQuestionnaire = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
@@ -129,9 +131,14 @@ export class QuestionnaireService {
   private checkCooldown(finishedDate: Date | null, cooldownInMinutes: number) {
     if (!finishedDate) return true;
     const lastSubmissionDate = new Date(finishedDate);
-    const coolDown = cooldownInMinutes;
     const now = new Date();
-    return now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
+    return now.getTime() - lastSubmissionDate.getTime() > cooldownInMinutes * 60 * 1000;
+  }
+
+  private getCooldownPassDate(finishedDate: Date | null, cooldownInMinutes: number) {
+    if (!finishedDate) return undefined;
+    const lastSubmissionDate = new Date(finishedDate);
+    return new Date(lastSubmissionDate.getTime() + cooldownInMinutes * 60 * 1000);
   }
 
   private async createQuestionnaireSubmission(questionnaireId: string, studentId: string) {

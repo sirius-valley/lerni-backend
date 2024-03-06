@@ -132,10 +132,10 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async setQuestionnaireSubmissionCompletedDateTime(questionnaireSubmissionId: string) {
+  public async setQuestionnaireSubmissionCompletedDateTime(questionnaireSubmissionId: string, date: Date) {
     return this.prisma.questionnaireSubmission.update({
       data: {
-        finishedDateTime: new Date(),
+        finishedDateTime: date,
       },
       where: {
         id: questionnaireSubmissionId,
