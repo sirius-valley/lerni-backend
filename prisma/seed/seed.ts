@@ -255,7 +255,7 @@ async function main() {
     },
   });
 
-  await extraPrograms();
+  await extraPrograms(10);
 }
 
 main()
