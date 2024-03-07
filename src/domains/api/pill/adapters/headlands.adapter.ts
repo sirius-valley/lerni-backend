@@ -24,18 +24,19 @@ export class HeadlandsAdapter {
     const variableToQuestionMap: any = {};
     let skip = false;
     thread.forEach((element: any, index: number, array: any[]) => {
-      if (skip) {
-        skip = false;
-        return;
-      }
       if (array.length === index) return;
       const processedElementResult = this.processElement(element, array[index + 1], pill, variableToQuestionMap);
-      if (processedElementResult.pillNode.length !== 0 && pill.elements.length !== 0) {
+      if (processedElementResult.skip) {
+        skip = true;
+      }
+      console.log('skip', skip);
+      if (processedElementResult.pillNode.length !== 0 && pill.elements.length !== 0 && !skip) {
         pill.relations.push({
           from: pill.elements[pill.elements.length - 1].id,
           to: processedElementResult.pillNode[0].id,
         });
       }
+      skip = false;
       pill.elements.push(...processedElementResult.pillNode);
     });
 
@@ -140,13 +141,6 @@ export class HeadlandsAdapter {
 
   private processFreeTextQuestion(element: any): PillNode[] {
     const elements: PillNode[] = [];
-    const uuid = this.generateUUID();
-
-    elements.push({
-      id: uuid,
-      type: ElementType.ACTION,
-      name: element.question,
-    });
 
     elements.push({
       id: element.id,
@@ -180,13 +174,6 @@ export class HeadlandsAdapter {
     const correctAnswer = this.getCorrectAnswer(element);
 
     if (!variableToQuestionMap[element.save_to_variable]) variableToQuestionMap[element.save_to_variable] = element;
-
-    const uuid = this.generateUUID();
-    elements.push({
-      id: uuid,
-      type: ElementType.ACTION,
-      name: element.question,
-    });
 
     const questionNode: PillNode = {
       id: element.id,
@@ -254,6 +241,7 @@ export class HeadlandsAdapter {
     element.branches.forEach((element: any) => {
       let skip = false;
 
+      const branchElements: PillNode[] = [];
       element.objects.forEach((object: any, array: any[], index: number) => {
         if (skip) {
           skip = false;
@@ -268,34 +256,41 @@ export class HeadlandsAdapter {
           });
         }
         elements.push(...processed);
+        branchElements.push(...processed);
       });
 
       //adds sequential relation if there are more than 1 objects in the branch
-      element.objects.forEach((object: any, index: number, array: any[]) => {
+      branchElements.forEach((object: any, index: number, array: any[]) => {
         if (array.length > index + 1) {
           pill.relations.push({
-            from: element.objects[index].id,
-            to: element.objects[index + 1].id,
+            from: branchElements[index].id,
+            to: branchElements[index + 1].id,
           });
         }
       });
 
-      const branchId = element.test.val[0];
+      console.log('element', element);
+      const branchIds = element.test.val;
       const testVarName = element.test.var;
 
       if (variableToQuestionMap[testVarName]) {
-        const parent = variableToQuestionMap[testVarName];
-        const parentOption = parent.options.find((option: any) => option.id === branchId);
-        const previousIndex = elements.findIndex((node: PillNode) => node.id === element.objects[0].id) - 1;
-        pill.relations.push({
-          from: parent.id,
-          to: elements[previousIndex].id,
-          condition: `ans = '${parentOption.text}'`,
-        });
-        const a = this.processElement(nextElement, null, pill, variableToQuestionMap).pillNode;
-        pill.relations.push({
-          from: element.objects[element.objects.length - 1].id,
-          to: a[0].id,
+        branchIds.forEach((id: string) => {
+          const parent = variableToQuestionMap[testVarName];
+          const parentOption = parent.options.find((option: any) => option.id === id);
+          let a: PillNode[];
+          nextElement ? (a = this.processElement(nextElement, null, pill, variableToQuestionMap).pillNode) : (a = []);
+          pill.relations.push({
+            from: parent.id,
+            to: branchElements[0].id,
+            condition: `ans = '${parentOption.text}'`,
+          });
+          if (a.length === 0) return elements;
+          console.log('a', a);
+          console.log('elements', elements[0]);
+          pill.relations.push({
+            from: branchElements[branchElements.length - 1].id,
+            to: a[0].id,
+          });
         });
       }
     });
