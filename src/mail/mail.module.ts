@@ -17,7 +17,7 @@ import * as path from 'path';
       useFactory: async (config: ConfigService) => {
         return {
           transport: {
-            host: config.get<string>('EMAIL_HOST'),
+            host: 'smtp.gmail.com',
             secure: true,
             auth: {
               user: config.get<string>('EMAIL_USER'),
