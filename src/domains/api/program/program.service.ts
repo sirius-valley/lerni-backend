@@ -11,6 +11,7 @@ import { CommentRequestDto } from './dtos/comment-request.dto';
 import { ProgramLeaderboardDto } from './dtos/program-leaderboard.dto';
 import { LeaderboardItemDto } from './dtos/leaderboard-item.dto';
 import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
+import { ProgramRequestDto } from './dtos/program-request.dto';
 
 @Injectable()
 export class ProgramService {
@@ -201,5 +202,20 @@ export class ProgramService {
     const passedCoolDown = now.getTime() - lastSubmissionDate.getTime() > coolDown * 60 * 1000;
     const coolDownPassDate = new Date(lastSubmissionDate.getTime() + coolDown * 60 * 1000);
     return { passedCoolDown, coolDownPassDate };
+  }
+
+  public async createProgram(newProgram: ProgramRequestDto) {
+    const program = await this.programRepository.createProgram(
+      newProgram.title,
+      newProgram.description,
+      0,
+      0,
+      newProgram.professor,
+      newProgram.image,
+    );
+    return program;
+    //create pills
+    //create pillVersions
+    //
   }
 }
