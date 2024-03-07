@@ -9,6 +9,7 @@ import { PillModule } from '../domains/api/pill/pill.module';
 import { ProgramModule } from '../domains/api/program/program.module';
 import { QuestionnaireModule } from '../domains/api/questionnaire/questionnaire.module';
 import { SearchModule } from 'src/domains/api/search/search.module';
+import { ProfessorModule } from 'src/domains/api/professor/professor.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SearchModule } from 'src/domains/api/search/search.module';
     ProgramModule,
     QuestionnaireModule,
     SearchModule,
+    ProfessorModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],
