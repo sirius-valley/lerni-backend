@@ -13,12 +13,4 @@ export class ProfessorRepository {
       },
     });
   }
-
-  async create(professor: ProfessorRequestDto) {
-    return this.prisma.teacher.create({
-      data: {
-        ...professor,
-      },
-    });
-  }
 }
