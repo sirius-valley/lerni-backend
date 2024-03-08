@@ -9,8 +9,18 @@ export class StudentDetailsDto {
   career?: string;
   image?: string;
   hasCompletedIntroduction: boolean;
+  points?: number;
 
-  constructor(data: StudentDto, hasCompletedIntroduction: boolean) {
+  constructor(
+    data: StudentDto,
+    {
+      hasCompletedIntroduction,
+      points,
+    }: {
+      points: number;
+      hasCompletedIntroduction: boolean;
+    },
+  ) {
     this.id = data.id;
     this.name = data.name;
     this.lastname = data.lastname;
@@ -19,5 +29,6 @@ export class StudentDetailsDto {
     this.career = data.career;
     this.image = data.image;
     this.hasCompletedIntroduction = hasCompletedIntroduction;
+    this.points = points;
   }
 }

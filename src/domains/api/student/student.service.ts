@@ -9,11 +9,14 @@ export class StudentService {
   constructor(private readonly studentRepository: StudentRepository) {}
 
   public async getStudentDetails(studentDto: StudentDto) {
-    if (!studentDto) return new StudentDetailsDto(studentDto, false);
+    if (!studentDto) return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0 });
 
-    if (!this.checkNecessaryFields(studentDto, necessaryFields)) return new StudentDetailsDto(studentDto, false);
-    if (!this.checkOptionalFields(studentDto, optionalFields)) return new StudentDetailsDto(studentDto, false);
-    return new StudentDetailsDto(studentDto, true);
+    if (!this.checkNecessaryFields(studentDto, necessaryFields))
+      return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0 });
+    if (!this.checkOptionalFields(studentDto, optionalFields))
+      return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0 });
+    const points = await this.studentRepository.getTotalPoints(studentDto.id);
+    return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: true, points: points });
   }
 
   private checkNecessaryFields(studentDto: StudentDto, necessaryFields: string[]) {

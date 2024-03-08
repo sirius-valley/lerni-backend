@@ -34,4 +34,11 @@ export class StudentRepository {
     });
     return data ? new StudentDto(data as StudentDto) : new SimpleEmptyStudentDto({ email: email } as SimpleEmptyStudentDto);
   }
+
+  async getTotalPoints(studentId: string) {
+    const totalPoints = await this.prisma.pointRecord.findMany({
+      where: { studentId },
+    });
+    return totalPoints.reduce((acc, point) => acc + point.amount, 0);
+  }
 }
