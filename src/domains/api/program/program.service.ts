@@ -269,11 +269,11 @@ export class ProgramService {
     const students = await this.studentService.getStudentsByEmail(newProgram.students);
 
     Promise.all(
-      students.map((student) => {
+      students.map(async (student) => {
         if (student instanceof StudentDto) {
-          this.studentRepository.enrollStudent(student.id, program.id);
+          await this.studentRepository.enrollStudent(student.id, program.id);
         } else {
-          this.authService.temporalRegister(student.email);
+          await this.authService.temporalRegister(student.email);
         }
       }),
     );

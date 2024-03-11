@@ -20,15 +20,26 @@ export class AuthService {
 
   public async register(registerDTO: RegisterRequestDto): Promise<JwtDto> {
     const auth = await this.authRepository.findAuthByEmail(registerDTO.email);
-    if (auth) throw new HttpException('Email already in use', HttpStatus.CONFLICT);
-    const hashedPassword = await this.hashPassword(registerDTO.password);
-    const authCreated = await this.authRepository.createAuthAndStudent({
-      ...registerDTO,
-      password: hashedPassword,
-    });
-    const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
-    await this.mailService.sendMail(authCreated.email);
-    return new JwtDto(jwt);
+    if (auth) {
+      if (auth.isActive) {
+        throw new HttpException('Email already in use', HttpStatus.CONFLICT);
+      } else {
+        const hashedPassword = await this.hashPassword(registerDTO.password);
+        const authCreated = await this.authRepository.updateIsActive({ ...registerDTO, password: hashedPassword });
+        const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+        await this.mailService.sendMail(authCreated.email);
+        return new JwtDto(jwt);
+      }
+    } else {
+      const hashedPassword = await this.hashPassword(registerDTO.password);
+      const authCreated = await this.authRepository.createAuthAndStudent({
+        ...registerDTO,
+        password: hashedPassword,
+      });
+      const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+      await this.mailService.sendMail(authCreated.email);
+      return new JwtDto(jwt);
+    }
   }
 
   public async login(loginDTO: LoginRequestDto): Promise<JwtDto> {
@@ -72,6 +83,9 @@ export class AuthService {
   }
 
   public async temporalRegister(email: string) {
-    console.log(email);
+    const auth = await this.authRepository.findAuthByEmail(email);
+    if (auth) throw false;
+    const authCreated = await this.authRepository.createTemporalAuth(email);
+    return authCreated;
   }
 }
