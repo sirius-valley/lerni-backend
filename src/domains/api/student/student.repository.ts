@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma.service';
+import { SimpleEmptyStudentDto } from './dtos/simple-empty-student.dto';
 import { StudentDto } from './dtos/student.dto';
 
 @Injectable()
@@ -21,5 +22,23 @@ export class StudentRepository {
       },
     });
     return student ? new StudentDto(student as StudentDto) : null;
+  }
+
+  async findStudentByEmail(email: string): Promise<StudentDto | SimpleEmptyStudentDto> {
+    const data = await this.prisma.student.findFirst({
+      where: {
+        auth: {
+          email,
+        },
+      },
+    });
+    return data ? new StudentDto(data as StudentDto) : new SimpleEmptyStudentDto({ email: email } as SimpleEmptyStudentDto);
+  }
+
+  async getTotalPoints(studentId: string) {
+    const totalPoints = await this.prisma.pointRecord.findMany({
+      where: { studentId },
+    });
+    return totalPoints.reduce((acc, point) => acc + point.amount, 0);
   }
 }

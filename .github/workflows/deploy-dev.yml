@@ -58,7 +58,7 @@ jobs:
           EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
           ENVIRONMENT: development
         run: |
-          docker build --build-arg PORT="$(PORT)" --build-arg DATABASE_URL="$(DATABASE_URL)" --build-arg POSTGRES_USER="$(POSTGRES_USER)" --build-arg POSTGRES_PASSWORD="$(POSTGRES_PASSWORD)" --build-arg JWT_SECRET="$(JWT_SECRET)" --build-arg SPRING_SERVICE_URL="$(SPRING_SERVICE_URL)" --build-arg EMAIL_HOST="$(EMAIL_HOST)" --build-arg EMAIL_USER="$(EMAIL_USER)" --build-arg EMAIL_PASSWORD="$(EMAIL_PASSWORD) --build-arg ENVIRONMENT="$(ENVIRONMENT) -t $ECR_REPO:$IMAGE_TAG .
+          docker build --build-arg PORT="$PORT" --build-arg DATABASE_URL="$DATABASE_URL" --build-arg POSTGRES_USER="$POSTGRES_USER" --build-arg POSTGRES_PASSWORD="$POSTGRES_PASSWORD" --build-arg JWT_SECRET="$JWT_SECRET" --build-arg SPRING_SERVICE_URL="$SPRING_SERVICE_URL" --build-arg EMAIL_HOST="$EMAIL_HOST" --build-arg EMAIL_USER="$EMAIL_USER" --build-arg EMAIL_PASSWORD="$EMAIL_PASSWORD" --build-arg ENVIRONMENT="$ENVIRONMENT" -t $ECR_REPO:$IMAGE_TAG .
           docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
           docker push $ECR_REPO:$IMAGE_TAG
           docker push $ECR_REPO:latest

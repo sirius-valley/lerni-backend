@@ -55,7 +55,7 @@ export class AuthService {
   public async loginAdmin(adminLoginDto: LoginRequestDto) {
     const admin = await this.authRepository.findTeacherByEmail(adminLoginDto.email);
     if (!admin) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
-    const isCorrectPassword = await this.comparePassword(adminLoginDto.password, admin.password);
+    const isCorrectPassword = await this.comparePassword(adminLoginDto.password, admin?.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     const jwt = await this.jwtService.signAsync({ sub: admin.id }, { secret: this.configService.get<string>('JWT_SECRET') });
     return new JwtDto(jwt);
@@ -66,7 +66,8 @@ export class AuthService {
     return await bcrypt.hash(password, saltOrRounds);
   }
 
-  private async comparePassword(password: string, hash: string): Promise<boolean> {
+  private async comparePassword(password: string, hash: string | null): Promise<boolean> {
+    if (!hash) return false;
     return await bcrypt.compare(password, hash);
   }
 }

@@ -44,14 +44,15 @@ model Student {
 }
 
 model Teacher {
-  id         String   @id @default(uuid())
-  name       String
-  lastname   String
-  password   String
-  email      String
-  profession String
-  image      String?
-  createdAt  DateTime @default(now())
+  id          String   @id @default(uuid())
+  name        String
+  lastname    String
+  password    String?
+  email       String?
+  profession  String
+  image       String?
+  description String?
+  createdAt   DateTime @default(now())
 
   programs Program[]
 }

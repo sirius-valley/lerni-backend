@@ -46,6 +46,7 @@ describe('StudentController', () => {
         city: 'London',
         image: 'profile.jpg',
         hasCompletedIntroduction: true,
+        points: 0,
       });
     });
 
@@ -73,6 +74,7 @@ describe('StudentController', () => {
         career: undefined,
         image: undefined,
         hasCompletedIntroduction: false,
+        points: 0,
       });
     });
 
@@ -101,6 +103,7 @@ describe('StudentController', () => {
         career: undefined,
         image: 'profile.jpg',
         hasCompletedIntroduction: false,
+        points: 0,
       });
     });
   });
