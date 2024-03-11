@@ -9,6 +9,7 @@ import { SpringPillModule } from '../pill-external-api/spring-pill.module';
 import { HttpException } from '@nestjs/common';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { PillModule } from '../pill/pill.module';
+import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
 
 describe('Program Controller', () => {
   let programController: ProgramController;
@@ -16,7 +17,7 @@ describe('Program Controller', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [StudentModule, SpringPillModule, PillModule],
+      imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule],
       controllers: [ProgramController],
       providers: [ProgramService, ProgramRepository, PrismaService],
     })

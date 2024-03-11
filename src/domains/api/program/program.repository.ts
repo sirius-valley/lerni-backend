@@ -464,6 +464,29 @@ export class ProgramRepository {
           },
         },
       },
+      include: {
+        versions: true,
+      },
+    });
+  }
+
+  async createProgramPillVersion(programVersionId: string, pillVersionId: string, order: number) {
+    return this.prisma.programVersionPillVersion.create({
+      data: {
+        programVersionId,
+        pillVersionId,
+        order,
+      },
+    });
+  }
+
+  async createProgramQuestionnaireVersion(programVersionId: string, questionnaireVersionId: string, order) {
+    return await this.prisma.programVersionQuestionnaireVersion.create({
+      data: {
+        questionnaireVersionId,
+        programVersionId,
+        order,
+      },
     });
   }
 }

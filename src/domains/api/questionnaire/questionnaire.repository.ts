@@ -182,4 +182,35 @@ export class QuestionnaireRepository {
       },
     });
   }
+
+  public async createQuestionnaire(name: string, description: string) {
+    return await this.prisma.questionnaire.create({
+      data: {
+        name,
+        description,
+      },
+    });
+  }
+
+  public async createQuestionnaireVersion(
+    questionnaireId: string,
+    completionTimeMinutes: number,
+    cooldownInMinutes: number,
+    block: string,
+    questionCount: number,
+    passsing_score: number,
+    version: number,
+  ) {
+    return this.prisma.questionnaireVersion.create({
+      data: {
+        questionnaireId,
+        completionTimeMinutes,
+        cooldownInMinutes,
+        block,
+        questionCount,
+        passsing_score,
+        version,
+      },
+    });
+  }
 }

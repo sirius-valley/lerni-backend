@@ -12,10 +12,16 @@ import { ProgramLeaderboardDto } from './dtos/program-leaderboard.dto';
 import { LeaderboardItemDto } from './dtos/leaderboard-item.dto';
 import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
 import { ProgramRequestDto } from './dtos/program-request.dto';
+import { PillRepository } from '../pill/pill.repository';
+import { QuestionnaireRepository } from '../questionnaire/questionnaire.repository';
 
 @Injectable()
 export class ProgramService {
-  constructor(private programRepository: ProgramRepository) {}
+  constructor(
+    private programRepository: ProgramRepository,
+    private readonly questionnaireRepository: QuestionnaireRepository,
+    private readonly pillRepository: PillRepository,
+  ) {}
 
   public async getProgramById(studentId: string, programId: string) {
     const programVersion = await this.getProgramVersion(studentId, programId);
@@ -213,9 +219,48 @@ export class ProgramService {
       newProgram.professor,
       newProgram.image,
     );
+    const pills = await Promise.all(
+      newProgram.pill.map(async (item) => {
+        return await this.pillRepository.createPill({
+          name: item.name,
+          description: item.description,
+          teacherComment: item.teacherComment,
+        });
+      }),
+    );
+    const pillsVersions = await Promise.all(
+      pills.map(async (pill, index) => {
+        return await this.pillRepository.createPillVersion(
+          pill.id,
+          newProgram.pill[index].block,
+          newProgram.pill[index].completionTimeMinutes,
+        );
+      }),
+    );
+    await Promise.all(
+      pillsVersions.map(async (pill, index) => {
+        await this.programRepository.createProgramPillVersion(program.id, pill.id, index);
+      }),
+    );
+    const questionarie = await this.questionnaireRepository.createQuestionnaire(
+      newProgram.questionnaire.name,
+      newProgram.questionnaire.description,
+    );
+
+    const questionnaireVersion = await this.questionnaireRepository.createQuestionnaireVersion(
+      questionarie.id,
+      newProgram.questionnaire.completionTimeMinutes,
+      newProgram.questionnaire.cooldownInMinutes,
+      newProgram.questionnaire.block,
+      newProgram.questionnaire.questionCount,
+      newProgram.questionnaire.passsingScore,
+      1,
+    );
+
+    await this.programRepository.createProgramQuestionnaireVersion(program.id, questionnaireVersion.id, newProgram.questionnaire.order);
+
+    // Promise.all(newProgram.students.map((student) => {}));
+
     return program;
-    //create pills
-    //create pillVersions
-    //
   }
 }

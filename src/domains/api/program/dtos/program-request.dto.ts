@@ -1,5 +1,6 @@
-import { Pill } from '@prisma/client';
 import { IsArray, IsEmail, IsJSON, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { PillRequestDto } from '../../pill/dtos/pill-request.dto';
+import { QuestionnaireRequestDto } from '../../questionnaire/dtos/questionnaire-request.dto';
 
 export class ProgramRequestDto {
   @IsNotEmpty()
@@ -20,10 +21,10 @@ export class ProgramRequestDto {
 
   @IsNotEmpty()
   @IsArray()
-  pill: Pill[];
+  pill: PillRequestDto[];
 
-  @IsJSON()
-  questionnaire: string;
+  @IsNotEmpty()
+  questionnaire: QuestionnaireRequestDto;
 
   @IsJSON()
   trivia: string;

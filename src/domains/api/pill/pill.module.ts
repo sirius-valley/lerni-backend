@@ -11,7 +11,7 @@ import { HeadlandsAdapter } from './adapters/headlands.adapter';
 @Module({
   controllers: [PillController],
   imports: [SpringPillModule, StudentModule],
-  providers: [PrismaService, PillService, PillRepository, StudentRepository, StudentRepository, HeadlandsAdapter],
+  providers: [PrismaService, PillService, PillRepository, StudentRepository, HeadlandsAdapter],
   exports: [PillService, PillRepository],
 })
 export class PillModule {}

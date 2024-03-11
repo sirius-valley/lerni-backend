@@ -1,6 +1,5 @@
 import { PrismaService } from '../../../prisma.service';
 import { Injectable } from '@nestjs/common';
-// import { PillDto } from './dtos/pill.dto';
 
 @Injectable()
 export class PillRepository {
@@ -161,9 +160,22 @@ export class PillRepository {
     });
   }
 
-  // public async createPill(pills: PillDto[]) {
-  //   return await this.prisma.pill.createMany({
-  //     data: [pills],
-  //   });
-  // }
+  public async createPill(pill: { name: string; description: string; teacherComment: string }) {
+    return await this.prisma.pill.create({
+      data: {
+        ...pill,
+      },
+    });
+  }
+
+  public async createPillVersion(pillId: string, block: string, completionTimeMinutes: number) {
+    return await this.prisma.pillVersion.create({
+      data: {
+        pillId,
+        block,
+        completionTimeMinutes,
+        version: 1,
+      },
+    });
+  }
 }
