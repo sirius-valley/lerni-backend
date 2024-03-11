@@ -41,4 +41,13 @@ export class StudentRepository {
     });
     return totalPoints.reduce((acc, point) => acc + point.amount, 0);
   }
+
+  async enrollStudent(studentId: string, programVersionId: string) {
+    return await this.prisma.studentProgram.create({
+      data: {
+        studentId,
+        programVersionId,
+      },
+    });
+  }
 }

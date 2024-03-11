@@ -70,4 +70,8 @@ export class AuthService {
     if (!hash) return false;
     return await bcrypt.compare(password, hash);
   }
+
+  public async temporalRegister(email: string) {
+    console.log(email);
+  }
 }

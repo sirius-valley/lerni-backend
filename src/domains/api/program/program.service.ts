@@ -14,6 +14,10 @@ import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
 import { ProgramRequestDto } from './dtos/program-request.dto';
 import { PillRepository } from '../pill/pill.repository';
 import { QuestionnaireRepository } from '../questionnaire/questionnaire.repository';
+import { StudentService } from '../student/student.service';
+import { StudentDto } from '../student/dtos/student.dto';
+import { StudentRepository } from '../student/student.repository';
+import { AuthService } from '../../auth/auth.service';
 
 @Injectable()
 export class ProgramService {
@@ -21,6 +25,9 @@ export class ProgramService {
     private programRepository: ProgramRepository,
     private readonly questionnaireRepository: QuestionnaireRepository,
     private readonly pillRepository: PillRepository,
+    private readonly studentService: StudentService,
+    private readonly studentRepository: StudentRepository,
+    private readonly authService: AuthService,
   ) {}
 
   public async getProgramById(studentId: string, programId: string) {
@@ -259,7 +266,17 @@ export class ProgramService {
 
     await this.programRepository.createProgramQuestionnaireVersion(program.id, questionnaireVersion.id, newProgram.questionnaire.order);
 
-    // Promise.all(newProgram.students.map((student) => {}));
+    const students = await this.studentService.getStudentsByEmail(newProgram.students);
+
+    Promise.all(
+      students.map((student) => {
+        if (student instanceof StudentDto) {
+          this.studentRepository.enrollStudent(student.id, program.id);
+        } else {
+          this.authService.temporalRegister(student.email);
+        }
+      }),
+    );
 
     return program;
   }

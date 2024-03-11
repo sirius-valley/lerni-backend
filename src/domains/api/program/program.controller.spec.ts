@@ -10,14 +10,16 @@ import { HttpException } from '@nestjs/common';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { PillModule } from '../pill/pill.module';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
+import { AuthModule } from '../../auth/auth.module';
 
+process.env.JWT_SECRET = 'test_secret_long';
 describe('Program Controller', () => {
   let programController: ProgramController;
   let prismaService: DeepMockProxy<PrismaService>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule],
+      imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule, AuthModule],
       controllers: [ProgramController],
       providers: [ProgramService, ProgramRepository, PrismaService],
     })

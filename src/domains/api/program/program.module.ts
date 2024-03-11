@@ -8,10 +8,11 @@ import { PillModule } from '../pill/pill.module';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
 import { QuestionnaireRepository } from '../questionnaire/questionnaire.repository';
 import { PillRepository } from '../pill/pill.repository';
+import { AuthModule } from 'src/domains/auth/auth.module';
 
 @Module({
   controllers: [ProgramController],
-  imports: [StudentModule, PillModule, QuestionnaireModule],
+  imports: [StudentModule, PillModule, QuestionnaireModule, AuthModule],
   providers: [PrismaService, ProgramService, ProgramRepository, QuestionnaireRepository, PillRepository],
   exports: [ProgramService, ProgramRepository],
 })
