@@ -273,7 +273,8 @@ export class ProgramService {
         if (student instanceof StudentDto) {
           await this.studentRepository.enrollStudent(student.id, program.id);
         } else {
-          await this.authService.temporalRegister(student.email);
+          const temporalStudent = await this.authService.temporalRegister(student.email);
+          await this.studentRepository.enrollStudent(temporalStudent.id, program.id);
         }
       }),
     );
