@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsJSON, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsArray, IsEmail, IsInt, IsJSON, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 import { PillRequestDto } from '../../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../../questionnaire/dtos/questionnaire-request.dto';
 
@@ -32,6 +32,12 @@ export class ProgramRequestDto {
   @IsArray()
   @IsEmail({}, { each: true })
   students: string[];
+
+  @IsInt()
+  hoursToComplete: number;
+
+  @IsInt()
+  pointsReward: number;
 
   constructor(program: ProgramRequestDto) {
     this.title = program.title;

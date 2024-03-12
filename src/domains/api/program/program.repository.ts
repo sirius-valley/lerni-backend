@@ -458,14 +458,15 @@ export class ProgramRepository {
         pointsReward,
         teacherId,
         icon,
-        versions: {
-          create: {
-            version: 1,
-          },
-        },
       },
-      include: {
-        versions: true,
+    });
+  }
+
+  async createProgramVersion(programId: string, version: number) {
+    return await this.prisma.programVersion.create({
+      data: {
+        programId,
+        version,
       },
     });
   }

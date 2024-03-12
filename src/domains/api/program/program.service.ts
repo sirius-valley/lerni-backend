@@ -18,6 +18,8 @@ import { StudentService } from '../student/student.service';
 import { StudentDto } from '../student/dtos/student.dto';
 import { StudentRepository } from '../student/student.repository';
 import { AuthService } from '../../auth/auth.service';
+import { PillRequestDto } from '../pill/dtos/pill-request.dto';
+import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
 
 @Injectable()
 export class ProgramService {
@@ -217,17 +219,9 @@ export class ProgramService {
     return { passedCoolDown, coolDownPassDate };
   }
 
-  public async createProgram(newProgram: ProgramRequestDto) {
-    const program = await this.programRepository.createProgram(
-      newProgram.title,
-      newProgram.description,
-      0,
-      0,
-      newProgram.professor,
-      newProgram.image,
-    );
+  private async addPillToProgram(data: PillRequestDto[], programId: string) {
     const pills = await Promise.all(
-      newProgram.pill.map(async (item) => {
+      data.map(async (item) => {
         return await this.pillRepository.createPill({
           name: item.name,
           description: item.description,
@@ -237,47 +231,68 @@ export class ProgramService {
     );
     const pillsVersions = await Promise.all(
       pills.map(async (pill, index) => {
-        return await this.pillRepository.createPillVersion(
-          pill.id,
-          newProgram.pill[index].block,
-          newProgram.pill[index].completionTimeMinutes,
-        );
+        return await this.pillRepository.createPillVersion(pill.id, data[index].block, data[index].completionTimeMinutes);
       }),
     );
     await Promise.all(
       pillsVersions.map(async (pill, index) => {
-        await this.programRepository.createProgramPillVersion(program.id, pill.id, index);
+        await this.programRepository.createProgramPillVersion(programId, pill.id, index);
       }),
     );
-    const questionarie = await this.questionnaireRepository.createQuestionnaire(
-      newProgram.questionnaire.name,
-      newProgram.questionnaire.description,
-    );
+  }
+
+  public async createVersionProgram(programId: string, version: number) {
+    return await this.programRepository.createProgramVersion(programId, version);
+  }
+
+  public async addQuestionnaireToProgram(programId: string, data: QuestionnaireRequestDto) {
+    const questionarie = await this.questionnaireRepository.createQuestionnaire(data.name, data.description);
 
     const questionnaireVersion = await this.questionnaireRepository.createQuestionnaireVersion(
       questionarie.id,
-      newProgram.questionnaire.completionTimeMinutes,
-      newProgram.questionnaire.cooldownInMinutes,
-      newProgram.questionnaire.block,
-      newProgram.questionnaire.questionCount,
-      newProgram.questionnaire.passsingScore,
+      data.completionTimeMinutes,
+      data.cooldownInMinutes,
+      data.block,
+      data.questionCount,
+      data.passsingScore,
       1,
     );
 
-    await this.programRepository.createProgramQuestionnaireVersion(program.id, questionnaireVersion.id, newProgram.questionnaire.order);
+    await this.programRepository.createProgramQuestionnaireVersion(programId, questionnaireVersion.id, data.order);
+  }
 
-    const students = await this.studentService.getStudentsByEmail(newProgram.students);
+  public async enrollStudents(programId: string, newStudents: string[]) {
+    const students = await this.studentService.getStudentsByEmail(newStudents);
 
     Promise.all(
       students.map(async (student) => {
         if (student instanceof StudentDto) {
-          await this.studentRepository.enrollStudent(student.id, program.id);
+          await this.studentRepository.enrollStudent(student.id, programId);
         } else {
           const temporalStudent = await this.authService.temporalRegister(student.email);
-          await this.studentRepository.enrollStudent(temporalStudent.id, program.id);
+          await this.studentRepository.enrollStudent(temporalStudent.id, programId);
         }
       }),
     );
+  }
+
+  public async createProgram(newProgram: ProgramRequestDto) {
+    const program = await this.programRepository.createProgram(
+      newProgram.title,
+      newProgram.description,
+      newProgram.hoursToComplete,
+      newProgram.pointsReward,
+      newProgram.professor,
+      newProgram.image,
+    );
+
+    const programVersion = await this.createVersionProgram(program.id, 1);
+
+    this.addPillToProgram(newProgram.pill, programVersion.id);
+
+    this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
+
+    this.enrollStudents(programVersion.id, newProgram.students);
 
     return program;
   }
