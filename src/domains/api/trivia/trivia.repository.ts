@@ -5,7 +5,7 @@ import { PrismaService } from '../../../prisma.service';
 export class TriviaRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async getTriviaMatchByStudentIdAndProgramId(studentId: string, programId: string) {
+  public async getTriviaMatchByStudentIdAndProgramVersionId(studentId: string, programVersionId: string) {
     return this.prisma.triviaMatch.findFirst({
       where: {
         studentTriviaMatches: {
@@ -16,9 +16,7 @@ export class TriviaRepository {
         trivia: {
           programVersions: {
             some: {
-              programVersion: {
-                programId,
-              },
+              programVersionId,
             },
           },
         },
@@ -26,15 +24,13 @@ export class TriviaRepository {
     });
   }
 
-  public async findTriviaMatchByProgramId(programId: string) {
+  public async findTriviaMatchByProgramVersionId(programVersionId: string) {
     const matches = await this.prisma.triviaMatch.findMany({
       where: {
         trivia: {
           programVersions: {
             some: {
-              programVersion: {
-                programId,
-              },
+              programVersionId,
             },
           },
         },
@@ -43,7 +39,11 @@ export class TriviaRepository {
         createdAt: 'desc',
       },
       include: {
-        studentTriviaMatches: true,
+        studentTriviaMatches: {
+          include: {
+            student: true,
+          },
+        },
       },
     });
     return matches.find((match) => match.studentTriviaMatches.length === 1);
@@ -54,6 +54,85 @@ export class TriviaRepository {
       data: {
         studentId,
         triviaMatchId,
+      },
+    });
+  }
+
+  public async findTriviaByProgramVersionId(programVersionId: string) {
+    return this.prisma.trivia.findFirst({
+      where: {
+        programVersions: {
+          some: {
+            programVersionId,
+          },
+        },
+      },
+    });
+  }
+
+  public async createTriviaMatch(studentId: string, triviaId: string) {
+    return this.prisma.triviaMatch.create({
+      data: {
+        triviaId,
+        studentTriviaMatches: {
+          create: {
+            studentId,
+          },
+        },
+      },
+    });
+  }
+
+  public async getStudentsByProgramVersionIdAndNoTriviaMatch(programVersionId: string, triviaId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+        studentTriviaMatches: {
+          none: {
+            triviaMatch: {
+              triviaId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  public async getStudentWithCompleteProgram(studentId: string, programVersionId: string) {
+    return this.prisma.studentProgram.findFirst({
+      where: {
+        studentId,
+        programVersion: {
+          id: programVersionId,
+          programVersionPillVersions: {
+            every: {
+              pillVersion: {
+                pillSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+          programVersionQuestionnaireVersions: {
+            every: {
+              questionnaireVersion: {
+                questionnaireSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
