@@ -16,11 +16,13 @@ export class ProfessorRepository {
     });
   }
 
-  async getProfessors(options: LimitOffsetPagination): Promise<SimpleProfessortDto[]> {
+  async getProfessors(options: LimitOffsetPagination): Promise<any> {
     const teachers = this.prisma.teacher.findMany({
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
     });
-    return (await teachers).map((teacher) => new SimpleProfessortDto(teacher));
+
+    const total = Number(await this.prisma.teacher.count());
+    return { result: (await teachers).map((teacher) => new SimpleProfessortDto(teacher)), total: Math.ceil(total / 10) };
   }
 }
