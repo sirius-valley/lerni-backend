@@ -11,7 +11,8 @@ export class ProfessorService {
     return await this.professorRepository.createSimpleProfessor(newProfessor);
   }
 
-  async getProfessors(): Promise<SimpleProfessortDto[]> {
-    return await this.professorRepository.getProfessors();
+  async getProfessors(page: number): Promise<SimpleProfessortDto[]> {
+    const options = { limit: Number(10), offset: (page - 1) * 10 };
+    return await this.professorRepository.getProfessors(options);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AttachStudentDataInterceptor } from 'src/interceptors/attach-student-data.interceptor';
@@ -19,7 +19,8 @@ export class ProfessorController {
   }
 
   @Get('')
-  async getProfessor() {
-    return await this.professorService.getProfessors();
+  async getProfessor(@Query() query: any) {
+    const { page } = query as Record<string, string>;
+    return await this.professorService.getProfessors(Number(page));
   }
 }
