@@ -41,6 +41,8 @@ model Student {
   pillSubmissions PillSubmission[]
 
   questionnaireSubmissions QuestionnaireSubmission[]
+
+  studentTriviaMatches StudentTriviaMatch[]
 }
 
 model Teacher {
@@ -130,6 +132,8 @@ model ProgramVersion {
   programVersionPillVersions ProgramVersionPillVersion[]
 
   programVersionQuestionnaireVersions ProgramVersionQuestionnaireVersion[]
+
+  programVersionTrivias ProgramVersionTrivia[]
 }
 
 model StudentProgram {
@@ -287,4 +291,62 @@ model ProgramVersionQuestionnaireVersion {
 
   questionnaireVersionId String
   questionnaireVersion   QuestionnaireVersion @relation(fields: [questionnaireVersionId], references: [id])
+}
+
+model Trivia {
+  id            String   @id @default(uuid())
+  block         String
+  questionCount Int
+  createdAt     DateTime @default(now())
+
+  programVersions ProgramVersionTrivia[]
+
+  triviaMatches TriviaMatch[]
+}
+
+model ProgramVersionTrivia {
+  id        String   @id @default(uuid())
+  order     Int
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  triviaId String
+  trivia   Trivia @relation(fields: [triviaId], references: [id])
+}
+
+model TriviaMatch {
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now())
+  finishedDateTime DateTime?
+
+  triviaId String
+  trivia   Trivia @relation(fields: [triviaId], references: [id])
+
+  studentTriviaMatches StudentTriviaMatch[]
+}
+
+model StudentTriviaMatch {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  triviaMatchId String
+  triviaMatch   TriviaMatch @relation(fields: [triviaMatchId], references: [id])
+
+  triviaAnswers TriviaAnswer[]
+}
+
+model TriviaAnswer {
+  id         String   @id @default(uuid())
+  questionId String
+  value      String
+  isCorrect  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  studentTriviaMatchId String
+  studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id])
 }

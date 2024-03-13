@@ -103,7 +103,7 @@ export class ProgramService {
     });
   }
 
-  private async getProgramVersion(studentId: string, programId: string) {
+  public async getProgramVersion(studentId: string, programId: string) {
     const studentRelatedProgramVersion = (
       await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithSubmissions(studentId, programId)
     )?.programVersion;
