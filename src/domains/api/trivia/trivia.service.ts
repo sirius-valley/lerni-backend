@@ -56,9 +56,19 @@ export class TriviaService {
   }
 
   private async findOpponent(programVersionId: string, triviaId: string) {
-    //find students who are enrolled and don't have a trivia match
+    // Find students who are enrolled and don't have a trivia match
     const students = await this.triviaRepository.getStudentsByProgramVersionIdAndNoTriviaMatch(programVersionId, triviaId);
-    //find the first one that has completed the program
-    return students.find(async (student) => await this.triviaRepository.getStudentWithCompleteProgram(student.id, programVersionId));
+    if (students.length === 0) return undefined;
+
+    for (const student of students) {
+      const hasCompletedProgram = await this.triviaRepository.getStudentWithCompleteProgram(student.id, programVersionId);
+      if (hasCompletedProgram) {
+        // If the student has completed the program, return the student object
+        // TODO: notify student
+        return student;
+      }
+    }
+    // If no student has completed the program, return undefined
+    return undefined;
   }
 }

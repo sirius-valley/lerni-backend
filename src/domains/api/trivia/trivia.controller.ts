@@ -1,12 +1,18 @@
-import { Controller, Get, Param, Request } from '@nestjs/common';
+import { Controller, Get, Param, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TriviaService } from './trivia.service';
 import { ApiRequest } from '../../../types/api-request.interface';
+import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 
 @Controller('api/trivia')
+@UseGuards(JwtGuard)
+@ApiBearerAuth('JWT-auth')
+@UseInterceptors(AttachStudentDataInterceptor)
 export class TriviaController {
   constructor(private readonly triviaService: TriviaService) {}
 
-  @Get('/assign/:programId')
+  @Get('assign/:programId')
   async getTriviaMatch(@Request() req: ApiRequest, @Param('programId') programId: string) {
     return await this.triviaService.createOrAssignTriviaMatch(req.user, programId);
   }
