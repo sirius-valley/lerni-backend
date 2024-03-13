@@ -5,6 +5,7 @@ import { AttachStudentDataInterceptor } from '../../../interceptors/attach-stude
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { CommentRequestDto } from './dtos/comment-request.dto';
+import { ProgramRequestDto } from './dtos/program-request.dto';
 
 @Controller('api/program')
 @ApiBearerAuth('JWT-auth')
@@ -42,5 +43,10 @@ export class ProgramController {
       limit: Number(limit),
       offset: Number(offset),
     });
+  }
+
+  @Post('')
+  async newProgram(@Request() req: ApiRequest, @Body() newProgram: ProgramRequestDto) {
+    return await this.programService.createProgram(newProgram);
   }
 }

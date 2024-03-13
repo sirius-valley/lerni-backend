@@ -159,4 +159,23 @@ export class PillRepository {
       },
     });
   }
+
+  public async createPill(pill: { name: string; description: string; teacherComment: string }) {
+    return await this.prisma.pill.create({
+      data: {
+        ...pill,
+      },
+    });
+  }
+
+  public async createPillVersion(pillId: string, block: string, completionTimeMinutes: number) {
+    return await this.prisma.pillVersion.create({
+      data: {
+        pillId,
+        block,
+        completionTimeMinutes,
+        version: 1,
+      },
+    });
+  }
 }

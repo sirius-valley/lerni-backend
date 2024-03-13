@@ -51,4 +51,13 @@ export class StudentRepository {
     });
     return student ? new SimpleStudentDto(student as SimpleStudentDto) : null;
   }
+
+  async enrollStudent(studentId: string, programVersionId: string) {
+    return await this.prisma.studentProgram.create({
+      data: {
+        studentId,
+        programVersionId,
+      },
+    });
+  }
 }
