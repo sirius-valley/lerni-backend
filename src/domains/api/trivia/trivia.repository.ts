@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LimitOffsetPagination } from 'src/types/limit-offset.pagination';
 import { PrismaService } from '../../../prisma.service';
 
 @Injectable()
@@ -135,5 +136,25 @@ export class TriviaRepository {
         },
       },
     });
+  }
+
+  public async getTriviaHistory(studentId: string, options: LimitOffsetPagination) {
+    const results = await this.prisma.studentTriviaMatch.findMany({
+      where: {
+        studentId,
+      },
+      include: {
+        triviaMatch: true,
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
+    });
+    const total = await this.prisma.studentTriviaMatch.count({
+      where: {
+        studentId,
+      },
+    });
+
+    return { results, total };
   }
 }

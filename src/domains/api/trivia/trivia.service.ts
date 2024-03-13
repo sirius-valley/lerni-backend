@@ -61,4 +61,10 @@ export class TriviaService {
     //find the first one that has completed the program
     return students.find(async (student) => await this.triviaRepository.getStudentWithCompleteProgram(student.id, programVersionId));
   }
+
+  public async getTriviaHistory(student: StudentDto, page: number) {
+    const options = { limit: Number(10), offset: (page - 1) * 10 };
+    const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
+    return { results, totalPages: Math.ceil(total / 10) };
+  }
 }
