@@ -81,7 +81,7 @@ export class TriviaService {
 
     const data = results.map(async (item) => {
       const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
-      const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId);
+      const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId, options);
       if (otherMatches) {
         const oponent = await this.studentService.getStudentById(otherMatches.studentId);
         const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);

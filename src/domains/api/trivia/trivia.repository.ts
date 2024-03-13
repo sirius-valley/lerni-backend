@@ -183,7 +183,7 @@ export class TriviaRepository {
     });
   }
 
-  public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string) {
+  public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string, options: LimitOffsetPagination) {
     return await this.prisma.studentTriviaMatch.findFirst({
       where: {
         triviaMatchId,
@@ -193,6 +193,11 @@ export class TriviaRepository {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
     });
   }
 
