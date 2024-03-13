@@ -202,4 +202,8 @@ export class ProgramService {
     const coolDownPassDate = new Date(lastSubmissionDate.getTime() + coolDown * 60 * 1000);
     return { passedCoolDown, coolDownPassDate };
   }
+
+  public async getProgramByProgramVersionId(id: string) {
+    return await this.programRepository.getProgramByProgramVersion(id);
+  }
 }

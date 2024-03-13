@@ -448,4 +448,16 @@ export class ProgramRepository {
         OFFSET ${offset * limit};
     `;
   }
+
+  async getProgramByProgramVersion(programVersionId: string) {
+    return await this.prisma.program.findFirst({
+      where: {
+        versions: {
+          every: {
+            id: programVersionId,
+          },
+        },
+      },
+    });
+  }
 }

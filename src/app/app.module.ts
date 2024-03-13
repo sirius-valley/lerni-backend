@@ -10,6 +10,7 @@ import { ProgramModule } from '../domains/api/program/program.module';
 import { QuestionnaireModule } from '../domains/api/questionnaire/questionnaire.module';
 import { SearchModule } from 'src/domains/api/search/search.module';
 import { ProfessorModule } from 'src/domains/api/professor/professor.module';
+import { TriviaModule } from 'src/domains/api/trivia/trivia.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProfessorModule } from 'src/domains/api/professor/professor.module';
     QuestionnaireModule,
     SearchModule,
     ProfessorModule,
+    TriviaModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],

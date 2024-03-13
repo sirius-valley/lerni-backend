@@ -143,8 +143,8 @@ export class TriviaRepository {
       where: {
         studentId,
       },
-      include: {
-        triviaMatch: true,
+      orderBy: {
+        createdAt: 'desc',
       },
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
@@ -156,5 +156,51 @@ export class TriviaRepository {
     });
 
     return { results, total };
+  }
+
+  public async getTriviaById(triviaId: string) {
+    return await this.prisma.trivia.findUnique({
+      where: {
+        id: triviaId,
+      },
+    });
+  }
+
+  public async getTriviaMatchById(triviaMatchId: string) {
+    return await this.prisma.triviaMatch.findUnique({
+      where: {
+        id: triviaMatchId,
+      },
+    });
+  }
+
+  public async getTriviaAnswerCorrectCountByMatchId(studentTriviaMatchId: string) {
+    return await this.prisma.triviaAnswer.count({
+      where: {
+        studentTriviaMatchId,
+        isCorrect: true,
+      },
+    });
+  }
+
+  public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string) {
+    return await this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        triviaMatchId,
+        student: {
+          isNot: {
+            id: studentId,
+          },
+        },
+      },
+    });
+  }
+
+  public async getProgramTriviaVersionByTriviaId(triviaId: string) {
+    return await this.prisma.programVersionTrivia.findFirst({
+      where: {
+        triviaId,
+      },
+    });
   }
 }

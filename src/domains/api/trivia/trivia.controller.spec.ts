@@ -4,6 +4,7 @@ import { ProgramModule } from '../program/program.module';
 import { TriviaService } from './trivia.service';
 import { TriviaRepository } from './trivia.repository';
 import { PrismaService } from '../../../prisma.service';
+import { StudentModule } from '../student/student.module';
 
 describe('TriviaController', () => {
   let controller: TriviaController;
@@ -11,7 +12,7 @@ describe('TriviaController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TriviaController],
-      imports: [ProgramModule],
+      imports: [ProgramModule, StudentModule],
       providers: [TriviaService, TriviaRepository, PrismaService],
     }).compile();
 

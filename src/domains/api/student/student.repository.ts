@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma.service';
 import { SimpleEmptyStudentDto } from './dtos/simple-empty-student.dto';
+import { SimpleStudentDto } from './dtos/simple-student.dto';
 import { StudentDto } from './dtos/student.dto';
 
 @Injectable()
@@ -40,5 +41,14 @@ export class StudentRepository {
       where: { studentId },
     });
     return totalPoints.reduce((acc, point) => acc + point.amount, 0);
+  }
+
+  async findStudentById(id: string): Promise<SimpleStudentDto | null> {
+    const student = await this.prisma.student.findUnique({
+      where: {
+        id,
+      },
+    });
+    return student ? new SimpleStudentDto(student as SimpleStudentDto) : null;
   }
 }
