@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsInt, IsJSON, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsArray, IsEmail, IsInt, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 import { PillRequestDto } from '../../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../../questionnaire/dtos/questionnaire-request.dto';
 
@@ -26,7 +26,7 @@ export class ProgramRequestDto {
   @IsNotEmpty()
   questionnaire: QuestionnaireRequestDto;
 
-  @IsJSON()
+  @IsString()
   trivia: string;
 
   @IsArray()
@@ -38,15 +38,4 @@ export class ProgramRequestDto {
 
   @IsInt()
   pointsReward: number;
-
-  constructor(program: ProgramRequestDto) {
-    this.title = program.title;
-    this.image = program.image;
-    this.description = program.description;
-    this.questionnaire = program.questionnaire;
-    this.pill = program.pill;
-    this.professor = program.professor;
-    this.trivia = program.trivia;
-    this.students = program.students;
-  }
 }
