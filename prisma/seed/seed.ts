@@ -265,23 +265,17 @@ async function main() {
 }
 
 main()
-
   .then(async () => {
-
     await prisma.$disconnect();
-
   })
 
   .catch(async (e) => {
-
     console.error(e);
 
     await prisma.$disconnect();
 
     process.exit(1);
-
   });
-
 
 async function extraPrograms(n: number = 10) {
   for (let i = 0; i < n; i++) {

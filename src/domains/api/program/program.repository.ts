@@ -448,4 +448,46 @@ export class ProgramRepository {
         OFFSET ${offset * limit};
     `;
   }
+
+  async createProgram(name: string, description: string, hoursToComplete: number, pointsReward: number, teacherId: string, icon: string) {
+    return await this.prisma.program.create({
+      data: {
+        name,
+        description,
+        hoursToComplete,
+        pointsReward,
+        teacherId,
+        icon,
+      },
+    });
+  }
+
+  async createProgramVersion(programId: string, version: number) {
+    return await this.prisma.programVersion.create({
+      data: {
+        programId,
+        version,
+      },
+    });
+  }
+
+  async createProgramPillVersion(programVersionId: string, pillVersionId: string, order: number) {
+    return this.prisma.programVersionPillVersion.create({
+      data: {
+        programVersionId,
+        pillVersionId,
+        order,
+      },
+    });
+  }
+
+  async createProgramQuestionnaireVersion(programVersionId: string, questionnaireVersionId: string, order) {
+    return await this.prisma.programVersionQuestionnaireVersion.create({
+      data: {
+        questionnaireVersionId,
+        programVersionId,
+        order,
+      },
+    });
+  }
 }

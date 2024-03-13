@@ -38,4 +38,27 @@ export class AuthRepository {
       where: { email },
     });
   }
+
+  async createTemporalAuth(email: string) {
+    return this.prisma.auth.create({
+      data: {
+        email,
+        password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+        isActive: false,
+      },
+    });
+  }
+
+  async updateIsActive(data: RegisterRequestDto) {
+    return this.prisma.auth.update({
+      data: {
+        ...data,
+        isActive: true,
+        user: {},
+      },
+      where: {
+        email: data.email,
+      },
+    });
+  }
 }

@@ -10,5 +10,6 @@ import { StudentModule } from '../student/student.module';
   controllers: [QuestionnaireController],
   imports: [SpringPillModule, StudentModule],
   providers: [PrismaService, QuestionnaireService, QuestionnaireRepository],
+  exports: [QuestionnaireService, QuestionnaireRepository],
 })
 export class QuestionnaireModule {}
