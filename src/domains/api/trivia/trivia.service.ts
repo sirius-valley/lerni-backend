@@ -95,13 +95,13 @@ export class TriviaService {
 
   private async getProgramByTriviaMatchId(triviaMatchId: string) {
     const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
-    if (!triviaMatch) throw 'error';
+    if (!triviaMatch) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
     const trivia = await this.triviaRepository.getTriviaById(triviaMatch?.triviaId);
-    if (!trivia) throw 'error';
+    if (!trivia) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
     const triviaVersion = await this.triviaRepository.getProgramTriviaVersionByTriviaId(trivia.id);
-    if (!triviaVersion) throw 'error';
+    if (!triviaVersion) throw new HttpException('Trivia version not found', HttpStatus.NOT_FOUND);
     const program = await this.programService.getProgramByProgramVersionId(triviaVersion?.programVersionId);
-    if (!program) throw 'error';
+    if (!program) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
     return program;
   }
 
