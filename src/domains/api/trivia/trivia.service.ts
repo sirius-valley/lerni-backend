@@ -85,9 +85,9 @@ export class TriviaService {
       if (otherMatches) {
         const oponent = await this.studentService.getStudentById(otherMatches.studentId);
         const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
-        return new TriviaHistoryDto(item.id, result, program.name, 10, oponent);
+        return new TriviaHistoryDto(item.id, result, program.name, 10, item.createdAt, oponent);
       }
-      return new TriviaHistoryDto(item.id, 'WAIT', program.name, 10, null);
+      return new TriviaHistoryDto(item.id, 'WAIT', program.name, 10, item.createdAt, null);
     });
 
     return { results: data, totalPages: Math.ceil(total / 10) };
