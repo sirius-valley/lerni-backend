@@ -7,6 +7,7 @@ import { SimpleProgramDto } from '../program/dtos/simple-program.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
+import { TriviaStatus } from './dto/trivia-interfaces.interface';
 
 @Injectable()
 export class TriviaService {
@@ -87,7 +88,6 @@ export class TriviaService {
         const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
         return new TriviaHistoryDto(item.id, result, program.name, 10, item.createdAt, oponent);
       }
-      return new TriviaHistoryDto(item.id, 'WAIT', program.name, 10, item.createdAt, null);
     });
 
     return { results: data, totalPages: Math.ceil(total / 10) };
@@ -108,6 +108,6 @@ export class TriviaService {
   private async getTriviaResult(studentId: string, oponentId: string) {
     const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
     const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
-    return otherAnswer > myAnswer ? 'LOST' : otherAnswer < myAnswer ? 'WON' : 'TIED';
+    return otherAnswer > myAnswer ? TriviaStatus.LOST : otherAnswer < myAnswer ? TriviaStatus.WON : TriviaStatus.TIED;
   }
 }

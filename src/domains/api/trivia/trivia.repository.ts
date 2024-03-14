@@ -142,6 +142,11 @@ export class TriviaRepository {
     const results = await this.prisma.studentTriviaMatch.findMany({
       where: {
         studentId,
+        triviaMatch: {
+          isNot: {
+            finishedDateTime: null,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
