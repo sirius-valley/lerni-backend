@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TriviaService } from './trivia.service';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
@@ -15,5 +15,11 @@ export class TriviaController {
   @Get('assign/:programId')
   async getTriviaMatch(@Request() req: ApiRequest, @Param('programId') programId: string) {
     return await this.triviaService.createOrAssignTriviaMatch(req.user, programId);
+  }
+
+  @Get('/history')
+  async getTriviaHistory(@Request() req: ApiRequest, @Query() query: any) {
+    const { page } = query as Record<string, string>;
+    return await this.triviaService.getTriviaHistory(req.user, Number(page));
   }
 }

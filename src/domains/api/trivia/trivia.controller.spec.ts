@@ -6,6 +6,7 @@ import { TriviaRepository } from './trivia.repository';
 import { PrismaService } from '../../../prisma.service';
 import { StudentModule } from '../student/student.module';
 
+process.env.JWT_SECRET = 'test_secret_long';
 describe('TriviaController', () => {
   let controller: TriviaController;
 

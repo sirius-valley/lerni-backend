@@ -34,4 +34,8 @@ export class StudentService {
       }),
     );
   }
+
+  public async getStudentById(id: string) {
+    return await this.studentRepository.findStudentById(id);
+  }
 }

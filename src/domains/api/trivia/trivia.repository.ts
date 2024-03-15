@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LimitOffsetPagination } from 'src/types/limit-offset.pagination';
 import { PrismaService } from '../../../prisma.service';
 
 @Injectable()
@@ -133,6 +134,82 @@ export class TriviaRepository {
             },
           },
         },
+      },
+    });
+  }
+
+  public async getTriviaHistory(studentId: string, options: LimitOffsetPagination) {
+    const results = await this.prisma.studentTriviaMatch.findMany({
+      where: {
+        studentId,
+        triviaMatch: {
+          isNot: {
+            finishedDateTime: null,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
+    });
+    const total = await this.prisma.studentTriviaMatch.count({
+      where: {
+        studentId,
+      },
+    });
+
+    return { results, total };
+  }
+
+  public async getTriviaById(triviaId: string) {
+    return await this.prisma.trivia.findUnique({
+      where: {
+        id: triviaId,
+      },
+    });
+  }
+
+  public async getTriviaMatchById(triviaMatchId: string) {
+    return await this.prisma.triviaMatch.findUnique({
+      where: {
+        id: triviaMatchId,
+      },
+    });
+  }
+
+  public async getTriviaAnswerCorrectCountByMatchId(studentTriviaMatchId: string) {
+    return await this.prisma.triviaAnswer.count({
+      where: {
+        studentTriviaMatchId,
+        isCorrect: true,
+      },
+    });
+  }
+
+  public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string, options: LimitOffsetPagination) {
+    return await this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        triviaMatchId,
+        student: {
+          isNot: {
+            id: studentId,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
+    });
+  }
+
+  public async getProgramTriviaVersionByTriviaId(triviaId: string) {
+    return await this.prisma.programVersionTrivia.findFirst({
+      where: {
+        triviaId,
       },
     });
   }

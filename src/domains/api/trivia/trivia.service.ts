@@ -5,12 +5,16 @@ import { ProgramService } from '../program/program.service';
 import { SimpleTriviaDto } from './dto/simple-trivia.dto';
 import { SimpleProgramDto } from '../program/dtos/simple-program.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
+import { StudentService } from '../student/student.service';
+import { TriviaHistoryDto } from './dto/trivia-history.dto';
+import { TriviaStatus } from './dto/trivia-interfaces.interface';
 
 @Injectable()
 export class TriviaService {
   constructor(
     private readonly triviaRepository: TriviaRepository,
     private readonly programService: ProgramService,
+    private readonly studentService: StudentService,
   ) {}
 
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
@@ -70,5 +74,40 @@ export class TriviaService {
     }
     // If no student has completed the program, return undefined
     return undefined;
+  }
+
+  public async getTriviaHistory(student: StudentDto, page: number): Promise<any> {
+    const options = { limit: Number(10), offset: (page - 1) * 10 };
+    const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
+
+    const data = results.map(async (item) => {
+      const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
+      const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId, options);
+      if (otherMatches) {
+        const oponent = await this.studentService.getStudentById(otherMatches.studentId);
+        const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
+        return new TriviaHistoryDto(item.id, result, program.name, 10, item.createdAt, oponent);
+      }
+    });
+
+    return { results: data, totalPages: Math.ceil(total / 10) };
+  }
+
+  private async getProgramByTriviaMatchId(triviaMatchId: string) {
+    const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
+    if (!triviaMatch) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    const trivia = await this.triviaRepository.getTriviaById(triviaMatch?.triviaId);
+    if (!trivia) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    const triviaVersion = await this.triviaRepository.getProgramTriviaVersionByTriviaId(trivia.id);
+    if (!triviaVersion) throw new HttpException('Trivia version not found', HttpStatus.NOT_FOUND);
+    const program = await this.programService.getProgramByProgramVersionId(triviaVersion?.programVersionId);
+    if (!program) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    return program;
+  }
+
+  private async getTriviaResult(studentId: string, oponentId: string) {
+    const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
+    const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
+    return otherAnswer > myAnswer ? TriviaStatus.LOST : otherAnswer < myAnswer ? TriviaStatus.WON : TriviaStatus.TIED;
   }
 }

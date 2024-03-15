@@ -449,6 +449,18 @@ export class ProgramRepository {
     `;
   }
 
+  async getProgramByProgramVersion(programVersionId: string) {
+    return await this.prisma.program.findFirst({
+      where: {
+        versions: {
+          every: {
+            id: programVersionId,
+          },
+        },
+      },
+    });
+  }
+
   async createProgram(name: string, description: string, hoursToComplete: number, pointsReward: number, teacherId: string, icon: string) {
     return await this.prisma.program.create({
       data: {
