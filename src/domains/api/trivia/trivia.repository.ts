@@ -136,4 +136,55 @@ export class TriviaRepository {
       },
     });
   }
+
+  public async getTriviaAnswersByTriviaMatchId(studentId: string, triviaMatchId: string) {
+    return await this.prisma.triviaAnswer.findMany({
+      select: {
+        id: true,
+        isCorrect: true,
+      },
+      where: {
+        studentTriviaMatch: {
+          studentId,
+          triviaMatchId,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  public async getTriviaMatchById(id: string) {
+    return await this.prisma.triviaMatch.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        trivia: true,
+      },
+    });
+  }
+
+  public async getOponentAnswer(studentId: string, triviaMatchId: string) {
+    return await this.prisma.triviaAnswer.findMany({
+      select: {
+        isCorrect: true,
+        id: true,
+      },
+      where: {
+        studentTriviaMatch: {
+          triviaMatchId,
+          student: {
+            isNot: {
+              id: studentId,
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 }

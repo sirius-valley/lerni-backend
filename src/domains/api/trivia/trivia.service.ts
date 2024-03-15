@@ -5,12 +5,17 @@ import { ProgramService } from '../program/program.service';
 import { SimpleTriviaDto } from './dto/simple-trivia.dto';
 import { SimpleProgramDto } from '../program/dtos/simple-program.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
+import { QuestionTriviaDto } from './dto/question-trivia.dto';
+import { SpringPillService } from '../pill-external-api/spring-pill.service';
+import { SpringData } from './dto/SpringResponse-interface';
+import { QuestionTriviaStatus } from './dto/question-trivia-status.enum';
 
 @Injectable()
 export class TriviaService {
   constructor(
     private readonly triviaRepository: TriviaRepository,
     private readonly programService: ProgramService,
+    private readonly springService: SpringPillService,
   ) {}
 
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
@@ -70,5 +75,96 @@ export class TriviaService {
     }
     // If no student has completed the program, return undefined
     return undefined;
+  }
+
+  public async getQuestion(auth: string, user: StudentDto, triviaMatchId: string) {
+    const userAnswers = await this.triviaRepository.getTriviaAnswersByTriviaMatchId(user.id, triviaMatchId);
+    const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
+    const opponentAnsewrs = await this.triviaRepository.getOponentAnswer(user.id, triviaMatchId);
+    const neextAnswer = await this.springService.getSpringProgress(triviaMatch?.trivia?.block, auth, []);
+    if (triviaMatch) {
+      const bubbles: SpringData[] = await this.mergeData(neextAnswer, JSON.parse(triviaMatch?.trivia?.block));
+      return new QuestionTriviaDto(
+        bubbles[bubbles.length - 1].value,
+        bubbles[bubbles.length - 1].options,
+        20,
+        userAnswers.length + 1,
+        triviaMatch?.trivia?.questionCount,
+        { me: userAnswers, opponent: opponentAnsewrs },
+        this.calculateStatus(triviaMatch?.trivia?.questionCount, userAnswers, opponentAnsewrs),
+      );
+    }
+  }
+
+  private mergeData(springProgress: any, pillBlock: any) {
+    return springProgress.nodes.map((node) => {
+      const element = pillBlock.elements.find((element) => {
+        return element.id === node.nodeId;
+      });
+      const type = element?.metadata?.metadata.lerni_question_type ?? 'text';
+      return {
+        id: node.nodeId,
+        type: type,
+        ...this.calculateExtraAttributes(node, type),
+      } as SpringData;
+    });
+  }
+
+  private calculateExtraAttributes(node: any, type: string) {
+    switch (type) {
+      case 'text':
+      case 'image':
+        return { content: node.nodeContent.content };
+      case 'free-text':
+        return { content: node.answer };
+      case 'single-choice':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          correct: node.correct,
+          correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
+        };
+      case 'multiple-choice':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          correct: node.correct,
+          correctValue:
+            node.answer !== '' ? this.findIntersection(node.nodeContent.metadata.metadata.correct_answer, node.answer) : undefined,
+        };
+      case 'carousel':
+        return {
+          value: node.answer,
+          options: node.nodeContent.metadata.options,
+          correct: node.correct,
+          optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
+          correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
+        };
+    }
+  }
+
+  private findIntersection(a: string | string[], b: string | string[]) {
+    const aSet = new Set(a);
+    const bSet = new Set(b);
+
+    return [...aSet].filter((x) => bSet.has(x));
+  }
+
+  private calculateStatus(totalQuestion: number, userAnswers: any[], opponentAnswer: any[]) {
+    if (userAnswers.length === totalQuestion) {
+      if (userAnswers.length === opponentAnswer.length) {
+        const totalUser = userAnswers.filter((answer) => answer.isCorrect === true).length;
+        const totalOpponent = opponentAnswer.filter((answer) => answer.isCorrect === true).length;
+        if (totalUser > totalOpponent) {
+          return QuestionTriviaStatus.WINNER;
+        } else {
+          return QuestionTriviaStatus.LOSER;
+        }
+      }
+      return QuestionTriviaStatus.FINISHED;
+    } else if (userAnswers.length === 0) {
+      return QuestionTriviaStatus.NOT_STARTED;
+    }
+    return QuestionTriviaStatus.PLAYING;
   }
 }
