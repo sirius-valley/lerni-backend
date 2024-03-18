@@ -136,4 +136,85 @@ export class TriviaRepository {
       },
     });
   }
+
+  public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId,
+        triviaMatch: {
+          triviaId,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        triviaAnswers: true,
+        triviaMatch: {
+          include: {
+            trivia: true,
+          },
+        },
+      },
+    });
+  }
+
+  public async createTriviaAnswer(studentTriviaMatchId: string, questionId: string, value: string | string[], isCorrect: boolean) {
+    value = JSON.stringify(value);
+    return this.prisma.studentTriviaMatch.update({
+      data: {
+        triviaAnswers: {
+          create: {
+            questionId,
+            value,
+            isCorrect,
+          },
+        },
+      },
+      where: {
+        id: studentTriviaMatchId,
+      },
+      include: {
+        triviaAnswers: true,
+        triviaMatch: true,
+      },
+    });
+  }
+
+  public async getTriviaOpponent(studentId: string, triviaMatchId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId: {
+          not: studentId,
+        },
+        triviaMatchId,
+      },
+      include: {
+        student: true,
+        triviaAnswers: true,
+      },
+    });
+  }
+
+  async setStudentTrivaMatchFinishedDateTime(id: string) {
+    return this.prisma.studentTriviaMatch.update({
+      data: {
+        finishedDateTime: new Date(),
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  async setTriviaMatchFinishedDateTime(triviaMatchId: string) {
+    return this.prisma.triviaMatch.update({
+      data: {
+        finishedDateTime: new Date(),
+      },
+      where: {
+        id: triviaMatchId,
+      },
+    });
+  }
 }

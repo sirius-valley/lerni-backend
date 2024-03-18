@@ -297,7 +297,7 @@ model ProgramVersionQuestionnaireVersion {
 model Trivia {
   id            String   @id @default(uuid())
   block         String
-  questionCount Int
+  questionCount Int      @default(12)
   createdAt     DateTime @default(now())
 
   programVersions ProgramVersionTrivia[]
@@ -319,6 +319,7 @@ model ProgramVersionTrivia {
 
 model TriviaMatch {
   id               String    @id @default(uuid())
+  seed             Int       @default(0)
   createdAt        DateTime  @default(now())
   finishedDateTime DateTime?
 
@@ -329,8 +330,9 @@ model TriviaMatch {
 }
 
 model StudentTriviaMatch {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now())
+  finishedDateTime DateTime?
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])
