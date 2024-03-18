@@ -155,7 +155,6 @@ export class TriviaService {
   private async getSpringResponse(authorization: string, triviaMatch: any, answerRequest: TriviaAnswerRequestDto) {
     const block = JSON.parse(triviaMatch.trivia.block);
     block.seed = triviaMatch.seed;
-    console.log(block);
     return this.springPillService.answerQuestionnaire(
       authorization,
       block,
@@ -197,7 +196,8 @@ export class TriviaService {
     status: TriviaAnswerResponseStatus,
     opponent?: any,
   ) {
-    const opponentAnsweredCorrectly = opponent ? opponent.answers.find((answer) => answer.questionId === questionId).isCorrect : undefined;
+    const opponentTriviaAnswer = opponent?.triviaAnswers.find((answer) => answer.questionId === questionId);
+    const opponentAnswer = opponentTriviaAnswer ? { id: questionId, isCorrect: opponentTriviaAnswer.isCorrect } : undefined;
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
@@ -205,7 +205,7 @@ export class TriviaService {
       triviaQuestion,
       isCorrect: springResponse.isCorrect,
       status,
-      opponentAnsweredCorrectly,
+      opponentAnswer,
       correctOption,
     };
   }
