@@ -2,9 +2,10 @@ export interface PillForm {
   id: string;
   name?: string;
   type: FormType;
-  initial: string;
+  initial?: string;
+  seed?: number;
   elements: PillNode[];
-  relations: PillRelations[];
+  relations?: PillRelations[];
 }
 
 export interface PillNode {
@@ -25,6 +26,7 @@ export interface PillRelations {
 export enum FormType {
   DYNAMIC = 'DYNAMIC',
   STATIC = 'STATIC',
+  RANDOM = 'RANDOM',
 }
 
 export enum ElementType {
