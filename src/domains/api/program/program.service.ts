@@ -219,6 +219,10 @@ export class ProgramService {
     return { passedCoolDown, coolDownPassDate };
   }
 
+  public async getProgramByProgramVersionId(id: string) {
+    return await this.programRepository.getProgramByProgramVersion(id);
+  }
+
   private async addPillToProgram(data: PillRequestDto[], programId: string) {
     const pills = await Promise.all(
       data.map(async (item) => {
