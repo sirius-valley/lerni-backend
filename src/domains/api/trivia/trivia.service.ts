@@ -126,9 +126,9 @@ export class TriviaService {
 
   private getMatchStatus(studentTriviaMatch: any, trivia: Trivia, opponentTriviaMatch?: any) {
     if (!opponentTriviaMatch) {
-      if (studentTriviaMatch.answers.length === trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
+      if (studentTriviaMatch.triviaAnswers.length === trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
       return TriviaAnswerResponseStatus.IN_PROGRESS;
-    } else return this.calcualteMatchResult(studentTriviaMatch.answers, opponentTriviaMatch.answers, trivia.questionCount);
+    } else return this.calcualteMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers, trivia.questionCount);
   }
 
   private calcualteMatchResult(studentAnswers: TriviaAnswer[], opponentAnswers: TriviaAnswer[], questionCount: number) {
@@ -159,8 +159,9 @@ export class TriviaService {
     opponent?: any,
   ) {
     const opponentAnsweredCorrectly = opponent ? opponent.answers.find((answer) => answer.questionId === questionId).isCorrect : undefined;
-    const correctOption = triviaBlock.find((question) => question.id === questionId).metadata.metadata.correct_answer;
-    const triviaQuestion = this.getTriviaQuestion(triviaBlock, questionId);
+    const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
+    const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
+    const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
     return {
       triviaQuestion,
       isCorrect: springResponse.isCorrect,
@@ -172,12 +173,7 @@ export class TriviaService {
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
     const questionNode = triviaBlock.elements.find((question) => question.id === questionId);
-    const options = questionNode.metadata.metadata.options;
-    return new TriviaQuestionDto(
-      questionId,
-      questionNode.metadata.metadata.question,
-      questionNode.metadata.metadata.time_to_answer,
-      options,
-    );
+    const options = questionNode.metadata.options;
+    return new TriviaQuestionDto(questionId, questionNode.name, questionNode.metadata.metadata.seconds_to_answer, options);
   }
 }
