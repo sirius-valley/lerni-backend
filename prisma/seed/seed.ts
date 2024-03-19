@@ -2,6 +2,11 @@ import { PrismaClient } from '@prisma/client';
 import { introductionID } from '../../src/const';
 import {
   authId,
+  FractureB2Block,
+  FractureB2PillId1,
+  FractureB2PillVersionId1,
+  FractureB2ProgramVersionPillVersionId1,
+  FractureClassificationBlock,
   FractureClassificationPillId1,
   FractureClassificationPillVersionId1,
   FractureClassificationProgramVersionPillVersionId1,
@@ -11,7 +16,7 @@ import {
   FractureProgramId,
   FractureProgramVersionId,
   FractureProgramVersionPillVersionId1,
-  FractureProgramVersionQuestionnaireVersionId,
+  FractureProgramVersionQuestionnaireVersionId, FractureQuestionnaireId, FractureQuestionnaireVersionId,
   FractureStudentProgramId,
   introductionBlock,
   maleTeacherId,
@@ -482,14 +487,14 @@ async function main() {
   await prisma.pillVersion.upsert({
     where: { id: FractureClassificationPillVersionId1 },
     update: {
-      block: FractureClassificationPillVersionId1,
+      block: FractureClassificationBlock,
       version: 1,
       completionTimeMinutes: 15,
       pillId: FractureClassificationPillId1,
     },
     create: {
       id: FractureClassificationPillVersionId1,
-      block: FractureClassificationPillVersionId1,
+      block: FractureClassificationBlock,
       version: 1,
       completionTimeMinutes: 15,
       pillId: FractureClassificationPillId1,
@@ -501,40 +506,89 @@ async function main() {
     update: {
       programVersionId: FractureProgramVersionId,
       pillVersionId: FractureClassificationPillVersionId1,
-      order: 1,
+      order: 2,
     },
     create: {
       id: FractureClassificationProgramVersionPillVersionId1,
       programVersionId: FractureProgramVersionId,
       pillVersionId: FractureClassificationPillVersionId1,
-      order: 1,
+      order: 2,
+    },
+  });
+
+  // Fracture program - Classification pill
+
+  await prisma.pill.upsert({
+    where: { id: FractureB2PillId1 },
+    update: {
+      name: 'Fracturas B2 Periprotésicas',
+      description: 'Se presentará un estudio sobre fracturas B2 periprotésicas',
+      teacherComment: '',
+    },
+    create: {
+      id: FractureB2PillId1,
+      name: 'Fracturas B2 Periprotésicas',
+      description: 'Se presentará un estudio sobre fracturas B2 periprotésicas',
+      teacherComment: '',
+    },
+  });
+
+  await prisma.pillVersion.upsert({
+    where: { id: FractureB2PillVersionId1 },
+    update: {
+      block: FractureB2Block,
+      version: 1,
+      completionTimeMinutes: 8,
+      pillId: FractureB2PillId1,
+    },
+    create: {
+      id: FractureB2PillVersionId1,
+      block: FractureB2Block,
+      version: 1,
+      completionTimeMinutes: 8,
+      pillId: FractureB2PillId1,
+    },
+  });
+
+  await prisma.programVersionPillVersion.upsert({
+    where: { id: FractureB2ProgramVersionPillVersionId1 },
+    update: {
+      programVersionId: FractureProgramVersionId,
+      pillVersionId: FractureB2PillVersionId1,
+      order: 3,
+    },
+    create: {
+      id: FractureB2ProgramVersionPillVersionId1,
+      programVersionId: FractureProgramVersionId,
+      pillVersionId: FractureB2PillVersionId1,
+      order: 3,
     },
   });
 
   // Fracture program - Questionnaire
 
   await prisma.questionnaire.upsert({
-    where: { id: NICQuestionnaireId },
+    where: { id: FractureQuestionnaireId },
     update: {
       name: 'Cuestionario',
-      description: 'Cuestionario del programa sobre NIC',
+      description: 'Cuestionario del programa sobre Fractura periprotésica femoral',
     },
     create: {
-      id: NICQuestionnaireId,
+      id: FractureQuestionnaireId,
       name: 'Cuestionario',
-      description: 'Cuestionario del programa sobre NIC',
+      description: 'Cuestionario del programa sobre Fractura periprotésica femoral',
     },
   });
 
   await prisma.questionnaireVersion.upsert({
-    where: { id: NICQuestionnaireVersionId },
+    where: { id: FractureQuestionnaireVersionId },
     update: {
-      questionnaireId: NICQuestionnaireId,
+      questionnaireId: FractureQuestionnaireId,
       version: 1,
     },
     create: {
-      id: NICQuestionnaireVersionId,
-      questionnaireId: NICQuestionnaireId,
+      id: FractureQuestionnaireVersionId,
+      questionnaireId: FractureQuestionnaireId,
       completionTimeMinutes: 5,
       cooldownInMinutes: 10,
       block: NICQuestionnaire,
@@ -548,14 +602,14 @@ async function main() {
     where: { id: FractureProgramVersionQuestionnaireVersionId },
     update: {
       programVersionId: FractureProgramVersionId,
-      questionnaireVersionId: NICQuestionnaireVersionId,
-      order: 1,
+      questionnaireVersionId: FractureQuestionnaireVersionId,
+      order: 4,
     },
     create: {
       id: FractureProgramVersionQuestionnaireVersionId,
       programVersionId: FractureProgramVersionId,
-      questionnaireVersionId: NICQuestionnaireVersionId,
-      order: 1,
+      questionnaireVersionId: FractureQuestionnaireVersionId,
+      order: 4,
     },
   });
 
