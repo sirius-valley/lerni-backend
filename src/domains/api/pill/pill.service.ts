@@ -33,7 +33,7 @@ export class PillService {
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(introduction.block));
 
     return {
-      pill: new PillDto(introduction.pill, introduction, formattedPillBlock),
+      pill: new PillDto(introduction.pill, introduction, 1, formattedPillBlock),
       teacher: introductionTeacher,
     };
   }
@@ -47,9 +47,10 @@ export class PillService {
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);
     const formattedPillBlock = this.formatPillBlock(replacedPill, JSON.parse(pillSubmission.pillVersion.block));
+    const pillOrder = pillSubmission.pillVersion.programVersions[0].order;
     await this.pillRepository.updatePillSubmissionProgress(pillSubmission.id, formattedPillBlock.progress);
     return {
-      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
+      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, pillOrder, formattedPillBlock),
       teacher: new TeacherDto(teacher),
     };
   }
@@ -77,9 +78,10 @@ export class PillService {
     );
 
     const teacherDto = this.getTeacher(answerRequest, teacher);
+    const pillOrder = pillSubmission.pillVersion.programVersions[0].order;
 
     return {
-      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, formattedPillBlock),
+      pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, pillOrder, formattedPillBlock),
       teacher: answerRequest.pillId === introductionID ? introductionTeacher : teacherDto,
     };
   }

@@ -121,6 +121,7 @@ export class PillRepository {
         pillVersion: {
           include: {
             pill: true,
+            programVersions: true,
           },
         },
       },
@@ -143,6 +144,7 @@ export class PillRepository {
         pillVersion: {
           include: {
             pill: true,
+            programVersions: true,
           },
         },
       },
