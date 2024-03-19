@@ -191,12 +191,16 @@ export class TriviaRepository {
   public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string, options: LimitOffsetPagination) {
     return await this.prisma.studentTriviaMatch.findFirst({
       where: {
-        triviaMatchId,
-        student: {
-          isNot: {
-            id: studentId,
+        AND: [
+          {
+            triviaMatchId,
+            student: {
+              isNot: {
+                id: studentId,
+              },
+            },
           },
-        },
+        ],
       },
       orderBy: {
         createdAt: 'desc',
@@ -211,6 +215,30 @@ export class TriviaRepository {
       where: {
         triviaId,
       },
+    });
+  }
+
+  public async getNotFinishTrivia(studentId: string, options: LimitOffsetPagination) {
+    return await this.prisma.studentTriviaMatch.findMany({
+      where: {
+        studentId,
+        triviaMatch: {
+          finishedDateTime: null,
+        },
+      },
+      include: {
+        triviaMatch: true,
+        _count: {
+          select: {
+            triviaAnswers: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
     });
   }
 }

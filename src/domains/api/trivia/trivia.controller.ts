@@ -22,4 +22,10 @@ export class TriviaController {
     const { page } = query as Record<string, string>;
     return await this.triviaService.getTriviaHistory(req.user, Number(page));
   }
+
+  @Get('/status')
+  async getTriviaStatus(@Request() req: ApiRequest, @Query() query: any) {
+    const { page } = query as Record<string, string>;
+    return await this.triviaService.getTriviaStatus(req.user, Number(page));
+  }
 }
