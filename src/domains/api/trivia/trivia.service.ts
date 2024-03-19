@@ -129,11 +129,9 @@ export class TriviaService {
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
+      const questionBubble = bubbles[bubbles.length - 1];
       return new QuestionTriviaDto(
-        bubbles[bubbles.length - 1].id,
-        bubbles[bubbles.length - 1].value,
-        bubbles[bubbles.length - 1].options,
-        20,
+        new TriviaQuestionDto(questionBubble.id, questionBubble.value, questionBubble.secondsToAnswer, questionBubble.options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
         { me: userAnswers, opponent: opponentAnsewrs },
@@ -167,6 +165,7 @@ export class TriviaService {
         return {
           value: node.answer,
           options: node.nodeContent.metadata.options,
+          secondsToAnswer: node.nodeContent.metadata.metadata.seconds_to_answer,
           correct: node.correct,
           correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
         };
@@ -284,7 +283,12 @@ export class TriviaService {
     opponent?: any,
   ) {
     const opponentTriviaAnswer = opponent?.triviaAnswers.find((answer) => answer.questionId === questionId);
-    const opponentAnswer = opponentTriviaAnswer ? { id: questionId, isCorrect: opponentTriviaAnswer.isCorrect } : undefined;
+    const opponentAnswer = opponentTriviaAnswer
+      ? {
+          id: questionId,
+          isCorrect: opponentTriviaAnswer.isCorrect,
+        }
+      : undefined;
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
