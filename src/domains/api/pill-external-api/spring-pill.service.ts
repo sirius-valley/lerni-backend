@@ -62,7 +62,7 @@ export class SpringPillService {
           this.configService.get<string>('SPRING_SERVICE_URL') + '/questionnaire/answer',
           {
             answer: answerRequest,
-            pillForm: JSON.parse(pillBlock),
+            pillForm: pillBlock,
           },
           { headers: { Authorization: authorization } },
         )

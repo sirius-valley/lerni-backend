@@ -29,9 +29,8 @@ export class HeadlandsAdapter {
       if (processedElementResult.skip) {
         skip = true;
       }
-      console.log('skip', skip);
       if (processedElementResult.pillNode.length !== 0 && pill.elements.length !== 0 && !skip) {
-        pill.relations.push({
+        pill.relations?.push({
           from: pill.elements[pill.elements.length - 1].id,
           to: processedElementResult.pillNode[0].id,
         });
@@ -43,6 +42,24 @@ export class HeadlandsAdapter {
     if (pill.elements.length > 0) {
       pill.initial = pill.elements[0].id;
     }
+
+    return new PillBlockDto(pill);
+  }
+
+  public adaptThreadIntoTrivia(thread: any): PillBlockDto {
+    const pill: PillForm = {
+      id: '',
+      type: FormType.RANDOM,
+      seed: 0,
+      elements: [],
+    };
+
+    thread.forEach((element: any) => {
+      if (element.type === 'multiple_choice_question') {
+        const elements = this.processTriviaQuestion(element);
+        pill.elements.push(...elements);
+      }
+    });
 
     return new PillBlockDto(pill);
   }
@@ -91,7 +108,7 @@ export class HeadlandsAdapter {
   private addSequentialRelation(elements: PillNode[], pill: PillForm): void {
     elements.forEach((element: PillNode, index: number, array: PillNode[]) => {
       if (array.length > index + 1) {
-        pill.relations.push({
+        pill.relations?.push({
           from: element.id,
           to: array[index + 1].id,
         });
@@ -250,7 +267,7 @@ export class HeadlandsAdapter {
         if (array.length === index) return;
         const processed = this.processElement(object, array[index + 1], pill, variableToQuestionMap).pillNode;
         if (elements.length > 0) {
-          pill.relations.push({
+          pill.relations?.push({
             from: elements[elements.length - 1].id,
             to: processed[0].id,
           });
@@ -262,14 +279,13 @@ export class HeadlandsAdapter {
       //adds sequential relation if there are more than 1 objects in the branch
       branchElements.forEach((object: any, index: number, array: any[]) => {
         if (array.length > index + 1) {
-          pill.relations.push({
+          pill.relations?.push({
             from: branchElements[index].id,
             to: branchElements[index + 1].id,
           });
         }
       });
 
-      console.log('element', element);
       const branchIds = element.test.val;
       const testVarName = element.test.var;
 
@@ -279,21 +295,48 @@ export class HeadlandsAdapter {
           const parentOption = parent.options.find((option: any) => option.id === id);
           let a: PillNode[];
           nextElement ? (a = this.processElement(nextElement, null, pill, variableToQuestionMap).pillNode) : (a = []);
-          pill.relations.push({
+          pill.relations?.push({
             from: parent.id,
             to: branchElements[0].id,
             condition: `ans = '${parentOption.text}'`,
           });
           if (a.length === 0) return elements;
-          console.log('a', a);
-          console.log('elements', elements[0]);
-          pill.relations.push({
+          pill.relations?.push({
             from: branchElements[branchElements.length - 1].id,
             to: a[0].id,
           });
         });
       }
     });
+
+    return elements;
+  }
+
+  private processTriviaQuestion(element: any): PillNode[] {
+    const elements: PillNode[] = [];
+
+    const options = this.getQuestionOptions(element);
+    options.push('timeout');
+    const correctAnswer = this.getCorrectAnswer(element);
+
+    const questionNode: PillNode = {
+      id: element.id,
+      type: ElementType.QUESTION,
+      name: element.question,
+      question_type: element.properties.may_select_multiple ? QuestionType.MULTIPLECHOICE : QuestionType.SINGLECHOICE,
+      metadata: {
+        metadata: {
+          lerni_question_type: element.properties.may_select_multiple ? 'multiple-choice' : 'single-choice',
+          seconds_to_answer: 30,
+        },
+        options,
+      },
+    };
+    if (correctAnswer) {
+      questionNode.metadata.metadata.correct_answer = correctAnswer;
+    }
+
+    elements.push(questionNode);
 
     return elements;
   }

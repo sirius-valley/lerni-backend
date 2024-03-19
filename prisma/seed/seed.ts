@@ -38,12 +38,17 @@ import {
   programVersionId,
   programVersionPillVersionId,
   programVersionQuestionnaireVersionId,
+  programVersionTrivia,
   questionnaireBlock,
   questionnaireId,
   questionnaireVersionId,
   studentId,
   studentProgramId,
+  studentTriviaMatchId,
   teacherId,
+  triviaBlock,
+  triviaId,
+  triviaMatchId,
   walterTeacherId,
 } from './const';
 
@@ -728,6 +733,60 @@ async function main() {
       programVersionId: programVersionId,
       questionnaireVersionId: questionnaireVersionId,
       order: 1,
+    },
+  });
+
+  await prisma.trivia.upsert({
+    where: {
+      id: triviaId,
+    },
+    update: {
+      block: triviaBlock,
+      questionCount: 10,
+    },
+    create: {
+      id: triviaId,
+      block: triviaBlock,
+      questionCount: 10,
+    },
+  });
+
+  await prisma.programVersionTrivia.upsert({
+    where: { id: programVersionTrivia },
+    update: {
+      order: 1,
+      triviaId: triviaId,
+      programVersionId: programVersionId,
+    },
+    create: {
+      id: programVersionTrivia,
+      order: 1,
+      triviaId: triviaId,
+      programVersionId: programVersionId,
+    },
+  });
+
+  await prisma.triviaMatch.upsert({
+    where: { id: triviaMatchId },
+    update: {
+      triviaId: triviaId,
+    },
+    create: {
+      id: triviaMatchId,
+      triviaId: triviaId,
+    },
+  });
+
+  await prisma.studentTriviaMatch.upsert({
+    where: { id: studentTriviaMatchId },
+    update: {
+      studentId: studentId,
+      triviaMatchId: triviaMatchId,
+    },
+    create: {
+      id: studentTriviaMatchId,
+      studentId: studentId,
+      triviaMatchId: triviaMatchId,
     },
   });
 
