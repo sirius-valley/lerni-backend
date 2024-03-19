@@ -744,12 +744,12 @@ async function main() {
     },
     update: {
       block: triviaBlock,
-      questionCount: 10,
+      questionCount: 12,
     },
     create: {
       id: triviaId,
       block: triviaBlock,
-      questionCount: 10,
+      questionCount: 12,
     },
   });
 
