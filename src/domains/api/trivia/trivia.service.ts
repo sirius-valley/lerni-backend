@@ -260,6 +260,7 @@ export class TriviaService {
     const opponentCorrectAnswers = opponentAnswers.filter((answer) => answer.isCorrect).length;
     const studentsQuestionsLeft = questionCount - studentAnswers.length;
     const opponentsQuestionsLeft = questionCount - opponentAnswers.length;
+    if (studentAnswers.length === 0) return TriviaAnswerResponseStatus.NOT_STARTED;
     if (studentCorrectAnswers > opponentCorrectAnswers + opponentsQuestionsLeft) return TriviaAnswerResponseStatus.WON;
     if (studentCorrectAnswers + studentsQuestionsLeft < opponentCorrectAnswers) return TriviaAnswerResponseStatus.LOST;
     if (studentCorrectAnswers === opponentCorrectAnswers && studentsQuestionsLeft === 0 && opponentsQuestionsLeft === 0)
