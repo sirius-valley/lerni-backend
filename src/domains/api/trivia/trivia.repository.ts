@@ -138,6 +138,46 @@ export class TriviaRepository {
     });
   }
 
+  public async getTriviaAnswersByTriviaMatchId(studentId: string, triviaMatchId: string) {
+    return await this.prisma.triviaAnswer.findMany({
+      where: {
+        studentTriviaMatch: {
+          studentId,
+          triviaMatchId,
+        },
+      },
+      include: {
+        studentTriviaMatch: {
+          select: {
+            triviaMatch: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  public async getOponentAnswer(studentId: string, triviaMatchId: string) {
+    return await this.prisma.triviaAnswer.findMany({
+      select: {
+        isCorrect: true,
+        id: true,
+      },
+      where: {
+        studentTriviaMatch: {
+          triviaMatchId,
+          student: {
+            isNot: {
+              id: studentId,
+            },
+          },
+        },
+      },
+    });
+  }
+
   public async getTriviaHistory(studentId: string, options: LimitOffsetPagination) {
     const results = await this.prisma.studentTriviaMatch.findMany({
       where: {
@@ -176,6 +216,9 @@ export class TriviaRepository {
       where: {
         id: triviaMatchId,
       },
+      include: {
+        trivia: true,
+      },
     });
   }
 
@@ -191,16 +234,12 @@ export class TriviaRepository {
   public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string, options: LimitOffsetPagination) {
     return await this.prisma.studentTriviaMatch.findFirst({
       where: {
-        AND: [
-          {
-            triviaMatchId,
-            student: {
-              isNot: {
-                id: studentId,
-              },
-            },
+        triviaMatchId,
+        student: {
+          isNot: {
+            id: studentId,
           },
-        ],
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -226,6 +265,8 @@ export class TriviaRepository {
           finishedDateTime: null,
         },
       },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
       include: {
         triviaMatch: true,
         _count: {
@@ -234,11 +275,87 @@ export class TriviaRepository {
           },
         },
       },
+    });
+  }
+
+  public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId,
+        triviaMatch: {
+          triviaId,
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },
-      skip: options.offset ? options.offset : 0,
-      take: options.limit ? options.limit : 10,
+      include: {
+        triviaAnswers: true,
+        triviaMatch: {
+          include: {
+            trivia: true,
+          },
+        },
+      },
+    });
+  }
+
+  public async createTriviaAnswer(studentTriviaMatchId: string, questionId: string, value: string | string[], isCorrect: boolean) {
+    value = JSON.stringify(value);
+    return this.prisma.studentTriviaMatch.update({
+      data: {
+        triviaAnswers: {
+          create: {
+            questionId,
+            value,
+            isCorrect,
+          },
+        },
+      },
+      where: {
+        id: studentTriviaMatchId,
+      },
+      include: {
+        triviaAnswers: true,
+        triviaMatch: true,
+      },
+    });
+  }
+
+  public async getTriviaOpponent(studentId: string, triviaMatchId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId: {
+          not: studentId,
+        },
+        triviaMatchId,
+      },
+      include: {
+        student: true,
+        triviaAnswers: true,
+      },
+    });
+  }
+
+  async setStudentTrivaMatchFinishedDateTime(id: string) {
+    return this.prisma.studentTriviaMatch.update({
+      data: {
+        finishedDateTime: new Date(),
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  async setTriviaMatchFinishedDateTime(triviaMatchId: string) {
+    return this.prisma.triviaMatch.update({
+      data: {
+        finishedDateTime: new Date(),
+      },
+      where: {
+        id: triviaMatchId,
+      },
     });
   }
 }

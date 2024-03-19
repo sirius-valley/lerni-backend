@@ -158,7 +158,11 @@ export class QuestionnaireService {
 
   private async getSpringProgress(authorization: string, questionnaireSubmission: any, answerRequest: QuestionnaireAnswerRequestDto) {
     const springDto = new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer);
-    return await this.springPillService.answerQuestionnaire(authorization, questionnaireSubmission.questionnaireVersion.block, springDto);
+    return await this.springPillService.answerQuestionnaire(
+      authorization,
+      JSON.parse(questionnaireSubmission.questionnaireVersion.block),
+      springDto,
+    );
   }
 
   private isQuestionnaireFailed(questionnaireAnswers: QuestionnaireAnswer[], questionnaireVersion: QuestionnaireVersion) {

@@ -114,6 +114,11 @@ describe('PillController', () => {
               description: 'description',
               teacherComment: 'teacherComment',
             },
+            programVersions: [
+              {
+                order: 1,
+              },
+            ],
           },
           pillAnswers: [],
         } as any);
@@ -135,6 +140,7 @@ describe('PillController', () => {
         ).resolves.toMatchObject<PillProgressResponseDto>({
           pill: {
             version: 1,
+            pillOrder: 1,
             completionTimeMinutes: 10,
             id: '123',
             name: 'name',
@@ -179,6 +185,7 @@ describe('PillController', () => {
         await expect(pillController.getIntroduction(req as any)).resolves.toMatchObject<PillProgressResponseDto>({
           pill: {
             version: 1,
+            pillOrder: 1,
             completionTimeMinutes: 10,
             id: '123',
             name: 'name',
