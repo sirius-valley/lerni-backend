@@ -19,7 +19,7 @@ export class TriviaController {
     return await this.triviaService.createOrAssignTriviaMatch(req.user, programId);
   }
 
-  @Get('quesion/:triviaMatchId')
+  @Get('question/:triviaMatchId')
   async getQuestion(@Request() req: ApiRequest, @Param('triviaMatchId') triviaMatchId: string) {
     return await this.triviaService.getQuestion((req.headers as any).authorization, req.user, triviaMatchId);
   }
