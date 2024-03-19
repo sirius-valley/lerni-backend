@@ -5146,8 +5146,8 @@ export const FractureB2PillVersionId1 = '3d595203-e5fd-40cd-bce8-3aa41acb3cac';
 export const FractureB2ProgramVersionPillVersionId1 = '7c336346-fce3-4a0f-a18b-09950b6f0290';
 
 // Fracture Questionnaire
-export const FractureQuestionnaireId = '2fc49573-543d-4244-8cdd-1d334d48e8d0';
-export const FractureQuestionnaireVersionId = '2966283c-b94b-49d8-9cb0-960ade8dcf51';
+//export const FractureQuestionnaireId = '2fc49573-543d-4244-8cdd-1d334d48e8d0';
+//export const FractureQuestionnaireVersionId = '2966283c-b94b-49d8-9cb0-960ade8dcf51';
 
 export const FractureProgramVersionQuestionnaireVersionId = 'eb4154d4-8d1e-4ddc-ac81-4f9158e51546';
 export const FractureStudentProgramId = 'ff93a045-393c-4abd-877c-41f5f852a82b';
