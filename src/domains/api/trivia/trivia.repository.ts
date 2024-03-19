@@ -140,14 +140,17 @@ export class TriviaRepository {
 
   public async getTriviaAnswersByTriviaMatchId(studentId: string, triviaMatchId: string) {
     return await this.prisma.triviaAnswer.findMany({
-      select: {
-        id: true,
-        isCorrect: true,
-      },
       where: {
         studentTriviaMatch: {
           studentId,
           triviaMatchId,
+        },
+      },
+      include: {
+        studentTriviaMatch: {
+          select: {
+            triviaMatch: true,
+          },
         },
       },
       orderBy: {

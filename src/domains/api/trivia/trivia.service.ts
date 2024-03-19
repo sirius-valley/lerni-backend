@@ -7,7 +7,6 @@ import { SimpleProgramDto } from '../program/dtos/simple-program.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { QuestionTriviaDto } from './dto/question-trivia.dto';
 import { SpringData } from './dto/SpringResponse-interface';
-import { QuestionTriviaStatus } from './dto/question-trivia-status.enum';
 import { TriviaAnswerRequestDto } from './dto/trivia-answer-request.dto';
 import { StudentTriviaMatch, Trivia, TriviaAnswer } from '@prisma/client';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
@@ -120,18 +119,25 @@ export class TriviaService {
   public async getQuestion(auth: string, user: StudentDto, triviaMatchId: string) {
     const userAnswers = await this.triviaRepository.getTriviaAnswersByTriviaMatchId(user.id, triviaMatchId);
     const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
+    if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const dataToSpring = {
+      triviaId: triviaMatch.id,
+      questionId: userAnswers[0]?.id ? userAnswers[0].id : undefined,
+      answer: userAnswers[0]?.value ? userAnswers[0].value : undefined,
+    };
     const opponentAnsewrs = await this.triviaRepository.getOponentAnswer(user.id, triviaMatchId);
-    const neextAnswer = await this.springService.getSpringProgress(triviaMatch?.trivia?.block, auth, []);
+    const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
-      const bubbles: SpringData[] = await this.mergeData(neextAnswer, JSON.parse(triviaMatch?.trivia?.block));
+      const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
       return new QuestionTriviaDto(
+        bubbles[bubbles.length - 1].id,
         bubbles[bubbles.length - 1].value,
         bubbles[bubbles.length - 1].options,
         20,
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
         { me: userAnswers, opponent: opponentAnsewrs },
-        this.calculateStatus(triviaMatch?.trivia?.questionCount, userAnswers, opponentAnsewrs),
+        this.calcualteMatchResult(userAnswers as TriviaAnswer[], opponentAnsewrs as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
       );
     }
   }
@@ -190,24 +196,6 @@ export class TriviaService {
     return [...aSet].filter((x) => bSet.has(x));
   }
 
-  private calculateStatus(totalQuestion: number, userAnswers: any[], opponentAnswer: any[]) {
-    if (userAnswers.length === totalQuestion) {
-      if (userAnswers.length === opponentAnswer.length) {
-        const totalUser = userAnswers.filter((answer) => answer.isCorrect === true).length;
-        const totalOpponent = opponentAnswer.filter((answer) => answer.isCorrect === true).length;
-        if (totalUser > totalOpponent) {
-          return QuestionTriviaStatus.WINNER;
-        } else {
-          return QuestionTriviaStatus.LOSER;
-        }
-      }
-      return QuestionTriviaStatus.FINISHED;
-    } else if (userAnswers.length === 0) {
-      return QuestionTriviaStatus.NOT_STARTED;
-    }
-    return QuestionTriviaStatus.PLAYING;
-  }
-
   public async getTriviaHistory(student: StudentDto, page: number): Promise<any> {
     const options = { limit: Number(10), offset: (page - 1) * 10 };
     const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
@@ -250,11 +238,15 @@ export class TriviaService {
   private async getSpringResponse(authorization: string, triviaMatch: any, answerRequest: TriviaAnswerRequestDto) {
     const block = JSON.parse(triviaMatch.trivia.block);
     block.seed = triviaMatch.seed;
-    return this.springPillService.answerQuestionnaire(
-      authorization,
-      block,
-      new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer),
-    );
+    if (answerRequest?.questionId && answerRequest.answer) {
+      return this.springPillService.answerQuestionnaire(
+        authorization,
+        block,
+        new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer),
+      );
+    } else {
+      return this.springPillService.getSpringProgress(JSON.stringify(block), authorization, []);
+    }
   }
 
   private getMatchStatus(studentTriviaMatch: any, trivia: Trivia, opponentTriviaMatch?: any) {
