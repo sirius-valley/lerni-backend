@@ -6,9 +6,17 @@ import { SimpleTriviaDto } from './dto/simple-trivia.dto';
 import { SimpleProgramDto } from '../program/dtos/simple-program.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { QuestionTriviaDto } from './dto/question-trivia.dto';
-import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { SpringData } from './dto/SpringResponse-interface';
 import { QuestionTriviaStatus } from './dto/question-trivia-status.enum';
+import { TriviaAnswerRequestDto } from './dto/trivia-answer-request.dto';
+import { StudentTriviaMatch, Trivia, TriviaAnswer } from '@prisma/client';
+import { SpringPillService } from '../pill-external-api/spring-pill.service';
+import { PillAnswerSpringDto } from '../pill-external-api/dtos/pill-answer-spring.dto';
+import { TriviaAnswerResponseStatus } from './dto/trivia-answer-response.dto';
+import { TriviaQuestionDto } from './dto/trivia-question.dto';
+import { StudentService } from '../student/student.service';
+import { TriviaHistoryDto } from './dto/trivia-history.dto';
+import { TriviaStatus } from './dto/trivia-interfaces.interface';
 
 @Injectable()
 export class TriviaService {
@@ -16,6 +24,8 @@ export class TriviaService {
     private readonly triviaRepository: TriviaRepository,
     private readonly programService: ProgramService,
     private readonly springService: SpringPillService,
+    private readonly studentService: StudentService,
+    private readonly springPillService: SpringPillService,
   ) {}
 
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
@@ -46,6 +56,36 @@ export class TriviaService {
       createdMatch.triviaId,
       new SimpleProgramDto(programVersion.program, 100),
       opponent ? new SimpleStudentDto(opponent) : undefined,
+    );
+  }
+
+  public async answerTrivia(student: StudentDto, triviaAnswer: TriviaAnswerRequestDto, authorization: string) {
+    const studentTriviaMatch = await this.triviaRepository.getStudentTriviaMatchByStudentIdAndTriviaId(student.id, triviaAnswer.triviaId);
+    if (!studentTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    if (this.isAlreadyAnsweredQuestion(studentTriviaMatch.triviaAnswers, triviaAnswer.questionId))
+      throw new HttpException('Question already answered', HttpStatus.BAD_REQUEST);
+
+    const springResponse = await this.getSpringResponse(authorization, studentTriviaMatch.triviaMatch, triviaAnswer);
+
+    const updatedStudentTriviaMatch = await this.triviaRepository.createTriviaAnswer(
+      studentTriviaMatch.id,
+      triviaAnswer.questionId,
+      triviaAnswer.answer,
+      springResponse.isCorrect,
+    );
+
+    const opponent = await this.triviaRepository.getTriviaOpponent(studentTriviaMatch.triviaMatchId, student.id);
+    const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, studentTriviaMatch.triviaMatch.trivia, opponent);
+    if (triviaStatus !== TriviaAnswerResponseStatus.IN_PROGRESS) {
+      await this.updateTriviaMatch(updatedStudentTriviaMatch, triviaStatus);
+    }
+
+    return this.getTriviaAnswerResponse(
+      JSON.parse(studentTriviaMatch.triviaMatch.trivia.block),
+      triviaAnswer.questionId,
+      springResponse,
+      triviaStatus,
+      opponent,
     );
   }
 
@@ -166,5 +206,108 @@ export class TriviaService {
       return QuestionTriviaStatus.NOT_STARTED;
     }
     return QuestionTriviaStatus.PLAYING;
+  }
+
+  public async getTriviaHistory(student: StudentDto, page: number): Promise<any> {
+    const options = { limit: Number(10), offset: (page - 1) * 10 };
+    const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
+
+    const data = results.map(async (item) => {
+      const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
+      const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId, options);
+      if (otherMatches) {
+        const oponent = await this.studentService.getStudentById(otherMatches.studentId);
+        const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
+        return new TriviaHistoryDto(item.id, result, program.name, 10, item.createdAt, oponent);
+      }
+    });
+
+    return { results: data, totalPages: Math.ceil(total / 10) };
+  }
+
+  private async getProgramByTriviaMatchId(triviaMatchId: string) {
+    const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
+    if (!triviaMatch) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    const trivia = await this.triviaRepository.getTriviaById(triviaMatch?.triviaId);
+    if (!trivia) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    const triviaVersion = await this.triviaRepository.getProgramTriviaVersionByTriviaId(trivia.id);
+    if (!triviaVersion) throw new HttpException('Trivia version not found', HttpStatus.NOT_FOUND);
+    const program = await this.programService.getProgramByProgramVersionId(triviaVersion?.programVersionId);
+    if (!program) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    return program;
+  }
+
+  private async getTriviaResult(studentId: string, oponentId: string) {
+    const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
+    const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
+    return otherAnswer > myAnswer ? TriviaStatus.LOST : otherAnswer < myAnswer ? TriviaStatus.WON : TriviaStatus.TIED;
+  }
+
+  private isAlreadyAnsweredQuestion(triviaAnswers: TriviaAnswer[], questionId: string) {
+    return triviaAnswers.some((answer) => answer.questionId === questionId);
+  }
+
+  private async getSpringResponse(authorization: string, triviaMatch: any, answerRequest: TriviaAnswerRequestDto) {
+    const block = JSON.parse(triviaMatch.trivia.block);
+    block.seed = triviaMatch.seed;
+    return this.springPillService.answerQuestionnaire(
+      authorization,
+      block,
+      new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer),
+    );
+  }
+
+  private getMatchStatus(studentTriviaMatch: any, trivia: Trivia, opponentTriviaMatch?: any) {
+    if (!opponentTriviaMatch) {
+      if (studentTriviaMatch.triviaAnswers.length === trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
+      return TriviaAnswerResponseStatus.IN_PROGRESS;
+    } else return this.calcualteMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers, trivia.questionCount);
+  }
+
+  private calcualteMatchResult(studentAnswers: TriviaAnswer[], opponentAnswers: TriviaAnswer[], questionCount: number) {
+    const studentCorrectAnswers = studentAnswers.filter((answer) => answer.isCorrect).length;
+    const opponentCorrectAnswers = opponentAnswers.filter((answer) => answer.isCorrect).length;
+    const studentsQuestionsLeft = questionCount - studentAnswers.length;
+    const opponentsQuestionsLeft = questionCount - opponentAnswers.length;
+    if (studentCorrectAnswers > opponentCorrectAnswers + opponentsQuestionsLeft) return TriviaAnswerResponseStatus.WON;
+    if (studentCorrectAnswers + studentsQuestionsLeft < opponentCorrectAnswers) return TriviaAnswerResponseStatus.LOST;
+    if (studentCorrectAnswers === opponentCorrectAnswers && studentsQuestionsLeft === 0 && opponentsQuestionsLeft === 0)
+      return TriviaAnswerResponseStatus.TIED;
+    if (studentAnswers.length === questionCount) return TriviaAnswerResponseStatus.WAITING;
+    return TriviaAnswerResponseStatus.IN_PROGRESS;
+  }
+
+  private async updateTriviaMatch(studentTriviaMatch: StudentTriviaMatch, status: TriviaAnswerResponseStatus) {
+    await this.triviaRepository.setStudentTrivaMatchFinishedDateTime(studentTriviaMatch.id);
+    if (status !== TriviaAnswerResponseStatus.WAITING) {
+      await this.triviaRepository.setTriviaMatchFinishedDateTime(studentTriviaMatch.triviaMatchId);
+    }
+  }
+
+  private async getTriviaAnswerResponse(
+    triviaBlock: any,
+    questionId: string,
+    springResponse: any,
+    status: TriviaAnswerResponseStatus,
+    opponent?: any,
+  ) {
+    const opponentTriviaAnswer = opponent?.triviaAnswers.find((answer) => answer.questionId === questionId);
+    const opponentAnswer = opponentTriviaAnswer ? { id: questionId, isCorrect: opponentTriviaAnswer.isCorrect } : undefined;
+    const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
+    const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
+    const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
+    return {
+      triviaQuestion,
+      isCorrect: springResponse.isCorrect,
+      status,
+      opponentAnswer,
+      correctOption,
+    };
+  }
+
+  private getTriviaQuestion(triviaBlock: any, questionId: string) {
+    const questionNode = triviaBlock.elements.find((question) => question.id === questionId);
+    const options = questionNode.metadata.options;
+    return new TriviaQuestionDto(questionId, questionNode.name, questionNode.metadata.metadata.seconds_to_answer, options);
   }
 }
