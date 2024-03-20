@@ -125,8 +125,8 @@ export class TriviaService {
     if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
     const dataToSpring = {
       triviaMatchId: triviaMatch.id,
-      questionId: userAnswers[0]?.id ? userAnswers[0].id : undefined,
-      answer: userAnswers[0]?.value ? userAnswers[0].value : undefined,
+      questionId: userAnswers[0]?.questionId ? userAnswers[0].questionId : undefined,
+      answer: userAnswers[0]?.value ? JSON.parse(userAnswers[0].value) : undefined,
     };
     const opponentAnswers = await this.triviaRepository.getOponentAnswer(user.id, triviaMatchId);
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
@@ -138,7 +138,7 @@ export class TriviaService {
         new TriviaQuestionDto(questionBubble.id, questionBubble.value, questionBubble.secondsToAnswer, options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
-        { me: userAnswers, opponent: opponentAnswers },
+        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers as TriviaAnswer[]) },
         this.calcualteMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
       );
     }
@@ -314,5 +314,14 @@ export class TriviaService {
 
   private filterOptions(options: string[]) {
     return options.filter((option) => option !== 'timeout');
+  }
+
+  private getSimpleAnswers(answers: TriviaAnswer[]) {
+    return answers.map((answer) => {
+      return {
+        id: answer.questionId,
+        isCorrect: answer.isCorrect,
+      };
+    });
   }
 }
