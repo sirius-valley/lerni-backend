@@ -28,9 +28,9 @@ export class TriviaService {
     private readonly studentService: StudentService,
     private readonly springPillService: SpringPillService,
   ) {
-    this.checkIn72Houes();
+    this.checkIn72Hours();
   }
-  private checkIn72Houes = () => {
+  private checkIn72Hours = () => {
     cron.schedule(' * */60 * * *', () => {
       this.checkAllNotFinishStatus();
     });
@@ -70,6 +70,12 @@ export class TriviaService {
   public async answerTrivia(student: StudentDto, triviaAnswer: TriviaAnswerRequestDto, authorization: string) {
     const studentTriviaMatch = await this.triviaRepository.getStudentTriviaMatchByStudentIdAndTriviaId(student.id, triviaAnswer.triviaId);
     if (!studentTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const validTime = await this.checkNotFinishStatus(studentTriviaMatch.triviaMatch.trivia, new Date());
+    if (studentTriviaMatch.triviaAnswers.length === 0 && validTime) {
+      await this.triviaRepository.resetTimer(studentTriviaMatch.id, new Date(new Date().getTime() + 72 * 60 * 60 * 1000));
+    } else if (!validTime) {
+      throw new HttpException('Time limit is over', HttpStatus.BAD_REQUEST);
+    }
     if (this.isAlreadyAnsweredQuestion(studentTriviaMatch.triviaAnswers, triviaAnswer.questionId))
       throw new HttpException('Question already answered', HttpStatus.BAD_REQUEST);
 
@@ -325,11 +331,13 @@ export class TriviaService {
     });
   }
 
-  private checkNotFinishStatus(trivia: any, today: Date) {
+  private async checkNotFinishStatus(trivia: any, today: Date) {
     //add into getStatus
     if (Math.abs(today.getTime() - trivia.completeBefore.getTime()) / (1000 * 60 * 60) > 0) {
-      this.triviaRepository.updateFinishDate(trivia.id, today);
+      await this.triviaRepository.updateFinishDate(trivia.id, today);
+      return false;
     }
     //Todo add notification with diferents times
+    return true;
   }
 }

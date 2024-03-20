@@ -356,4 +356,15 @@ export class TriviaRepository {
       },
     });
   }
+
+  async resetTimer(triviaMatchId: string, newDate: Date) {
+    return this.prisma.studentTriviaMatch.update({
+      where: {
+        id: triviaMatchId,
+      },
+      data: {
+        completeBefore: newDate,
+      },
+    });
+  }
 }
