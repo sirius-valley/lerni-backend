@@ -237,23 +237,21 @@ export class TriviaService {
     const options = { limit: Number(10), offset: (page - 1) * 10 };
     const matches = await this.triviaRepository.getNotFinishTrivia(student.id, options);
     const validMatches = this.checkValidTriviaTime(matches);
-    return await Promise.all(
-      validMatches.map(async (match) => {
-        const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
-        const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
-        if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
-          return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.WAITING, program.name, 10, match.createdAt, null);
-        } else if (trivia) {
-          const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId, options);
-          if (otherMatch) {
-            const oponent = await this.studentService.getStudentById(otherMatch.studentId);
-            return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, oponent);
-          } else {
-            return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, null);
-          }
+    return validMatches.map(async (match) => {
+      const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
+      const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
+      if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
+        return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.WAITING, program.name, 10, match.createdAt, null);
+      } else if (trivia) {
+        const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId, options);
+        if (otherMatch) {
+          const oponent = await this.studentService.getStudentById(otherMatch.studentId);
+          return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, oponent);
+        } else {
+          return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, null);
         }
-      }),
-    );
+      }
+    });
   }
 
   public checkValidTriviaTime(trivias: any[]) {
