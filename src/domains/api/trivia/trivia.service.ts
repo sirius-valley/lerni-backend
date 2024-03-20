@@ -258,9 +258,7 @@ export class TriviaService {
 
   public checkValidTriviaTime(trivias: any[]) {
     const today = new Date();
-    return trivias.filter((item) => {
-      Math.abs(today.getTime() - item.createdAt) / (1000 * 60 * 60) > 72 ? false : true;
-    });
+    return trivias.filter((item) => Math.abs(today.getTime() - item.createdAt) / (1000 * 60 * 60) < 72);
   }
 
   private isAlreadyAnsweredQuestion(triviaAnswers: TriviaAnswer[], questionId: string) {
