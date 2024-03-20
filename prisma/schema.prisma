@@ -333,7 +333,7 @@ model StudentTriviaMatch {
   id               String    @id @default(uuid())
   createdAt        DateTime  @default(now())
   finishedDateTime DateTime?
-  completeBefore   DateTime  @default(dbgenerated("NOW() + INTERVAL '72 hours'"))
+  completeBefore   DateTime?
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])

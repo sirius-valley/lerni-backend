@@ -55,6 +55,7 @@ export class TriviaRepository {
       data: {
         studentId,
         triviaMatchId,
+        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
       },
     });
   }
