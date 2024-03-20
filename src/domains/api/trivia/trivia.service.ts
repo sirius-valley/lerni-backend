@@ -73,7 +73,7 @@ export class TriviaService {
       studentTriviaMatch.id,
       triviaAnswer.questionId,
       triviaAnswer.answer,
-      springResponse.isCorrect,
+      springResponse.correct,
     );
 
     const opponent = await this.triviaRepository.getTriviaOpponent(studentTriviaMatch.triviaMatchId, student.id);
@@ -299,7 +299,7 @@ export class TriviaService {
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
     return {
       triviaQuestion,
-      isCorrect: springResponse.isCorrect,
+      isCorrect: springResponse.correct,
       status,
       opponentAnswer,
       correctOption,
@@ -308,7 +308,8 @@ export class TriviaService {
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
     const questionNode = triviaBlock.elements.find((question) => question.id === questionId);
-    const options = this.filterOptions(questionNode.metadata.metadata.options);
+    console.log(questionNode.metadata.options);
+    const options = this.filterOptions(questionNode.metadata.options);
     return new TriviaQuestionDto(questionId, questionNode.name, questionNode.metadata.metadata.seconds_to_answer, options);
   }
 
