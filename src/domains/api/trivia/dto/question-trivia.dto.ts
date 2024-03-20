@@ -3,7 +3,7 @@ import { TriviaQuestionDto } from './trivia-question.dto';
 
 export class QuestionTriviaDto {
   constructor(
-    public quetstion: TriviaQuestionDto,
+    public question: TriviaQuestionDto,
     public questionNumber: number,
     public totalQuestionsNumber: number,
     public answers: { me: any[]; opponent: any[] },
