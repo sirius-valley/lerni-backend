@@ -337,4 +337,23 @@ export class TriviaRepository {
       },
     });
   }
+
+  async getAllNotFinishTrivias() {
+    return this.prisma.studentTriviaMatch.findMany({
+      where: {
+        finishedDateTime: null,
+      },
+    });
+  }
+
+  async updateFinishDate(studentTriviaMatchId: string, date: Date) {
+    return this.prisma.studentTriviaMatch.update({
+      where: {
+        id: studentTriviaMatchId,
+      },
+      data: {
+        finishedDateTime: date,
+      },
+    });
+  }
 }

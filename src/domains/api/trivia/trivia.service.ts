@@ -16,6 +16,8 @@ import { TriviaQuestionDto } from './dto/trivia-question.dto';
 import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
 import { TriviaStatus } from './dto/trivia-interfaces.interface';
+// eslint-disable-next-line
+const cron = require('node-cron');
 
 @Injectable()
 export class TriviaService {
@@ -25,7 +27,14 @@ export class TriviaService {
     private readonly springService: SpringPillService,
     private readonly studentService: StudentService,
     private readonly springPillService: SpringPillService,
-  ) {}
+  ) {
+    this.checkIn72Houes();
+  }
+  private checkIn72Houes = () => {
+    cron.schedule(' * */60 * * *', () => {
+      this.checkAllNotFinishStatus();
+    });
+  };
 
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
     // check if student is already enrolled in the program
@@ -306,5 +315,20 @@ export class TriviaService {
     const questionNode = triviaBlock.elements.find((question) => question.id === questionId);
     const options = questionNode.metadata.options;
     return new TriviaQuestionDto(questionId, questionNode.name, questionNode.metadata.metadata.seconds_to_answer, options);
+  }
+
+  private async checkAllNotFinishStatus() {
+    const today = new Date();
+    const trivias = await this.triviaRepository.getAllNotFinishTrivias();
+    trivias.map((trivia) => {
+      this.checkNotFinishStatus(trivia, today);
+    });
+  }
+
+  private checkNotFinishStatus(trivia: any, today: Date) {
+    if (Math.abs(today.getTime() - trivia.createdAt.getTime()) / (1000 * 60 * 60) > 72) {
+      this.triviaRepository.updateFinishDate(trivia.id, today);
+    }
+    //Todo add notification with diferents times
   }
 }
