@@ -308,7 +308,6 @@ export class TriviaService {
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
     const questionNode = triviaBlock.elements.find((question) => question.id === questionId);
-    console.log(questionNode.metadata.options);
     const options = this.filterOptions(questionNode.metadata.options);
     return new TriviaQuestionDto(questionId, questionNode.name, questionNode.metadata.metadata.seconds_to_answer, options);
   }
