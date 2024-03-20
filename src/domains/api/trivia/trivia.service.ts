@@ -326,7 +326,8 @@ export class TriviaService {
   }
 
   private checkNotFinishStatus(trivia: any, today: Date) {
-    if (Math.abs(today.getTime() - trivia.createdAt.getTime()) / (1000 * 60 * 60) > 72) {
+    //add into getStatus
+    if (Math.abs(today.getTime() - trivia.completeBefore.getTime()) / (1000 * 60 * 60) > 0) {
       this.triviaRepository.updateFinishDate(trivia.id, today);
     }
     //Todo add notification with diferents times
