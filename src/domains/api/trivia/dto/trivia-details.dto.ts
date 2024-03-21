@@ -7,15 +7,15 @@ export class TriviaDetailsDto {
   opponent?: SimpleStudentDto;
   programName: string;
   finishedDateTime: Date;
-  questions: TriviaQuestionDetailsDto[];
   triviaStatus: TriviaStatus;
+  questions: TriviaQuestionDetailsDto[];
 
   constructor(data: any) {
     this.triviaMatchId = data.triviaMatchId;
     this.opponent = data.opponent;
     this.programName = data.programName;
     this.finishedDateTime = data.finishedDateTime;
-    this.questions = data.questions;
     this.triviaStatus = data.triviaStatus;
+    this.questions = data.questions;
   }
 }

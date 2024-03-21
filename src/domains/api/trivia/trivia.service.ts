@@ -347,7 +347,7 @@ export class TriviaService {
   }
 
   private async getTriviaMatchQuestions(trivia: Trivia, seed: number, authorization: string) {
-    const questions = Array.from({ length: trivia.questionCount }, () => new PillAnswerSpringDto('', 'timeout'));
+    const questions = Array.from({ length: trivia.questionCount - 1 }, () => new PillAnswerSpringDto('', 'timeout'));
     const triviaBlock = JSON.parse(trivia.block);
     triviaBlock.seed = seed;
     const springResponse = await this.springService.getSpringProgress(JSON.stringify(triviaBlock), authorization, questions);
@@ -356,14 +356,15 @@ export class TriviaService {
 
   private getQuestionSummary(triviaNodes: any, userAnswers?: TriviaAnswer[], opponentAnswers?: TriviaAnswer[]): TriviaQuestionDetailsDto[] {
     return triviaNodes.map((question) => {
+      console.log(question);
       const userAnswer = userAnswers?.find((answer) => answer.questionId === question.nodeId);
       const opponentAnswer = opponentAnswers?.find((answer) => answer.questionId === question.nodeId);
       const userAnswerStatus = this.getAnswerStatus(userAnswer);
       const opponentAnswerStatus = this.getAnswerStatus(opponentAnswer);
       return {
         questionId: question.nodeId,
-        question: question.name,
-        correctOption: question.metadata.metadata.correct_answer,
+        question: question.nodeContent.content,
+        correctOption: question.nodeContent.metadata.metadata.correct_answer,
         selectedOption: userAnswer?.value,
         opponentAnswer: opponentAnswer?.value,
         userAnswerStatus,
