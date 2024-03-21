@@ -16,6 +16,8 @@ import { TriviaQuestionDto } from './dto/trivia-question.dto';
 import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
 import { TriviaStatus } from './dto/trivia-interfaces.interface';
+import { TriviaAnswerStatus, TriviaQuestionDetailsDto } from './dto/trivia-question-details.dto';
+import { TriviaDetailsDto } from './dto/trivia-details.dto';
 
 @Injectable()
 export class TriviaService {
@@ -89,6 +91,25 @@ export class TriviaService {
       triviaStatus,
       opponent,
     );
+  }
+
+  public async getTriviaMatchDetails(student: StudentDto, triviaMatchId: string, authorization: string) {
+    const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
+    if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const studentTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === student.id);
+    const opponentTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
+    const questions = await this.getTriviaMatchQuestions(triviaMatch.trivia, triviaMatch.seed, authorization);
+    const triviaStatus = this.getMatchStatus(studentTriviaMatch, triviaMatch.trivia, opponentTriviaMatch);
+    const questionsSummary = this.getQuestionSummary(questions, studentTriviaMatch?.triviaAnswers, opponentTriviaMatch?.triviaAnswers);
+    const program = triviaMatch.trivia.programVersions[0].programVersion.program;
+    return new TriviaDetailsDto({
+      triviaMatchId,
+      opponent: opponentTriviaMatch?.student ? new SimpleStudentDto(opponentTriviaMatch.student) : undefined,
+      programName: program.name,
+      finishedDateTime: triviaMatch.finishedDateTime,
+      questions: questionsSummary,
+      triviaStatus,
+    });
   }
 
   private async assignMatchToStudent(studentId: string, triviaMatchId: string) {
@@ -209,7 +230,7 @@ export class TriviaService {
       if (otherMatches) {
         const oponent = await this.studentService.getStudentById(otherMatches.studentId);
         const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
-        return new TriviaHistoryDto(item.id, result, program.name, 10, item.createdAt, oponent);
+        return new TriviaHistoryDto(item.triviaMatchId, result, program.name, 10, item.createdAt, oponent);
       }
     });
 
@@ -323,5 +344,39 @@ export class TriviaService {
         isCorrect: answer.isCorrect,
       };
     });
+  }
+
+  private async getTriviaMatchQuestions(trivia: Trivia, seed: number, authorization: string) {
+    const questions = Array.from({ length: trivia.questionCount }, () => new PillAnswerSpringDto('', 'timeout'));
+    const triviaBlock = JSON.parse(trivia.block);
+    triviaBlock.seed = seed;
+    const springResponse = await this.springService.getSpringProgress(JSON.stringify(triviaBlock), authorization, questions);
+    return springResponse.nodes;
+  }
+
+  private getQuestionSummary(triviaNodes: any, userAnswers?: TriviaAnswer[], opponentAnswers?: TriviaAnswer[]): TriviaQuestionDetailsDto[] {
+    return triviaNodes.map((question) => {
+      const userAnswer = userAnswers?.find((answer) => answer.questionId === question.nodeId);
+      const opponentAnswer = opponentAnswers?.find((answer) => answer.questionId === question.nodeId);
+      const userAnswerStatus = this.getAnswerStatus(userAnswer);
+      const opponentAnswerStatus = this.getAnswerStatus(opponentAnswer);
+      return {
+        questionId: question.nodeId,
+        question: question.name,
+        correctOption: question.metadata.metadata.correct_answer,
+        selectedOption: userAnswer?.value,
+        opponentAnswer: opponentAnswer?.value,
+        userAnswerStatus,
+        opponentAnswerStatus,
+      };
+    });
+  }
+
+  private getAnswerStatus(answer?: TriviaAnswer) {
+    if (!answer) return TriviaAnswerStatus.UNANSWERED;
+    if (answer.isCorrect) return TriviaAnswerStatus.CORRECT;
+    if (answer.value === 'timeout') return TriviaAnswerStatus.TIMEDOUT;
+    if (answer.value === 'exit') return TriviaAnswerStatus.EXITED;
+    return TriviaAnswerStatus.INCORRECT;
   }
 }
