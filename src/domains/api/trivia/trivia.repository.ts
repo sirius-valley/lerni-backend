@@ -257,6 +257,28 @@ export class TriviaRepository {
     });
   }
 
+  public async getNotFinishTrivia(studentId: string, options: LimitOffsetPagination) {
+    return await this.prisma.studentTriviaMatch.findMany({
+      where: {
+        studentId,
+        triviaMatch: {
+          finishedDateTime: null,
+        },
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
+      include: {
+        triviaMatch: true,
+        _count: {
+          select: {
+            triviaAnswers: true,
+          },
+        },
+      },
+    });
+  }
+
+  // public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
   public async getStudentTriviaMatchByStudentIdAndTriviaMatchId(studentId: string, triviaMatchId: string) {
     return this.prisma.studentTriviaMatch.findFirst({
       where: {
