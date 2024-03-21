@@ -2,11 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
 import { ConfigModule } from '@nestjs/config';
 import { StudentModule } from './student.module';
+import { PrismaService } from '../../../prisma.service';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 
 process.env.NODE_ENV = 'development';
 
 describe('StudentController', () => {
   let controller: StudentController;
+  let prismaService: DeepMockProxy<PrismaService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,9 +20,14 @@ describe('StudentController', () => {
         StudentModule,
       ],
       controllers: [StudentController],
-    }).compile();
+      providers: [PrismaService],
+    })
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaService>())
+      .compile();
 
     controller = module.get<StudentController>(StudentController);
+    prismaService = module.get(PrismaService);
   });
 
   describe('getStudentDetails', () => {
@@ -35,6 +43,8 @@ describe('StudentController', () => {
           image: 'profile.jpg',
         },
       };
+
+      prismaService.pointRecord.findMany.mockResolvedValueOnce([]);
 
       // Assert
       await expect(controller.getStudentDetails(req as any)).resolves.toEqual({

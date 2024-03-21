@@ -278,13 +278,12 @@ export class TriviaRepository {
     });
   }
 
-  public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
+  // public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
+  public async getStudentTriviaMatchByStudentIdAndTriviaMatchId(studentId: string, triviaMatchId: string) {
     return this.prisma.studentTriviaMatch.findFirst({
       where: {
         studentId,
-        triviaMatch: {
-          triviaId,
-        },
+        triviaMatchId,
       },
       orderBy: {
         createdAt: 'desc',

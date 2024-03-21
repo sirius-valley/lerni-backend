@@ -665,219 +665,411 @@ export const questionnaireBlock = `{
 }`;
 
 export const triviaBlock = `{
-  "id": "",
-  "type": "RANDOM",
-  "seed": 0,
-  "elements": [
-    {
-      "id": "d3993fde-0492-48f1-965e-80d5d27adc58",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+    "id": "",
+    "type": "RANDOM",
+    "seed": 0,
+    "elements": [
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2900",
+            "type": "QUESTION",
+            "name": "Pregunta 0",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 1 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Verdadera",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Sigamos! 🙌🏻"
-        ]
-      }
-    },
-    {
-      "id": "4aee8eb6-412f-4dc1-aef8-a5527ddc2903",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2911",
+            "type": "QUESTION",
+            "name": "Pregunta 1",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 2 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Verdadera",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Increible! 😱"
-        ]
-      }
-    },
-    {
-      "id": "1d26bd23-41eb-464f-a083-4feb81269699",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2922",
+            "type": "QUESTION",
+            "name": "Pregunta 2",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 3 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 Verdadera",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "13",
-          "23",
-          "33",
-          "43"
-        ]
-      }
-    },
-    {
-      "id": "24800714-3acb-4092-8da9-f15e9ca6b4f8",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2933",
+            "type": "QUESTION",
+            "name": "Pregunta 3",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 4 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Verdadera",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Sigamos!"
-        ]
-      }
-    },
-    {
-      "id": "282c0044-baa0-4b1c-a298-d811411ce54e",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2944",
+            "type": "QUESTION",
+            "name": "Pregunta 4",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 1 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Verdadera",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Wooow "
-        ]
-      }
-    },
-    {
-      "id": "d11be9b0-97c8-40a5-8ac2-b2ceb1abef0e",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2955",
+            "type": "QUESTION",
+            "name": "Pregunta 5",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 2 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Verdadera",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "✋🏻"
-        ]
-      }
-    },
-    {
-      "id": "79b9aee0-10ff-44ae-b313-2c968f3ee9af",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2966",
+            "type": "QUESTION",
+            "name": "Pregunta 6",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 3 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 Verdadera",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "¿Cómo se manifiesta y por qué es tan desafiante de diagnosticar?"
-        ]
-      }
-    },
-    {
-      "id": "7a78ed17-452e-4b33-b686-4c8adbf828a7",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2977",
+            "type": "QUESTION",
+            "name": "Pregunta 7",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 4 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Verdadera",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "👍🏻"
-        ]
-      }
-    },
-    {
-      "id": "1b4d330c-03ed-4988-8dd2-4df981c83955",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2988",
+            "type": "QUESTION",
+            "name": "Pregunta 8",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 1 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Verdadera",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Aumento de la edad",
-          "Uso excesivo de dispositivos electronicos",
-          "Consumo regular de frutas y verduras",
-          "Practica de ejercicio moderado"
-        ]
-      }
-    },
-    {
-      "id": "ff1835a7-b691-4080-b0f1-da3720a61df1",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e2999",
+            "type": "QUESTION",
+            "name": "Pregunta 9",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 2 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Verdadera",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Si! Preparado!"
-        ]
-      }
-    },
-    {
-      "id": "dd941e5a-ac9f-48ca-b901-fef4c26e194d",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291010",
+            "type": "QUESTION",
+            "name": "Pregunta 10",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 3 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 Verdadera",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Vamos por unas preguntas!"
-        ]
-      }
-    },
-    {
-      "id": "9362322c-f25d-4b3d-8976-d5a8c38c8b4f",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291111",
+            "type": "QUESTION",
+            "name": "Pregunta 11",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 4 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Verdadera",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Aumento de la mortalidad y morbilidad",
-          "Reduccion de la necesidad de terapia antimicrobiana",
-          "Mejora en la calidad de vida del paciente"
-        ]
-      }
-    },
-    {
-      "id": "5baae4e4-9b0c-4767-9d18-06a1771a0526",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291212",
+            "type": "QUESTION",
+            "name": "Pregunta 12",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 1 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Verdadera",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Entre 15 y 35",
-          "Entre 35 y 50",
-          "Entre 35 y 67"
-        ]
-      }
-    },
-    {
-      "id": "66f38dbe-7abf-4180-afea-88e779db1d99",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "SINGLECHOICE",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "single-choice"
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291313",
+            "type": "QUESTION",
+            "name": "Pregunta 13",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 2 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Verdadera",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
         },
-        "options": [
-          "Edad y genero del paciente",
-          "Tipo de instalacion de atencion gravedad de la enfermedad acceso a la atencion medica y disponibilidad de pruebas clinicamente utiles",
-          "Historial de vacunacion del paciente"
-        ]
-      }
-    }
-  ]
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291414",
+            "type": "QUESTION",
+            "name": "Pregunta 14",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 3 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 Verdadera",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
+        },
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291515",
+            "type": "QUESTION",
+            "name": "Pregunta 15",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 4 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Verdadera",
+                    "timeout"
+                ]
+            }
+        },
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291616",
+            "type": "QUESTION",
+            "name": "Pregunta 16",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 1 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Verdadera",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
+        },
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291717",
+            "type": "QUESTION",
+            "name": "Pregunta 17",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 2 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Verdadera",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
+        },
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291818",
+            "type": "QUESTION",
+            "name": "Pregunta 18",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 3 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 Verdadera",
+                    "Opcion 4 Falsa",
+                    "timeout"
+                ]
+            }
+        },
+        {
+            "id": "3fa64704-3377-4238-8b22-e64c06772e291919",
+            "type": "QUESTION",
+            "name": "Pregunta 19",
+            "question_type": "SINGLECHOICE",
+            "metadata": {
+                "metadata": {
+                    "lerni_question_type": "single-choice",
+                    "seconds_to_answer": 30,
+                    "correct_answer": "Opcion 4 Verdadera"
+                },
+                "options": [
+                    "Opcion 1 Falsa",
+                    "Opcion 2 Falsa",
+                    "Opcion 3 falsa",
+                    "Opcion 4 Verdadera",
+                    "timeout"
+                ]
+            }
+        }
+    ]
 }`;
 
 export const programId = 'programId';
@@ -4474,9 +4666,6 @@ export const FractureClassificationPillId1 = '7d0fb04b-fe12-4c43-88f7-fcac355472
 export const FractureClassificationPillVersionId1 = 'fddef719-38f7-450d-aa50-182ca13c5925';
 export const FractureClassificationProgramVersionPillVersionId1 = 'fe9d2bd9-5140-4b83-a12f-7cae3f8ab085';
 
-export const FractureQuestionnaireId = '317b29b3-538a-4940-9edb-f87fc802630e';
-export const FractureQuestionnaireVersionId = 'edc06f96-e051-4d83-91c0-aaedff5a8d37';
-
 export const FractureB2Block = `{
         "id": "",
         "type": "DYNAMIC",
@@ -5146,8 +5335,8 @@ export const FractureB2PillVersionId1 = '3d595203-e5fd-40cd-bce8-3aa41acb3cac';
 export const FractureB2ProgramVersionPillVersionId1 = '7c336346-fce3-4a0f-a18b-09950b6f0290';
 
 // Fracture Questionnaire
-// export const FractureQuestionnaireId = '2fc49573-543d-4244-8cdd-1d334d48e8d0';
-// export const FractureQuestionnaireVersionId = '2966283c-b94b-49d8-9cb0-960ade8dcf51';
+export const FractureQuestionnaireId = '2fc49573-543d-4244-8cdd-1d334d48e8d0';
+export const FractureQuestionnaireVersionId = '2966283c-b94b-49d8-9cb0-960ade8dcf51';
 
 export const FractureProgramVersionQuestionnaireVersionId = 'eb4154d4-8d1e-4ddc-ac81-4f9158e51546';
 export const FractureStudentProgramId = 'ff93a045-393c-4abd-877c-41f5f852a82b';
