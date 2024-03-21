@@ -810,21 +810,25 @@ main()
 
 async function extraPrograms(n: number = 10) {
   for (let i = 0; i < n; i++) {
-    const programId = 'programId ' + i;
-    const teacherId = 'teacherId ' + i;
-    const programVersionId = 'programVersionId ' + i;
-    const pillId = 'pillId ' + i;
-    const pillVersionId = 'pillVersionId ' + i;
-    const programVersionPillVersionId = 'programVersionPillVersionId ' + i;
-    const studentId = 'studentId ' + i;
-    const authId = 'authId ' + i;
-    const studentProgramId = 'studentProgramId ' + i;
-    const questionnaireId = 'questionnaireId ' + i;
-    const questionnaireVersionId = 'questionnaireVersionId ' + i;
-    const programVersionQuestionnaireVersionId = 'programVersionQuestionnaireVersionId ' + i;
+    const programId1 = 'programId ' + i;
+    const teacherId1 = 'teacherId ' + i;
+    const programVersionId1 = 'programVersionId ' + i;
+    const pillId1 = 'pillId ' + i;
+    const pillVersionId1 = 'pillVersionId ' + i;
+    const programVersionPillVersionId1 = 'programVersionPillVersionId ' + i;
+    const studentId1 = 'studentId ' + i;
+    const authId1 = 'authId ' + i;
+    const studentProgramId1 = 'studentProgramId ' + i;
+    const questionnaireId1 = 'questionnaireId ' + i;
+    const questionnaireVersionId1 = 'questionnaireVersionId ' + i;
+    const programVersionQuestionnaireVersionId1 = 'programVersionQuestionnaireVersionId ' + i;
+    const triviaId1 = 'triviaId ' + i;
+    const programVersionTrivia1 = 'programVersionTrivia ' + i;
+    const triviaMatchId1 = 'triviaMatchId ' + i;
+    const studentTriviaMatchId1 = 'studentTriviaMatchId ' + i;
 
     await prisma.program.upsert({
-      where: { id: programId },
+      where: { id: programId1 },
       update: {
         name: 'Programa para probar los componentes',
         icon: 'https://lerni-images-2024.s3.amazonaws.com/pillimage1.png',
@@ -834,9 +838,9 @@ async function extraPrograms(n: number = 10) {
           'Esta fascinante exploración histórica nos sumerge en los intrincados acontecimientos que marcaron la historia de Argentina y Alemania en el contexto de las tierras americanas del sur durante épocas de guerra. A través de esta crónica, nos adentraremos en un viaje que revela la compleja interconexión de dos naciones distantes, pero cuyos destinos se entrelazaron de manera inesperada en el continente americano.',
         teacher: {
           connectOrCreate: {
-            where: { id: teacherId },
+            where: { id: teacherId1 },
             create: {
-              id: teacherId,
+              id: teacherId1,
               name: 'Teacher',
               lastname: 'Teacher',
               email: 'teacher@mail.com',
@@ -848,7 +852,7 @@ async function extraPrograms(n: number = 10) {
         },
       },
       create: {
-        id: programId,
+        id: programId1,
         name: 'Programa para probar los componentes',
         icon: 'https://lerni-images-2024.s3.amazonaws.com/pillimage1.png',
         hoursToComplete: 10,
@@ -857,9 +861,9 @@ async function extraPrograms(n: number = 10) {
           'Esta fascinante exploración histórica nos sumerge en los intrincados acontecimientos que marcaron la historia de Argentina y Alemania en el contexto de las tierras americanas del sur durante épocas de guerra. A través de esta crónica, nos adentraremos en un viaje que revela la compleja interconexión de dos naciones distantes, pero cuyos destinos se entrelazaron de manera inesperada en el continente americano.',
         teacher: {
           connectOrCreate: {
-            where: { id: teacherId },
+            where: { id: teacherId1 },
             create: {
-              id: teacherId,
+              id: teacherId1,
               name: 'Teacher',
               lastname: 'Teacher',
               email: 'teacher@mail.com',
@@ -873,27 +877,27 @@ async function extraPrograms(n: number = 10) {
     });
 
     await prisma.programVersion.upsert({
-      where: { id: programVersionId },
+      where: { id: programVersionId1 },
       update: {
-        programId: programId,
+        programId: programId1,
         version: 1,
       },
       create: {
-        id: programVersionId,
-        programId: programId,
+        id: programVersionId1,
+        programId: programId1,
         version: 1,
       },
     });
 
     await prisma.pill.upsert({
-      where: { id: pillId },
+      where: { id: pillId1 },
       update: {
         name: 'Prueba',
         description: 'Prueba',
         teacherComment: 'Esta es la píldora de prueba, es un buen lugar para comenzar.',
       },
       create: {
-        id: pillId,
+        id: pillId1,
         name: 'Prueba',
         description: 'Prueba',
         teacherComment: 'Esta es la píldora de prueba, es un buen lugar para comenzar.',
@@ -901,39 +905,39 @@ async function extraPrograms(n: number = 10) {
     });
 
     await prisma.pillVersion.upsert({
-      where: { id: pillVersionId },
+      where: { id: pillVersionId1 },
       update: {
         block: pillBlock,
         version: 1,
         completionTimeMinutes: 5,
-        pillId: pillId,
+        pillId: pillId1,
       },
       create: {
-        id: pillVersionId,
+        id: pillVersionId1,
         block: pillBlock,
         version: 1,
         completionTimeMinutes: 5,
-        pillId: pillId,
+        pillId: pillId1,
       },
     });
 
     await prisma.programVersionPillVersion.upsert({
-      where: { id: programVersionPillVersionId },
+      where: { id: programVersionPillVersionId1 },
       update: {
-        programVersionId: programVersionId,
-        pillVersionId: pillVersionId,
+        programVersionId: programVersionId1,
+        pillVersionId: pillVersionId1,
         order: 1,
       },
       create: {
-        id: programVersionPillVersionId,
-        programVersionId: programVersionId,
-        pillVersionId: pillVersionId,
+        id: programVersionPillVersionId1,
+        programVersionId: programVersionId1,
+        pillVersionId: pillVersionId1,
         order: 1,
       },
     });
 
     await prisma.auth.upsert({
-      where: { id: authId },
+      where: { id: authId1 },
       update: {
         email: `monosteve123+${i}@gmail.com`,
         password: '$2b$10$8mYwG|BbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
@@ -946,7 +950,7 @@ async function extraPrograms(n: number = 10) {
     });
 
     await prisma.student.upsert({
-      where: { id: studentId },
+      where: { id: studentId1 },
       update: {
         name: 'John',
         lastname: 'Doe',
@@ -954,58 +958,71 @@ async function extraPrograms(n: number = 10) {
         city: 'New York',
         auth: {
           connect: {
-            id: authId,
+            id: authId1,
           },
         },
       },
       create: {
-        id: studentId,
+        id: studentId1,
         name: 'John',
         lastname: 'Doe',
         career: 'Computer Science',
         city: 'New York',
         auth: {
           connect: {
-            id: authId,
+            id: authId1,
           },
         },
       },
     });
     await prisma.studentProgram.upsert({
-      where: { id: studentProgramId },
+      where: { id: studentProgramId1 },
       update: {
-        studentId: studentId,
-        programVersionId: programVersionId,
+        studentId: studentId1,
+        programVersionId: programVersionId1,
       },
       create: {
-        id: studentProgramId,
+        id: studentProgramId1,
+        studentId: studentId1,
+        programVersionId: programVersionId1,
+      },
+    });
+
+    await prisma.studentProgram.upsert({
+      where: { id: studentProgramId1 + i },
+      update: {
         studentId: studentId,
-        programVersionId: programVersionId,
+        programVersionId: programVersionId1,
+      },
+      create: {
+        id: studentProgramId1 + i,
+        studentId: studentId,
+        programVersionId: programVersionId1,
       },
     });
 
     await prisma.questionnaire.upsert({
-      where: { id: questionnaireId },
+      where: { id: questionnaireId1 },
       update: {
         name: 'Cuestionario de prueba',
         description: 'Cuestionario de prueba',
       },
       create: {
-        id: questionnaireId,
+        id: questionnaireId1,
         name: 'Cuestionario de prueba',
         description: 'Cuestionario de prueba',
       },
     });
 
     await prisma.questionnaireVersion.upsert({
-      where: { id: questionnaireVersionId },
+      where: { id: questionnaireVersionId1 },
       update: {
-        questionnaireId: questionnaireId,
+        questionnaireId: questionnaireId1,
         version: 1,
       },
       create: {
-        id: questionnaireVersionId,
-        questionnaireId: questionnaireId,
+        id: questionnaireVersionId1,
+        questionnaireId: questionnaireId1,
         completionTimeMinutes: 5,
         cooldownInMinutes: 10,
         block: questionnaireBlock,
@@ -1016,17 +1033,84 @@ async function extraPrograms(n: number = 10) {
     });
 
     await prisma.programVersionQuestionnaireVersion.upsert({
-      where: { id: programVersionQuestionnaireVersionId },
+      where: { id: programVersionQuestionnaireVersionId1 },
       update: {
-        programVersionId: programVersionId,
-        questionnaireVersionId: questionnaireVersionId,
+        programVersionId: programVersionId1,
+        questionnaireVersionId: questionnaireVersionId1,
         order: 1,
       },
       create: {
-        id: programVersionQuestionnaireVersionId,
-        programVersionId: programVersionId,
-        questionnaireVersionId: questionnaireVersionId,
+        id: programVersionQuestionnaireVersionId1,
+        programVersionId: programVersionId1,
+        questionnaireVersionId: questionnaireVersionId1,
         order: 1,
+      },
+    });
+
+    await prisma.trivia.upsert({
+      where: {
+        id: triviaId1,
+      },
+      update: {
+        block: triviaBlock,
+        questionCount: 12,
+      },
+      create: {
+        id: triviaId1,
+        block: triviaBlock,
+        questionCount: 12,
+      },
+    });
+
+    await prisma.programVersionTrivia.upsert({
+      where: { id: programVersionTrivia1 },
+      update: {
+        order: 1,
+        triviaId: triviaId1,
+        programVersionId: programVersionId1,
+      },
+      create: {
+        id: programVersionTrivia1,
+        order: 1,
+        triviaId: triviaId1,
+        programVersionId: programVersionId1,
+      },
+    });
+
+    await prisma.triviaMatch.upsert({
+      where: { id: triviaMatchId1 },
+      update: {
+        triviaId: triviaId1,
+      },
+      create: {
+        id: triviaMatchId1,
+        triviaId: triviaId1,
+      },
+    });
+
+    await prisma.studentTriviaMatch.upsert({
+      where: { id: studentTriviaMatchId1 },
+      update: {
+        studentId: studentId1,
+        triviaMatchId: triviaMatchId1,
+      },
+      create: {
+        id: studentTriviaMatchId1,
+        studentId: studentId1,
+        triviaMatchId: triviaMatchId1,
+      },
+    });
+
+    await prisma.studentTriviaMatch.upsert({
+      where: { id: studentTriviaMatchId1 + i },
+      update: {
+        studentId: studentId,
+        triviaMatchId: triviaMatchId1,
+      },
+      create: {
+        id: studentTriviaMatchId1 + i,
+        studentId: studentId,
+        triviaMatchId: triviaMatchId1,
       },
     });
   }
