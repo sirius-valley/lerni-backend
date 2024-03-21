@@ -207,9 +207,9 @@ export class TriviaService {
       const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
       const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId, options);
       if (otherMatches) {
-        const oponent = await this.studentService.getStudentById(otherMatches.studentId);
-        const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
-        return new TriviaHistoryDto(item.id, result, program.name, 10, item.createdAt, oponent);
+        const oponentUser = await this.studentService.getStudentById(otherMatches.studentId);
+        const { result, me, opponent } = await this.getTriviaResult(item.studentId, otherMatches.studentId);
+        return new TriviaHistoryDto(item.id, result, program.name, { me, opponent }, item.createdAt, oponentUser);
       }
     });
 
@@ -231,7 +231,11 @@ export class TriviaService {
   private async getTriviaResult(studentId: string, oponentId: string) {
     const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
     const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
-    return otherAnswer > myAnswer ? TriviaStatus.LOST : otherAnswer < myAnswer ? TriviaStatus.WON : TriviaStatus.TIED;
+    return {
+      result: otherAnswer > myAnswer ? TriviaStatus.LOST : otherAnswer < myAnswer ? TriviaStatus.WON : TriviaStatus.TIED,
+      me: myAnswer,
+      opponent: otherAnswer,
+    };
   }
 
   private isAlreadyAnsweredQuestion(triviaAnswers: TriviaAnswer[], questionId: string) {
