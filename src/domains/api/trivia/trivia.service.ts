@@ -15,7 +15,6 @@ import { TriviaAnswerResponseStatus } from './dto/trivia-answer-response.dto';
 import { TriviaQuestionDto } from './dto/trivia-question.dto';
 import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
-import { TriviaStatus } from './dto/trivia-interfaces.interface';
 
 @Injectable()
 export class TriviaService {
@@ -230,7 +229,39 @@ export class TriviaService {
   private async getTriviaResult(studentId: string, oponentId: string) {
     const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
     const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
-    return otherAnswer > myAnswer ? TriviaStatus.LOST : otherAnswer < myAnswer ? TriviaStatus.WON : TriviaStatus.TIED;
+    return otherAnswer > myAnswer
+      ? TriviaAnswerResponseStatus.LOST
+      : otherAnswer < myAnswer
+        ? TriviaAnswerResponseStatus.WON
+        : TriviaAnswerResponseStatus.TIED;
+  }
+
+  public async getTriviaStatus(student: StudentDto, page: number) {
+    const options = { limit: Number(10), offset: (page - 1) * 10 };
+    const matches = await this.triviaRepository.getNotFinishTrivia(student.id, options);
+    const validMatches = this.checkValidTriviaTime(matches);
+    return Promise.all(
+      validMatches.map(async (match) => {
+        const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
+        const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
+        if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
+          return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.WAITING, program.name, 10, match.createdAt, null);
+        } else if (trivia) {
+          const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId, options);
+          if (otherMatch) {
+            const oponent = await this.studentService.getStudentById(otherMatch.studentId);
+            return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, oponent);
+          } else {
+            return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, null);
+          }
+        }
+      }),
+    );
+  }
+
+  public checkValidTriviaTime(trivias: any[]) {
+    const today = new Date();
+    return trivias.filter((item) => Math.abs(today.getTime() - item.createdAt) / (1000 * 60 * 60) < 72);
   }
 
   private isAlreadyAnsweredQuestion(triviaAnswers: TriviaAnswer[], questionId: string) {
