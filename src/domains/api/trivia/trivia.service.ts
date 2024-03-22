@@ -59,15 +59,14 @@ export class TriviaService {
   }
 
   public async answerTrivia(student: StudentDto, triviaAnswer: TriviaAnswerRequestDto, authorization: string) {
-    const studentTriviaMatch = await this.triviaRepository.getStudentTriviaMatchByStudentIdAndTriviaMatchId(
-      student.id,
-      triviaAnswer.triviaMatchId,
-    );
+    const triviaMatch = await this.triviaRepository.getTriviaMatchByIdAndStudentId(triviaAnswer.triviaMatchId, student.id);
+    if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const studentTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === student.id);
     if (!studentTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
     if (this.isAlreadyAnsweredQuestion(studentTriviaMatch.triviaAnswers, triviaAnswer.questionId))
       throw new HttpException('Question already answered', HttpStatus.BAD_REQUEST);
 
-    const springResponse = await this.getSpringResponse(authorization, studentTriviaMatch.triviaMatch, triviaAnswer);
+    const springResponse = await this.getSpringResponse(authorization, triviaMatch, triviaAnswer);
 
     const updatedStudentTriviaMatch = await this.triviaRepository.createTriviaAnswer(
       studentTriviaMatch.id,
@@ -76,14 +75,14 @@ export class TriviaService {
       springResponse.correct,
     );
 
-    const opponent = await this.triviaRepository.getTriviaOpponent(studentTriviaMatch.triviaMatchId, student.id);
-    const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, studentTriviaMatch.triviaMatch.trivia, opponent);
+    const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
+    const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, triviaMatch.trivia, opponent);
     if (triviaStatus !== TriviaAnswerResponseStatus.IN_PROGRESS) {
       await this.updateTriviaMatch(updatedStudentTriviaMatch, triviaStatus);
     }
 
     return this.getTriviaAnswerResponse(
-      JSON.parse(studentTriviaMatch.triviaMatch.trivia.block),
+      JSON.parse(triviaMatch.trivia.block),
       triviaAnswer.questionId,
       springResponse,
       triviaStatus,
@@ -254,7 +253,7 @@ export class TriviaService {
 
   private getMatchStatus(studentTriviaMatch: any, trivia: Trivia, opponentTriviaMatch?: any) {
     if (!opponentTriviaMatch) {
-      if (studentTriviaMatch.triviaAnswers.length === trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
+      if (studentTriviaMatch.triviaAnswers.length >= trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
       return TriviaAnswerResponseStatus.IN_PROGRESS;
     } else return this.calcualteMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers, trivia.questionCount);
   }
@@ -267,9 +266,9 @@ export class TriviaService {
     if (studentAnswers.length === 0) return TriviaAnswerResponseStatus.IN_PROGRESS;
     if (studentCorrectAnswers > opponentCorrectAnswers + opponentsQuestionsLeft) return TriviaAnswerResponseStatus.WON;
     if (studentCorrectAnswers + studentsQuestionsLeft < opponentCorrectAnswers) return TriviaAnswerResponseStatus.LOST;
-    if (studentCorrectAnswers === opponentCorrectAnswers && studentsQuestionsLeft === 0 && opponentsQuestionsLeft === 0)
+    if (studentCorrectAnswers === opponentCorrectAnswers && studentsQuestionsLeft <= 0 && opponentsQuestionsLeft <= 0)
       return TriviaAnswerResponseStatus.TIED;
-    if (studentAnswers.length === questionCount) return TriviaAnswerResponseStatus.WAITING;
+    if (studentAnswers.length >= questionCount) return TriviaAnswerResponseStatus.WAITING;
     return TriviaAnswerResponseStatus.IN_PROGRESS;
   }
 

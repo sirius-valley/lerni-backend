@@ -257,26 +257,6 @@ export class TriviaRepository {
     });
   }
 
-  public async getStudentTriviaMatchByStudentIdAndTriviaMatchId(studentId: string, triviaMatchId: string) {
-    return this.prisma.studentTriviaMatch.findFirst({
-      where: {
-        studentId,
-        triviaMatchId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        triviaAnswers: true,
-        triviaMatch: {
-          include: {
-            trivia: true,
-          },
-        },
-      },
-    });
-  }
-
   public async createTriviaAnswer(studentTriviaMatchId: string, questionId: string, value: string | string[], isCorrect: boolean) {
     value = JSON.stringify(value);
     return this.prisma.studentTriviaMatch.update({
@@ -332,6 +312,28 @@ export class TriviaRepository {
       },
       where: {
         id: triviaMatchId,
+      },
+    });
+  }
+
+  async getTriviaMatchByIdAndStudentId(triviaMatchId: string, studentId: string) {
+    return this.prisma.triviaMatch.findFirst({
+      where: {
+        id: triviaMatchId,
+        studentTriviaMatches: {
+          some: {
+            studentId,
+          },
+        },
+      },
+      include: {
+        trivia: true,
+        studentTriviaMatches: {
+          include: {
+            student: true,
+            triviaAnswers: true,
+          },
+        },
       },
     });
   }
