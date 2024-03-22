@@ -348,7 +348,7 @@ export class TriviaService {
   }
 
   private filterOptions(options: string[]) {
-    return options.filter((option) => option !== 'timeout');
+    return options.filter((option) => option !== 'timeout' && option !== 'left');
   }
 
   private getSimpleAnswers(answers: TriviaAnswer[]) {
