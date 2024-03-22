@@ -118,26 +118,30 @@ export class TriviaService {
   }
 
   public async getQuestion(auth: string, user: StudentDto, triviaMatchId: string) {
-    const userAnswers = await this.triviaRepository.getTriviaAnswersByTriviaMatchId(user.id, triviaMatchId);
-    const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
+    const triviaMatch = await this.triviaRepository.getTriviaMatchByIdAndStudentId(triviaMatchId, user.id);
     if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const userTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === user.id);
+    if (!userTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const userAnswers = userTriviaMatch.triviaAnswers;
     const dataToSpring = {
       triviaMatchId: triviaMatch.id,
       questionId: userAnswers[0]?.questionId ? userAnswers[0].questionId : undefined,
       answer: userAnswers[0]?.value ? JSON.parse(userAnswers[0].value) : undefined,
     };
-    const opponentAnswers = await this.triviaRepository.getOponentAnswer(user.id, triviaMatchId);
+    const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== user.id);
+    const opponentAnswers = opponent?.triviaAnswers;
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
       const questionBubble = bubbles[bubbles.length - 1];
       const options = this.filterOptions(questionBubble.options);
       return new QuestionTriviaDto(
-        new TriviaQuestionDto(questionBubble.id, questionBubble.value, questionBubble.secondsToAnswer, options),
+        new TriviaQuestionDto(questionBubble.id, questionBubble.question, questionBubble.secondsToAnswer, options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
         { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers as TriviaAnswer[]) },
         this.calcualteMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
+        opponent ? new SimpleStudentDto(opponent.student) : undefined,
       );
     }
   }
@@ -166,6 +170,7 @@ export class TriviaService {
       case 'single-choice':
         return {
           value: node.answer,
+          question: node.nodeContent.content,
           options: node.nodeContent.metadata.options,
           secondsToAnswer: node.nodeContent.metadata.metadata.seconds_to_answer,
           correct: node.correct,
