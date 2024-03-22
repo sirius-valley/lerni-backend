@@ -30,6 +30,12 @@ export class TriviaController {
     return await this.triviaService.getTriviaHistory(req.user, Number(page));
   }
 
+  @Get('/status')
+  async getTriviaStatus(@Request() req: ApiRequest, @Query() query: any) {
+    const { page } = query as Record<string, string>;
+    return await this.triviaService.getTriviaStatus(req.user, Number(page));
+  }
+
   @Post('answer')
   async answerTrivia(@Request() req: ApiRequest, @Body() answerRequest: TriviaAnswerRequestDto) {
     return await this.triviaService.answerTrivia(req.user, answerRequest, (req.headers as any).authorization);
