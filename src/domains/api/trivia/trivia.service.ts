@@ -123,14 +123,14 @@ export class TriviaService {
     const userTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === user.id);
     if (!userTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
     const userAnswers = userTriviaMatch.triviaAnswers;
-    const dataToSpring = {
-      triviaMatchId: triviaMatch.id,
-      questionId: userAnswers[0]?.questionId ? userAnswers[0].questionId : undefined,
-      answer: userAnswers[0]?.value ? JSON.parse(userAnswers[0].value) : undefined,
-    };
+    const dataToSpring = new TriviaAnswerRequestDto(
+      triviaMatchId,
+      userAnswers[userAnswers.length - 1].questionId,
+      JSON.parse(userAnswers[userAnswers.length - 1].value),
+    );
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== user.id);
     const opponentAnswers = opponent?.triviaAnswers;
-    const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
+    const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
       const questionBubble = bubbles[bubbles.length - 1];
