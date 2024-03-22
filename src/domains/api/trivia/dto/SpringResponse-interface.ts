@@ -4,4 +4,5 @@ export interface SpringData {
   value: string;
   options: string[];
   secondsToAnswer: number;
+  question: string;
 }
