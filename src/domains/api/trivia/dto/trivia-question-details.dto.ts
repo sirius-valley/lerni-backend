@@ -3,7 +3,7 @@ export enum TriviaAnswerStatus {
   INCORRECT = 'INCORRECT',
   UNANSWERED = 'UNANSWERED',
   TIMEDOUT = 'TIMEDOUT',
-  EXITED = 'EXITED',
+  LEFT = 'LEFT',
 }
 
 export class TriviaQuestionDetailsDto {

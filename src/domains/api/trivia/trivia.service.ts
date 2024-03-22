@@ -377,7 +377,7 @@ export class TriviaService {
     if (!answer) return TriviaAnswerStatus.UNANSWERED;
     if (answer.isCorrect) return TriviaAnswerStatus.CORRECT;
     if (answer.value === 'timeout') return TriviaAnswerStatus.TIMEDOUT;
-    if (answer.value === 'exit') return TriviaAnswerStatus.EXITED;
+    if (answer.value === 'left') return TriviaAnswerStatus.LEFT;
     return TriviaAnswerStatus.INCORRECT;
   }
 }
