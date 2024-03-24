@@ -939,12 +939,12 @@ async function extraPrograms(n: number = 10) {
     await prisma.auth.upsert({
       where: { id: authId1 },
       update: {
-        email: `monosteve123+${i}@gmail.com`,
-        password: '$2b$10$8mYwG|BbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+        email: `monosteve123${i}@gmail.com`,
+        password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
       },
       create: {
         id: authId,
-        email: `monosteve123+${i}@gmail.com`,
+        email: `monosteve123${i}@gmail.com`,
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
       },
     });

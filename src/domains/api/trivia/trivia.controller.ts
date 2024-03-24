@@ -40,4 +40,9 @@ export class TriviaController {
   async answerTrivia(@Request() req: ApiRequest, @Body() answerRequest: TriviaAnswerRequestDto) {
     return await this.triviaService.answerTrivia(req.user, answerRequest, (req.headers as any).authorization);
   }
+
+  @Get('details/:triviaMatchId')
+  async getTriviaDetails(@Request() req: ApiRequest, @Param('triviaMatchId') triviaMatchId: string) {
+    return await this.triviaService.getTriviaMatchDetails(req.user, triviaMatchId, (req.headers as any).authorization);
+  }
 }
