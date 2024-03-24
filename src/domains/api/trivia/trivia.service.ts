@@ -333,7 +333,7 @@ export class TriviaService {
 
   private async checkNotFinishStatus(trivia: any, today: Date) {
     //add into getStatus
-    if (Math.abs(today.getTime() - trivia.completeBefore.getTime()) / (1000 * 60 * 60) > 0) {
+    if (today > trivia.completeBefore) {
       await this.triviaRepository.updateFinishDate(trivia.id, today);
       return false;
     }
