@@ -140,7 +140,7 @@ export class TriviaRepository {
   }
 
   public async getTriviaAnswersByTriviaMatchId(studentId: string, triviaMatchId: string) {
-    return await this.prisma.triviaAnswer.findMany({
+    return this.prisma.triviaAnswer.findMany({
       where: {
         studentTriviaMatch: {
           studentId,
@@ -161,7 +161,7 @@ export class TriviaRepository {
   }
 
   public async getOponentAnswer(studentId: string, triviaMatchId: string) {
-    return await this.prisma.triviaAnswer.findMany({
+    return this.prisma.triviaAnswer.findMany({
       select: {
         isCorrect: true,
         id: true,
@@ -205,7 +205,7 @@ export class TriviaRepository {
   }
 
   public async getTriviaById(triviaId: string) {
-    return await this.prisma.trivia.findUnique({
+    return this.prisma.trivia.findUnique({
       where: {
         id: triviaId,
       },
@@ -213,18 +213,36 @@ export class TriviaRepository {
   }
 
   public async getTriviaMatchById(triviaMatchId: string) {
-    return await this.prisma.triviaMatch.findUnique({
+    return this.prisma.triviaMatch.findUnique({
       where: {
         id: triviaMatchId,
       },
       include: {
-        trivia: true,
+        trivia: {
+          include: {
+            programVersions: {
+              include: {
+                programVersion: {
+                  include: {
+                    program: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        studentTriviaMatches: {
+          include: {
+            triviaAnswers: true,
+            student: true,
+          },
+        },
       },
     });
   }
 
   public async getTriviaAnswerCorrectCountByMatchId(studentTriviaMatchId: string) {
-    return await this.prisma.triviaAnswer.count({
+    return this.prisma.triviaAnswer.count({
       where: {
         studentTriviaMatchId,
         isCorrect: true,
@@ -233,7 +251,7 @@ export class TriviaRepository {
   }
 
   public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string, options: LimitOffsetPagination) {
-    return await this.prisma.studentTriviaMatch.findFirst({
+    return this.prisma.studentTriviaMatch.findFirst({
       where: {
         triviaMatchId,
         student: {
@@ -251,20 +269,40 @@ export class TriviaRepository {
   }
 
   public async getProgramTriviaVersionByTriviaId(triviaId: string) {
-    return await this.prisma.programVersionTrivia.findFirst({
+    return this.prisma.programVersionTrivia.findFirst({
       where: {
         triviaId,
       },
     });
   }
 
-  public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
-    return this.prisma.studentTriviaMatch.findFirst({
+  public async getNotFinishTrivia(studentId: string, options: LimitOffsetPagination) {
+    return await this.prisma.studentTriviaMatch.findMany({
       where: {
         studentId,
         triviaMatch: {
-          triviaId,
+          finishedDateTime: null,
         },
+      },
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
+      include: {
+        triviaMatch: true,
+        _count: {
+          select: {
+            triviaAnswers: true,
+          },
+        },
+      },
+    });
+  }
+
+  // public async getStudentTriviaMatchByStudentIdAndTriviaId(studentId: string, triviaId: string) {
+  public async getStudentTriviaMatchByStudentIdAndTriviaMatchId(studentId: string, triviaMatchId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId,
+        triviaMatchId,
       },
       orderBy: {
         createdAt: 'desc',
@@ -387,6 +425,28 @@ export class TriviaRepository {
       },
       data: {
         finishedDateTime: new Date(),
+      },
+    });
+  }
+
+  async getTriviaMatchByIdAndStudentId(triviaMatchId: string, studentId: string) {
+    return this.prisma.triviaMatch.findFirst({
+      where: {
+        id: triviaMatchId,
+        studentTriviaMatches: {
+          some: {
+            studentId,
+          },
+        },
+      },
+      include: {
+        trivia: true,
+        studentTriviaMatches: {
+          include: {
+            student: true,
+            triviaAnswers: true,
+          },
+        },
       },
     });
   }

@@ -317,6 +317,7 @@ export class HeadlandsAdapter {
 
     const options = this.getQuestionOptions(element);
     options.push('timeout');
+    options.push('left');
     const correctAnswer = this.getCorrectAnswer(element);
 
     const questionNode: PillNode = {
