@@ -335,6 +335,18 @@ export class TriviaService {
     //add into getStatus
     if (today > trivia.completeBefore) {
       await this.triviaRepository.updateFinishDate(trivia.id, today);
+      const triviaMatch = await this.triviaRepository.getStudentMatchbyTriviaMachtId(trivia.triviaMatchId);
+      if (!triviaMatch) throw new HttpException('Match not found', HttpStatus.NOT_FOUND);
+      if (triviaMatch[0].studentTriviaMatches.length > 1) {
+        if (
+          triviaMatch[0].studentTriviaMatches[0].finishedDateTime !== null &&
+          triviaMatch[0].studentTriviaMatches[1].finishedDateTime !== null
+        ) {
+          await this.triviaRepository.updateFinishDateTriviaMatch(triviaMatch[0].id);
+        }
+      } else {
+        await this.triviaRepository.updateFinishDateTriviaMatch(triviaMatch[0].id);
+      }
       return false;
     }
     //Todo add notification with diferents times

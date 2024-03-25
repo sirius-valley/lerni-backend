@@ -368,4 +368,26 @@ export class TriviaRepository {
       },
     });
   }
+
+  async getStudentMatchbyTriviaMachtId(triviaMatchId: string) {
+    return this.prisma.triviaMatch.findMany({
+      where: {
+        id: triviaMatchId,
+      },
+      include: {
+        studentTriviaMatches: true,
+      },
+    });
+  }
+
+  async updateFinishDateTriviaMatch(triviaId: string) {
+    return this.prisma.triviaMatch.update({
+      where: {
+        id: triviaId,
+      },
+      data: {
+        finishedDateTime: new Date(),
+      },
+    });
+  }
 }
