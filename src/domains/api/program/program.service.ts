@@ -303,37 +303,37 @@ export class ProgramService {
   }
 
   public async getProgramDetail(id: string) {
-    const program = await this.programRepository.getProgramById(id);
+    const program = await this.programRepository.getProgramByProgramVersionId(id);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const trivias: any = [];
     const students: any = [];
     const pills: any = [];
     const questionaries: any = [];
-    for (const version of program.versions) {
-      for (const triviaStudent of version.programVersionTrivias) {
-        trivias.push(triviaStudent.trivia);
-      }
-      for (const studentPrograms of version.studentPrograms) {
-        students.push(studentPrograms.student);
-      }
-      for (const programVersionPillVersions of version.programVersionPillVersions) {
-        pills.push(programVersionPillVersions.pillVersion.pill);
-      }
-      for (const programVersionQuestionnaireVersions of version.programVersionQuestionnaireVersions) {
-        questionaries.push(programVersionQuestionnaireVersions.questionnaireVersion.questionnaire);
-      }
+
+    for (const triviaStudent of program.programVersionTrivias) {
+      trivias.push(triviaStudent.trivia);
     }
+    for (const studentPrograms of program.studentPrograms) {
+      students.push(studentPrograms.student);
+    }
+    for (const programVersionPillVersions of program.programVersionPillVersions) {
+      pills.push(programVersionPillVersions.pillVersion.pill);
+    }
+    for (const programVersionQuestionnaireVersions of program.programVersionQuestionnaireVersions) {
+      questionaries.push(programVersionQuestionnaireVersions.questionnaireVersion.questionnaire);
+    }
+
     return new ProgramAdminDetailsDto({
       id: program.id,
-      programName: program.name,
-      icon: program.icon,
-      estimatedHours: program.hoursToComplete,
-      points: program.pointsReward,
+      programName: program.program.name,
+      icon: program.program.icon,
+      estimatedHours: program.program.hoursToComplete,
+      points: program.program.pointsReward,
       pills: pills,
       questionnaire: questionaries,
       students: students,
-      teacher: new TeacherDto(program.teacher),
-      programDescription: program.description as string,
+      teacher: new TeacherDto(program.program.teacher),
+      programDescription: program.program.description as string,
     });
   }
 }

@@ -50,8 +50,8 @@ export class ProgramController {
     return await this.programService.createProgram(newProgram);
   }
 
-  @Get('detail/:id')
-  async getProgramDetail(@Param('id') id: string) {
+  @Get('detail/:programVersionId')
+  async getProgramDetail(@Param('programVersionId') id: string) {
     return await this.programService.getProgramDetail(id);
   }
 }
