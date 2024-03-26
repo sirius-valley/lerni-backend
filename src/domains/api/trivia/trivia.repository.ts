@@ -55,6 +55,7 @@ export class TriviaRepository {
       data: {
         studentId,
         triviaMatchId,
+        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
       },
     });
   }
@@ -372,6 +373,58 @@ export class TriviaRepository {
       },
       where: {
         id: triviaMatchId,
+      },
+    });
+  }
+
+  async getAllNotFinishTrivias() {
+    return this.prisma.studentTriviaMatch.findMany({
+      where: {
+        finishedDateTime: null,
+      },
+    });
+  }
+
+  async updateFinishDate(studentTriviaMatchId: string, date: Date) {
+    return this.prisma.studentTriviaMatch.update({
+      where: {
+        id: studentTriviaMatchId,
+      },
+      data: {
+        finishedDateTime: date,
+      },
+    });
+  }
+
+  async resetTimer(triviaMatchId: string, newDate: Date) {
+    return this.prisma.studentTriviaMatch.update({
+      where: {
+        id: triviaMatchId,
+      },
+      data: {
+        completeBefore: newDate,
+      },
+    });
+  }
+
+  async getStudentMatchbyTriviaMachtId(triviaMatchId: string) {
+    return this.prisma.triviaMatch.findMany({
+      where: {
+        id: triviaMatchId,
+      },
+      include: {
+        studentTriviaMatches: true,
+      },
+    });
+  }
+
+  async updateFinishDateTriviaMatch(triviaId: string) {
+    return this.prisma.triviaMatch.update({
+      where: {
+        id: triviaId,
+      },
+      data: {
+        finishedDateTime: new Date(),
       },
     });
   }

@@ -17,6 +17,8 @@ import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
 import { TriviaAnswerStatus, TriviaQuestionDetailsDto } from './dto/trivia-question-details.dto';
 import { TriviaDetailsDto } from './dto/trivia-details.dto';
+// eslint-disable-next-line
+const cron = require('node-cron');
 
 @Injectable()
 export class TriviaService {
@@ -26,7 +28,14 @@ export class TriviaService {
     private readonly springService: SpringPillService,
     private readonly studentService: StudentService,
     private readonly springPillService: SpringPillService,
-  ) {}
+  ) {
+    this.checkIn72Hours();
+  }
+  private checkIn72Hours = () => {
+    cron.schedule(' * */60 * * *', () => {
+      this.checkAllNotFinishStatus();
+    });
+  };
 
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
     // check if student is already enrolled in the program
@@ -64,6 +73,12 @@ export class TriviaService {
     if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
     const studentTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === student.id);
     if (!studentTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
+    const validTime = await this.checkNotFinishStatus(triviaMatch.trivia, new Date());
+    if (studentTriviaMatch.triviaAnswers.length === 0 && validTime) {
+      await this.triviaRepository.resetTimer(studentTriviaMatch.id, new Date(new Date().getTime() + 72 * 60 * 60 * 1000));
+    } else if (!validTime) {
+      throw new HttpException('Time limit is over', HttpStatus.BAD_REQUEST);
+    }
     if (this.isAlreadyAnsweredQuestion(studentTriviaMatch.triviaAnswers, triviaAnswer.questionId))
       throw new HttpException('Question already answered', HttpStatus.BAD_REQUEST);
 
@@ -369,6 +384,35 @@ export class TriviaService {
     return new TriviaQuestionDto(questionId, questionNode.name, questionNode.metadata.metadata.seconds_to_answer, options);
   }
 
+  private async checkAllNotFinishStatus() {
+    const today = new Date();
+    const trivias = await this.triviaRepository.getAllNotFinishTrivias();
+    trivias.map((trivia) => {
+      this.checkNotFinishStatus(trivia, today);
+    });
+  }
+
+  private async checkNotFinishStatus(trivia: any, today: Date) {
+    //add into getStatus
+    if (today > trivia.completeBefore) {
+      await this.triviaRepository.updateFinishDate(trivia.id, today);
+      const triviaMatch = await this.triviaRepository.getStudentMatchbyTriviaMachtId(trivia.triviaMatchId);
+      if (!triviaMatch) throw new HttpException('Match not found', HttpStatus.NOT_FOUND);
+      if (triviaMatch[0].studentTriviaMatches.length > 1) {
+        if (
+          triviaMatch[0].studentTriviaMatches[0].finishedDateTime !== null &&
+          triviaMatch[0].studentTriviaMatches[1].finishedDateTime !== null
+        ) {
+          await this.triviaRepository.updateFinishDateTriviaMatch(triviaMatch[0].id);
+        }
+      } else {
+        await this.triviaRepository.updateFinishDateTriviaMatch(triviaMatch[0].id);
+      }
+      return false;
+    }
+    //Todo add notification with diferents times
+    return true;
+  }
   private filterOptions(options: string[]) {
     return options.filter((option) => option !== 'timeout' && option !== 'left');
   }
