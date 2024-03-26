@@ -685,7 +685,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -705,7 +706,8 @@ export const triviaBlock = `{
                     "Opcion 2 Verdadera",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -725,7 +727,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 Verdadera",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -745,7 +748,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Verdadera",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -765,7 +769,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -785,7 +790,8 @@ export const triviaBlock = `{
                     "Opcion 2 Verdadera",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -805,7 +811,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 Verdadera",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -825,7 +832,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Verdadera",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -845,7 +853,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -865,7 +874,8 @@ export const triviaBlock = `{
                     "Opcion 2 Verdadera",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -885,7 +895,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 Verdadera",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -905,7 +916,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Verdadera",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -925,7 +937,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -945,7 +958,8 @@ export const triviaBlock = `{
                     "Opcion 2 Verdadera",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -965,7 +979,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 Verdadera",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -985,7 +1000,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Verdadera",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -1005,7 +1021,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -1025,7 +1042,8 @@ export const triviaBlock = `{
                     "Opcion 2 Verdadera",
                     "Opcion 3 falsa",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -1045,7 +1063,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 Verdadera",
                     "Opcion 4 Falsa",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         },
@@ -1065,7 +1084,8 @@ export const triviaBlock = `{
                     "Opcion 2 Falsa",
                     "Opcion 3 falsa",
                     "Opcion 4 Verdadera",
-                    "timeout"
+                    "timeout",
+                    "left"
                 ]
             }
         }
