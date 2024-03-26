@@ -300,4 +300,10 @@ export class ProgramService {
 
     return program;
   }
+
+  public async getLikesAndDislikes(id: string) {
+    const likes = await this.programRepository.countLikesByProgramId(id);
+    const dislikes = await this.programRepository.countDislikesByProgramId(id);
+    return { likes: Number(likes), dislikes: Number(dislikes) };
+  }
 }
