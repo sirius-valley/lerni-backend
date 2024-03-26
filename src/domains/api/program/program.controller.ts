@@ -49,4 +49,9 @@ export class ProgramController {
   async newProgram(@Request() req: ApiRequest, @Body() newProgram: ProgramRequestDto) {
     return await this.programService.createProgram(newProgram);
   }
+
+  @Get('students/:programVersionId')
+  async getProgramStudents(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
+    return await this.programService.getProgramVersionStudents(programVersionId);
+  }
 }
