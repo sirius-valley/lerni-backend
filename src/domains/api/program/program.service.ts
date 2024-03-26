@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ProgramRepository } from './program.repository';
 import { TeacherDto } from '../pill/dtos/teacher.dto';
 import { SimplePillDto } from './dtos/simple-pill.dto';
@@ -20,6 +20,7 @@ import { StudentRepository } from '../student/student.repository';
 import { AuthService } from '../../auth/auth.service';
 import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
+import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 
 @Injectable()
 export class ProgramService {
@@ -299,5 +300,40 @@ export class ProgramService {
     this.enrollStudents(programVersion.id, newProgram.students);
 
     return program;
+  }
+
+  public async getProgramDetail(id: string) {
+    const program = await this.programRepository.getProgramById(id);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    const trivias: any = [];
+    const students: any = [];
+    const pills: any = [];
+    const questionaries: any = [];
+    for (const version of program.versions) {
+      for (const triviaStudent of version.programVersionTrivias) {
+        trivias.push(triviaStudent.trivia);
+      }
+      for (const studentPrograms of version.studentPrograms) {
+        students.push(studentPrograms.student);
+      }
+      for (const programVersionPillVersions of version.programVersionPillVersions) {
+        pills.push(programVersionPillVersions.pillVersion.pill);
+      }
+      for (const programVersionQuestionnaireVersions of version.programVersionQuestionnaireVersions) {
+        questionaries.push(programVersionQuestionnaireVersions.questionnaireVersion.questionnaire);
+      }
+    }
+    return new ProgramAdminDetailsDto({
+      id: program.id,
+      programName: program.name,
+      icon: program.icon,
+      estimatedHours: program.hoursToComplete,
+      points: program.pointsReward,
+      pills: pills,
+      questionnaire: questionaries,
+      students: students,
+      teacher: new TeacherDto(program.teacher),
+      programDescription: program.description as string,
+    });
   }
 }
