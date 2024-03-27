@@ -25,4 +25,12 @@ export class ProfessorRepository {
     const total = Number(await this.prisma.teacher.count());
     return { result: (await teachers).map((teacher) => new SimpleProfessortDto(teacher)), total: Math.ceil(total / 10) };
   }
+
+  async getProfessorById(id: string) {
+    return this.prisma.teacher.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 }

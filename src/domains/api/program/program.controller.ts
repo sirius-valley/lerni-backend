@@ -54,4 +54,9 @@ export class ProgramController {
   async getLikesAndDislikes(@Param('id') id: string) {
     return await this.programService.getLikesAndDislikes(id);
   }
+
+  @Get('students/:programVersionId')
+  async getProgramStudents(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
+    return await this.programService.getProgramVersionStudents(programVersionId);
+  }
 }

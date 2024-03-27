@@ -520,4 +520,29 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getStudentsByProgramVersionId(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+      },
+      include: {
+        questionnaireSubmissions: {
+          where: {
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
