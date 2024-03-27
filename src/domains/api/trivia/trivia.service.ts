@@ -29,7 +29,6 @@ export class TriviaService {
     private readonly programService: ProgramService,
     private readonly springService: SpringPillService,
     private readonly studentService: StudentService,
-    private readonly springPillService: SpringPillService,
     private readonly headlandsAdapter: HeadlandsAdapter,
   ) {
     this.checkIn72Hours();
@@ -325,13 +324,13 @@ export class TriviaService {
     const block = JSON.parse(triviaMatch.trivia.block);
     block.seed = triviaMatch.seed;
     if (answerRequest?.questionId && answerRequest.answer) {
-      return this.springPillService.answerQuestionnaire(
+      return this.springService.answerQuestionnaire(
         authorization,
         block,
         new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer),
       );
     } else {
-      return this.springPillService.getSpringProgress(JSON.stringify(block), authorization, []);
+      return this.springService.getSpringProgress(JSON.stringify(block), authorization, []);
     }
   }
 
