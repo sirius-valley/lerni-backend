@@ -20,6 +20,7 @@ import { StudentRepository } from '../student/student.repository';
 import { AuthService } from '../../auth/auth.service';
 import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
+import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
 
@@ -313,6 +314,41 @@ export class ProgramService {
     this.enrollStudents(programVersion.id, newProgram.students);
 
     return program;
+  }
+
+  public async getProgramDetail(id: string) {
+    const program = await this.programRepository.getProgramByProgramVersionId(id);
+    if (!program) throw new HttpException('Program Version not found', HttpStatus.NOT_FOUND);
+
+    const trivias = program.programVersionTrivias.map((item) => {
+      return item.trivia;
+    });
+
+    const students = program.studentPrograms.map((item) => {
+      return item.student;
+    });
+
+    const pills = program.programVersionPillVersions.map((item) => {
+      return item.pillVersion.pill;
+    });
+
+    const questionaries = program.programVersionQuestionnaireVersions.map((item) => {
+      return item.questionnaireVersion.questionnaire;
+    });
+
+    return new ProgramAdminDetailsDto({
+      id: program.id,
+      programName: program.program.name,
+      icon: program.program.icon,
+      estimatedHours: program.program.hoursToComplete,
+      points: program.program.pointsReward,
+      pills: pills,
+      questionnaire: questionaries,
+      students: students,
+      teacher: new TeacherDto(program.program.teacher),
+      programDescription: program.program.description as string,
+      trivias,
+    });
   }
 
   public async getLikesAndDislikes(id: string) {

@@ -503,6 +503,59 @@ export class ProgramRepository {
     });
   }
 
+  async getProgramByProgramVersionId(id: string) {
+    return await this.prisma.programVersion.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        programVersionPillVersions: {
+          include: {
+            pillVersion: {
+              include: {
+                pill: true,
+              },
+            },
+          },
+        },
+        programVersionQuestionnaireVersions: {
+          include: {
+            questionnaireVersion: {
+              include: {
+                questionnaire: true,
+              },
+            },
+          },
+        },
+        programVersionTrivias: {
+          include: {
+            trivia: true,
+          },
+        },
+        studentPrograms: {
+          include: {
+            student: true,
+          },
+        },
+        program: {
+          include: {
+            teacher: {
+              select: {
+                id: true,
+                name: true,
+                lastname: true,
+                email: true,
+                profession: true,
+                description: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async countLikesByProgramId(programId: string) {
     return this.prisma.comment.count({
       where: {
