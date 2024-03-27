@@ -6,10 +6,11 @@ import { ProgramModule } from '../program/program.module';
 import { PrismaService } from '../../../prisma.service';
 import { StudentModule } from '../student/student.module';
 import { SpringPillModule } from '../pill-external-api/spring-pill.module';
+import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
 
 @Module({
   controllers: [TriviaController],
   imports: [ProgramModule, StudentModule, SpringPillModule],
-  providers: [TriviaService, TriviaRepository, PrismaService],
+  providers: [TriviaService, TriviaRepository, PrismaService, HeadlandsAdapter],
 })
 export class TriviaModule {}

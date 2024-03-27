@@ -21,6 +21,8 @@ import { AuthService } from '../../auth/auth.service';
 import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
+import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
+import { ProgramStudentsDto } from './dtos/program-students.dto';
 
 @Injectable()
 export class ProgramService {
@@ -77,6 +79,18 @@ export class ProgramService {
     if (!studentProgram) throw new HttpException('Program not found', 404);
     if (!this.programIsComplete(studentProgram)) throw new HttpException('Program not complete', 400);
     await this.programRepository.createProgramComment(studentId, commentRequest);
+  }
+
+  public async getProgramVersionStudents(programVersionId: string) {
+    const program = await this.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', 404);
+    const students = await this.programRepository.getStudentsByProgramVersionId(programVersionId);
+    const completedStudents = students.filter((student) => student.questionnaireSubmissions.some((qs) => qs.progress === 100));
+    return new ProgramStudentsDto({
+      programVersionId,
+      totalStudents: students.length,
+      studentsCompleted: completedStudents.map((student) => new SimpleStudentDto(student)),
+    });
   }
 
   private programIsComplete(studentProgram: any) {
@@ -335,5 +349,13 @@ export class ProgramService {
       programDescription: program.program.description as string,
       trivias,
     });
+  }
+
+  public async getLikesAndDislikes(id: string) {
+    const program = await this.programRepository.getProgramByProgramVersion(id);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    const likes = await this.programRepository.countLikesByProgramId(id);
+    const dislikes = await this.programRepository.countDislikesByProgramId(id);
+    return { likes: Number(likes), dislikes: Number(dislikes) };
   }
 }

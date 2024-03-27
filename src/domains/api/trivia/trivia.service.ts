@@ -17,6 +17,8 @@ import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
 import { TriviaAnswerStatus, TriviaQuestionDetailsDto } from './dto/trivia-question-details.dto';
 import { TriviaDetailsDto } from './dto/trivia-details.dto';
+import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
+import { ThreadRequestDto } from '../pill/dtos/thread-request.dto';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -27,7 +29,7 @@ export class TriviaService {
     private readonly programService: ProgramService,
     private readonly springService: SpringPillService,
     private readonly studentService: StudentService,
-    private readonly springPillService: SpringPillService,
+    private readonly headlandsAdapter: HeadlandsAdapter,
   ) {
     this.checkIn72Hours();
   }
@@ -123,6 +125,14 @@ export class TriviaService {
       questions: questionsSummary,
       triviaStatus,
     });
+  }
+
+  public async adaptThreadToTriviaBlock(headlandsThread: ThreadRequestDto) {
+    try {
+      return this.headlandsAdapter.adaptThreadIntoTrivia(headlandsThread.thread);
+    } catch (e) {
+      throw new HttpException('Thread does not follow required format', HttpStatus.BAD_REQUEST);
+    }
   }
 
   private async assignMatchToStudent(studentId: string, triviaMatchId: string) {
@@ -314,13 +324,13 @@ export class TriviaService {
     const block = JSON.parse(triviaMatch.trivia.block);
     block.seed = triviaMatch.seed;
     if (answerRequest?.questionId && answerRequest.answer) {
-      return this.springPillService.answerQuestionnaire(
+      return this.springService.answerQuestionnaire(
         authorization,
         block,
         new PillAnswerSpringDto(answerRequest.questionId, answerRequest.answer),
       );
     } else {
-      return this.springPillService.getSpringProgress(JSON.stringify(block), authorization, []);
+      return this.springService.getSpringProgress(JSON.stringify(block), authorization, []);
     }
   }
 

@@ -555,4 +555,47 @@ export class ProgramRepository {
       },
     });
   }
+
+  async countLikesByProgramId(programId: string) {
+    return this.prisma.comment.count({
+      where: {
+        programId,
+        vote: 'up',
+      },
+    });
+  }
+
+  async countDislikesByProgramId(programId: string) {
+    return this.prisma.comment.count({
+      where: {
+        programId,
+        vote: 'down',
+      },
+    });
+  }
+
+  async getStudentsByProgramVersionId(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+      },
+      include: {
+        questionnaireSubmissions: {
+          where: {
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
