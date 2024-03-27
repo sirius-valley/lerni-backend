@@ -17,6 +17,8 @@ import { StudentService } from '../student/student.service';
 import { TriviaHistoryDto } from './dto/trivia-history.dto';
 import { TriviaAnswerStatus, TriviaQuestionDetailsDto } from './dto/trivia-question-details.dto';
 import { TriviaDetailsDto } from './dto/trivia-details.dto';
+import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
+import { ThreadRequestDto } from '../pill/dtos/thread-request.dto';
 
 @Injectable()
 export class TriviaService {
@@ -26,6 +28,7 @@ export class TriviaService {
     private readonly springService: SpringPillService,
     private readonly studentService: StudentService,
     private readonly springPillService: SpringPillService,
+    private readonly headlandsAdapter: HeadlandsAdapter,
   ) {}
 
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
@@ -108,6 +111,14 @@ export class TriviaService {
       questions: questionsSummary,
       triviaStatus,
     });
+  }
+
+  public async adaptThreadToTriviaBlock(headlandsThread: ThreadRequestDto) {
+    try {
+      return this.headlandsAdapter.adaptThreadIntoTrivia(headlandsThread.thread);
+    } catch (e) {
+      throw new HttpException('Thread does not follow required format', HttpStatus.BAD_REQUEST);
+    }
   }
 
   private async assignMatchToStudent(studentId: string, triviaMatchId: string) {

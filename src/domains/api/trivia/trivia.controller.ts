@@ -45,4 +45,9 @@ export class TriviaController {
   async getTriviaDetails(@Request() req: ApiRequest, @Param('triviaMatchId') triviaMatchId: string) {
     return await this.triviaService.getTriviaMatchDetails(req.user, triviaMatchId, (req.headers as any).authorization);
   }
+
+  @Post('adapt-to-trivia')
+  async adaptThreadToTriviaBlock(@Body() thread: any) {
+    return await this.triviaService.adaptThreadToTriviaBlock(thread);
+  }
 }
