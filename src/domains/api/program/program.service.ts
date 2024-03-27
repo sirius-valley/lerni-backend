@@ -304,24 +304,23 @@ export class ProgramService {
 
   public async getProgramDetail(id: string) {
     const program = await this.programRepository.getProgramByProgramVersionId(id);
-    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
-    const trivias: any = [];
-    const students: any = [];
-    const pills: any = [];
-    const questionaries: any = [];
+    if (!program) throw new HttpException('Program Version not found', HttpStatus.NOT_FOUND);
 
-    for (const triviaStudent of program.programVersionTrivias) {
-      trivias.push(triviaStudent.trivia);
-    }
-    for (const studentPrograms of program.studentPrograms) {
-      students.push(studentPrograms.student);
-    }
-    for (const programVersionPillVersions of program.programVersionPillVersions) {
-      pills.push(programVersionPillVersions.pillVersion.pill);
-    }
-    for (const programVersionQuestionnaireVersions of program.programVersionQuestionnaireVersions) {
-      questionaries.push(programVersionQuestionnaireVersions.questionnaireVersion.questionnaire);
-    }
+    const trivias = program.programVersionTrivias.map((item) => {
+      return item.trivia;
+    });
+
+    const students = program.studentPrograms.map((item) => {
+      return item.student;
+    });
+
+    const pills = program.programVersionPillVersions.map((item) => {
+      return item.pillVersion.pill;
+    });
+
+    const questionaries = program.programVersionQuestionnaireVersions.map((item) => {
+      return item.questionnaireVersion.questionnaire;
+    });
 
     return new ProgramAdminDetailsDto({
       id: program.id,
@@ -334,6 +333,7 @@ export class ProgramService {
       students: students,
       teacher: new TeacherDto(program.program.teacher),
       programDescription: program.program.description as string,
+      trivias,
     });
   }
 }
