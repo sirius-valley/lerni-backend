@@ -59,7 +59,10 @@ export class AuthService {
       ...adminRegisterDto,
       password: hashedPassword,
     });
-    const jwt = await this.jwtService.signAsync({ sub: adminCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+    const jwt = await this.jwtService.signAsync(
+      { sub: adminCreated.id, role: 'admin' },
+      { secret: this.configService.get<string>('JWT_SECRET') },
+    );
     return new JwtDto(jwt);
   }
 
@@ -68,7 +71,7 @@ export class AuthService {
     if (!admin) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
     const isCorrectPassword = await this.comparePassword(adminLoginDto.password, admin?.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-    const jwt = await this.jwtService.signAsync({ sub: admin.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+    const jwt = await this.jwtService.signAsync({ sub: admin.id, role: 'admin' }, { secret: this.configService.get<string>('JWT_SECRET') });
     return new JwtDto(jwt);
   }
 
