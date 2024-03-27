@@ -81,6 +81,8 @@ export class ProgramService {
   }
 
   public async getProgramVersionStudents(programVersionId: string) {
+    const program = await this.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', 404);
     const students = await this.programRepository.getStudentsByProgramVersionId(programVersionId);
     const completedStudents = students.filter((student) => student.questionnaireSubmissions.some((qs) => qs.progress === 100));
     return new ProgramStudentsDto({
