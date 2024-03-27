@@ -333,6 +333,7 @@ model StudentTriviaMatch {
   id               String    @id @default(uuid())
   createdAt        DateTime  @default(now())
   finishedDateTime DateTime?
+  completeBefore   DateTime?
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])
