@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ProgramRepository } from './program.repository';
 import { TeacherDto } from '../pill/dtos/teacher.dto';
 import { SimplePillDto } from './dtos/simple-pill.dto';
@@ -302,6 +302,8 @@ export class ProgramService {
   }
 
   public async getLikesAndDislikes(id: string) {
+    const program = await this.programRepository.getProgramByProgramVersion(id);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const likes = await this.programRepository.countLikesByProgramId(id);
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
     return { likes: Number(likes), dislikes: Number(dislikes) };
