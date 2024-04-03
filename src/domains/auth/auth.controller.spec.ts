@@ -48,6 +48,7 @@ describe('AuthController', () => {
         email: 'test@mail.com',
         password: 'Password12',
         isActive: true,
+        tokenDevice: null,
         createdAt: new Date(),
       });
 

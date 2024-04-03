@@ -559,8 +559,16 @@ export class ProgramRepository {
   async countLikesByProgramId(programId: string) {
     return this.prisma.comment.count({
       where: {
-        programId,
-        vote: 'up',
+        program: {
+          versions: {
+            some: {
+              id: programId,
+            },
+          },
+        },
+        vote: {
+          in: ['up'],
+        },
       },
     });
   }
@@ -568,7 +576,13 @@ export class ProgramRepository {
   async countDislikesByProgramId(programId: string) {
     return this.prisma.comment.count({
       where: {
-        programId,
+        program: {
+          versions: {
+            some: {
+              id: programId,
+            },
+          },
+        },
         vote: 'down',
       },
     });
