@@ -2,7 +2,7 @@ import { Body, Controller, Post, Request, UseGuards, UseInterceptors } from '@ne
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
-import { AttachStudentDataInterceptor } from 'src/interceptors/attach-student-data.interceptor';
+import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
 import { NotificationService } from './notification.service';
 import { NotificationDto } from './dto/notification.dto';
 import { NewTokenDto } from './dto/new-token.notification.dto';
