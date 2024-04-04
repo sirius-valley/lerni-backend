@@ -11,11 +11,12 @@ datasource db {
 }
 
 model Auth {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  isActive    Boolean  @default(true)
+  tokenDevice String?
+  createdAt   DateTime @default(now())
 
   user Student?
 }
