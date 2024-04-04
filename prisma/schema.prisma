@@ -44,6 +44,8 @@ model Student {
   questionnaireSubmissions QuestionnaireSubmission[]
 
   studentTriviaMatches StudentTriviaMatch[]
+
+  studentAchievementLevels StudentAchievementLevel[]
 }
 
 model Teacher {
@@ -353,4 +355,40 @@ model TriviaAnswer {
 
   studentTriviaMatchId String
   studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id])
+}
+
+model Achievement {
+  id           String @id @default(uuid())
+  name         String
+  description  String
+  trackedValue String
+
+  achievementLevels AchievementLevel[]
+}
+
+model AchievementLevel {
+  id            String @id @default(uuid())
+  name          String
+  description   String
+  targetValue   Int
+  pointsAwarded Int
+  icon          String
+
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+
+  studentAchievementLevels StudentAchievementLevel[]
+}
+
+model StudentAchievementLevel {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  progress    Int       @default(0)
+  completedAt DateTime?
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  achievementLevelId String
+  achievementLevel   AchievementLevel @relation(fields: [achievementLevelId], references: [id])
 }
