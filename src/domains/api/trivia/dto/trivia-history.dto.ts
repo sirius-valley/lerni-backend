@@ -7,15 +7,15 @@ export class TriviaHistoryDto {
   opponent: SimpleStudentDto | null;
   programName: string;
   score: number;
-  createAt: Date;
+  createAt?: Date;
 
   constructor(
     id: string,
     status: TriviaAnswerResponseStatus,
     programName: string,
     score: number,
-    createAt: Date,
     opponent: SimpleStudentDto | null,
+    createAt?: Date,
   ) {
     this.id = id;
     this.status = status;
