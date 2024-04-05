@@ -301,15 +301,17 @@ export class TriviaService {
         const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
         const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
         if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
-          return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.WAITING, program.name, 10, match.createdAt, null);
+          return new TriviaHistoryDto(match.triviaMatchId, TriviaAnswerResponseStatus.WAITING, program.name, 10, match.createdAt, null);
         } else if (trivia) {
           const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId, options);
-          if (otherMatch) {
-            const oponent = await this.studentService.getStudentById(otherMatch.studentId);
-            return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, oponent);
-          } else {
-            return new TriviaHistoryDto(trivia.id, TriviaAnswerResponseStatus.IN_PROGRESS, program.name, 10, match.createdAt, null);
-          }
+          return new TriviaHistoryDto(
+            match.triviaMatchId,
+            TriviaAnswerResponseStatus.IN_PROGRESS,
+            program.name,
+            10,
+            match.createdAt,
+            otherMatch ? new SimpleStudentDto(otherMatch.student) : null,
+          );
         }
       }),
     );

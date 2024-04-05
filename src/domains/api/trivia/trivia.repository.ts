@@ -265,6 +265,9 @@ export class TriviaRepository {
       },
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
+      include: {
+        student: true,
+      },
     });
   }
 
