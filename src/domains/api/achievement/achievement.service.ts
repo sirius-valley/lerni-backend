@@ -11,8 +11,13 @@ export class NotificationService {
     for (const achievement of achievements) {
       //add method tu calculated value
       const progres = this.calculateProgress(achievement, 1);
-      const studentAchievement = this.achievementRepository.getStudentAchievement(student.id, achievement.id);
-      this.achievementRepository.updateProgress(studentAchievement[0].id, progres);
+      const studentAchievement = await this.achievementRepository.getStudentAchievement(student.id, achievement.id);
+      if (!studentAchievement) {
+        //add value
+        await this.achievementRepository.createStudenAchievementLevel(student.id, achievement.id, 1);
+      } else {
+        await this.achievementRepository.updateProgress(studentAchievement.id, progres);
+      }
     }
   }
 

@@ -30,10 +30,20 @@ export class AchievementRepository {
   }
 
   async getStudentAchievement(studentId: string, achievementLevelId: string) {
-    return this.prisma.studentAchievementLevel.findMany({
+    return this.prisma.studentAchievementLevel.findFirst({
       where: {
         studentId,
         achievementLevelId,
+      },
+    });
+  }
+
+  async createStudenAchievementLevel(studentId: string, achievementLevelId: string, progress: number) {
+    return this.prisma.studentAchievementLevel.create({
+      data: {
+        studentId,
+        achievementLevelId,
+        progress,
       },
     });
   }
