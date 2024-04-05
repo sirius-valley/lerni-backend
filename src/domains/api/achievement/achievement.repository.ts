@@ -16,6 +16,18 @@ export class AchievementRepository {
     });
   }
 
+  async updateCompletedDate(id: string, progress: number) {
+    return this.prisma.studentAchievementLevel.update({
+      where: {
+        id,
+      },
+      data: {
+        progress,
+        completedAt: new Date(),
+      },
+    });
+  }
+
   async getAchievementLevelByTrackedValue(trackedValue: string) {
     return this.prisma.achievementLevel.findMany({
       where: {
