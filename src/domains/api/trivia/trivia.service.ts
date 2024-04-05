@@ -51,6 +51,7 @@ export class TriviaService {
       await this.assignMatchToStudent(student.id, triviaMatch.id);
       return new SimpleTriviaDto(
         triviaMatch.triviaId,
+        triviaMatch.id,
         new SimpleProgramDto(programVersion.program, 100),
         triviaMatch.studentTriviaMatches[0].student,
       );
@@ -65,6 +66,7 @@ export class TriviaService {
 
     return new SimpleTriviaDto(
       createdMatch.triviaId,
+      createdMatch.id,
       new SimpleProgramDto(programVersion.program, 100),
       opponent ? new SimpleStudentDto(opponent) : undefined,
     );
