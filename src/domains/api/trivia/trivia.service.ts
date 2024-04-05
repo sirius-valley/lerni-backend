@@ -178,7 +178,7 @@ export class TriviaService {
       answer: lastAnswer ? JSON.parse(lastAnswer.value) : undefined,
     };
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== user.id);
-    const opponentAnswers = opponent?.triviaAnswers;
+    const opponentAnswers = opponent ? opponent.triviaAnswers : [];
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
@@ -188,7 +188,7 @@ export class TriviaService {
         new TriviaQuestionDto(questionBubble.id, questionBubble.question, questionBubble.secondsToAnswer, options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
-        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers as TriviaAnswer[]) },
+        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers) },
         this.calcualteMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
         opponent ? new SimpleStudentDto(opponent.student) : undefined,
       );
