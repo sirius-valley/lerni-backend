@@ -253,17 +253,19 @@ export class TriviaService {
     const options = { limit: Number(10), offset: (page - 1) * 10 };
     const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
 
-    const data = results.map(async (item) => {
-      const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
-      const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId, options);
-      if (otherMatches) {
-        const oponent = await this.studentService.getStudentById(otherMatches.studentId);
-        const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
-        return new TriviaHistoryDto(item.triviaMatchId, result, program.name, 10, item.createdAt, oponent);
-      }
-    });
+    await Promise.all(
+      results.map(async (item) => {
+        const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
+        const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId, options);
+        if (otherMatches) {
+          const oponent = await this.studentService.getStudentById(otherMatches.studentId);
+          const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
+          return new TriviaHistoryDto(item.triviaMatchId, result, program.name, 10, item.createdAt, oponent);
+        }
+      }),
+    );
 
-    return { results: data, totalPages: Math.ceil(total / 10) };
+    return { results: results, totalPages: Math.ceil(total / 10) };
   }
 
   private async getProgramByTriviaMatchId(triviaMatchId: string) {
