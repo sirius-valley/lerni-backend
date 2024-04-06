@@ -19,6 +19,7 @@ import { TriviaAnswerStatus, TriviaQuestionDetailsDto } from './dto/trivia-quest
 import { TriviaDetailsDto } from './dto/trivia-details.dto';
 import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
 import { ThreadRequestDto } from '../pill/dtos/thread-request.dto';
+import { NotificationService } from '../notification/notification.service';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -30,6 +31,7 @@ export class TriviaService {
     private readonly springService: SpringPillService,
     private readonly studentService: StudentService,
     private readonly headlandsAdapter: HeadlandsAdapter,
+    private readonly notificationService: NotificationService,
   ) {
     this.checkIn72Hours();
   }
@@ -62,7 +64,14 @@ export class TriviaService {
 
     // find an opponent
     const opponent = await this.findOpponent(programVersion.id, createdMatch.triviaId);
-    if (opponent) await this.assignMatchToStudent(opponent.id, createdMatch.id);
+    if (opponent) {
+      await this.assignMatchToStudent(opponent.id, createdMatch.id);
+      this.notificationService.sendNotification({
+        userId: opponent.id,
+        title: 'Te retaron a jugar una trivia',
+        message: `${opponent.name} te retó a jugar una trivia del programa: ${programVersion.program.name}! Acordate que tenes 72hs para mostrarle quien sabe mas!`,
+      });
+    }
 
     return new SimpleTriviaDto(
       createdMatch.triviaId,
@@ -98,6 +107,19 @@ export class TriviaService {
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
     const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, triviaMatch.trivia, opponent);
     if (triviaStatus !== TriviaAnswerResponseStatus.IN_PROGRESS) {
+      if (triviaStatus === TriviaAnswerResponseStatus.LOST && opponent) {
+        this.notificationService.sendNotification({
+          userId: opponent.studentId,
+          title: 'Ganaste una trivia',
+          message: 'Bieeen! Ganaste una trivia! Entra para saber mas’',
+        });
+      } else if (triviaStatus === TriviaAnswerResponseStatus.WON && opponent) {
+        this.notificationService.sendNotification({
+          userId: opponent.studentId,
+          title: 'Perdiste una trivia',
+          message: `${student.name} ${student.lastname} te ganó en una trivia. Entrá para saber mas!`,
+        });
+      }
       await this.updateTriviaMatch(updatedStudentTriviaMatch, triviaStatus);
     }
 
@@ -138,7 +160,6 @@ export class TriviaService {
   }
 
   private async assignMatchToStudent(studentId: string, triviaMatchId: string) {
-    // TODO: notify other student
     return await this.triviaRepository.createStudentTriviaMatch(studentId, triviaMatchId);
   }
 
@@ -423,8 +444,19 @@ export class TriviaService {
         await this.triviaRepository.updateFinishDateTriviaMatch(triviaMatch[0].id);
       }
       return false;
+    } else if (Math.floor((trivia.completeBefore.getTime() - today.getTime()) / (1000 * 60 * 60)) < 3) {
+      this.notificationService.sendNotification({
+        userId: trivia.studentId,
+        title: 'Tenes una trivia sin terminar',
+        message: 'Eyy! Te quedan menos de 3 horas para terminar la trivia. Solo te va a tomar 5 minutos!',
+      });
+    } else if (Math.floor((trivia.completeBefore.getTime() - today.getTime()) / (1000 * 60)) < 20) {
+      this.notificationService.sendNotification({
+        userId: trivia.studentId,
+        title: 'Falta poco! La victoria se asoma!',
+        message: 'Te quedan menos de 20 minutos para terminar la trivia. Entrá y demostrá quien es el mejor!',
+      });
     }
-    //Todo add notification with diferents times
     return true;
   }
   private filterOptions(options: string[]) {
