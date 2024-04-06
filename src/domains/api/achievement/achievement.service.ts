@@ -1,9 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { NotificationService } from '../notification/notification.service';
 import { AchievementRepository } from './achievement.repository';
 
 @Injectable()
 export class AchievementService {
-  constructor(private readonly achievementRepository: AchievementRepository) {}
+  constructor(
+    private readonly achievementRepository: AchievementRepository,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   public async updateProgress(student: any, trackedValue: string) {
     const achievements = await this.findAchievement(trackedValue);
@@ -17,6 +21,11 @@ export class AchievementService {
           await this.achievementRepository.updateProgress(studentAchievement.id, studentAchievement.progress + 1);
         } else if (studentAchievement.completedAt !== null) {
           await this.achievementRepository.updateCompletedDate(studentAchievement.id, studentAchievement.progress + 1);
+          this.notificationService.sendNotification({
+            userId: student.id,
+            title: 'Conseguiste un logro',
+            message: `Bieeen! Conseguiste el logro ${achievement.name}! Entra para saber mas`,
+          });
         }
       }
     }
