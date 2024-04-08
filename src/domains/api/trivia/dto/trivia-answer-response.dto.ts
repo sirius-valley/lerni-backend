@@ -7,6 +7,7 @@ export enum TriviaAnswerResponseStatus {
   WAITING = 'Waiting',
   TIED = 'Tied',
   NOT_STARTED = 'Not Started',
+  CHALLENGED = 'Challenged',
 }
 
 export class TriviaAnswerResponseDto {

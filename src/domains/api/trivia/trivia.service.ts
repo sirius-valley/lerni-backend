@@ -333,19 +333,23 @@ export class TriviaService {
   private async getTriviaMatchStatus(match: any) {
     const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
     const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
-    if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
-      return new TriviaHistoryDto(match.triviaMatchId, TriviaAnswerResponseStatus.WAITING, program.name, 10, null, match.createdAt);
-    } else if (trivia) {
-      const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
-      return new TriviaHistoryDto(
-        match.triviaMatchId,
-        TriviaAnswerResponseStatus.IN_PROGRESS,
-        program.name,
-        10,
-        otherMatch ? new SimpleStudentDto(otherMatch.student) : null,
-        match.createdAt,
-      );
-    }
+    if (!trivia) return;
+    const opponent = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
+    return new TriviaHistoryDto(
+      match.triviaMatchId,
+      this.triviaMatchStatus(match, trivia, opponent),
+      program.name,
+      10,
+      opponent ? new SimpleStudentDto(opponent.student) : null,
+      match.triviaMatch.createdAt,
+    );
+  }
+
+  private triviaMatchStatus(triviaMatch: any, trivia: Trivia, opponent?: any) {
+    console.log(triviaMatch);
+    if (triviaMatch._count.triviaAnswers >= trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
+    if (opponent && triviaMatch._count.triviaAnswers === 0) return TriviaAnswerResponseStatus.CHALLENGED;
+    return TriviaAnswerResponseStatus.IN_PROGRESS;
   }
 
   public checkValidTriviaTime(trivias: any[]) {
