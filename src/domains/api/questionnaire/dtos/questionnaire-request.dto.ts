@@ -1,4 +1,4 @@
-import { IsInt, IsJSON, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsJSON, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 
 export class QuestionnaireRequestDto {
   @IsNotEmpty()
@@ -11,6 +11,8 @@ export class QuestionnaireRequestDto {
 
   @IsNotEmpty()
   @IsInt()
+  @Min(0)
+  @Max(100)
   passsingScore: number;
 
   @IsNotEmpty()

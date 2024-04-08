@@ -250,7 +250,7 @@ export class TriviaRepository {
     });
   }
 
-  public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string, options: LimitOffsetPagination) {
+  public async getStudentTriviaMatchNotIdStudent(triviaMatchId: string, studentId: string) {
     return this.prisma.studentTriviaMatch.findFirst({
       where: {
         triviaMatchId,
@@ -263,8 +263,9 @@ export class TriviaRepository {
       orderBy: {
         createdAt: 'desc',
       },
-      skip: options.offset ? options.offset : 0,
-      take: options.limit ? options.limit : 10,
+      include: {
+        student: true,
+      },
     });
   }
 
@@ -445,6 +446,62 @@ export class TriviaRepository {
           include: {
             student: true,
             triviaAnswers: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getCompletedProgramsWithNoTriviaMatchByStudentId(studentId: string) {
+    return this.prisma.studentProgram.findMany({
+      where: {
+        studentId,
+        programVersion: {
+          programVersionTrivias: {
+            none: {
+              trivia: {
+                triviaMatches: {
+                  some: {
+                    studentTriviaMatches: {
+                      some: {
+                        studentId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          programVersionPillVersions: {
+            every: {
+              pillVersion: {
+                pillSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+          programVersionQuestionnaireVersions: {
+            every: {
+              questionnaireVersion: {
+                questionnaireSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      include: {
+        programVersion: {
+          include: {
+            program: true,
           },
         },
       },

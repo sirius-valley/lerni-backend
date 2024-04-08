@@ -78,7 +78,7 @@ export class PillService {
     );
 
     const teacherDto = this.getTeacher(answerRequest, teacher);
-    const pillOrder = pillSubmission.pillVersion.programVersions[0].order;
+    const pillOrder = answerRequest.pillId === introductionID ? 1 : pillSubmission.pillVersion.programVersions[0].order;
 
     return {
       pill: new PillDto(pillSubmission.pillVersion.pill, pillSubmission.pillVersion, pillOrder, formattedPillBlock),
