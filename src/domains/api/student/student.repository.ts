@@ -33,7 +33,9 @@ export class StudentRepository {
         },
       },
     });
-    return data ? new StudentDto(data as StudentDto) : new SimpleEmptyStudentDto({ email: email } as SimpleEmptyStudentDto);
+    return data
+      ? new StudentDto({ ...data, email: email } as StudentDto)
+      : new SimpleEmptyStudentDto({ email: email } as SimpleEmptyStudentDto);
   }
 
   async getTotalPoints(studentId: string) {

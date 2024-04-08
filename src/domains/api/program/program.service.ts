@@ -307,11 +307,11 @@ export class ProgramService {
 
     const programVersion = await this.createVersionProgram(program.id, 1);
 
-    this.addPillToProgram(newProgram.pill, programVersion.id);
+    await this.addPillToProgram(newProgram.pill, programVersion.id);
 
-    this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
+    await this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
 
-    this.enrollStudents(programVersion.id, newProgram.students);
+    await this.enrollStudents(programVersion.id, newProgram.students);
 
     return program;
   }

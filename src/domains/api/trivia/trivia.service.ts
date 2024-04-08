@@ -446,7 +446,6 @@ export class TriviaService {
 
   private getQuestionSummary(triviaNodes: any, userAnswers?: TriviaAnswer[], opponentAnswers?: TriviaAnswer[]): TriviaQuestionDetailsDto[] {
     return triviaNodes.map((question) => {
-      console.log(question);
       const userAnswer = userAnswers?.find((answer) => answer.questionId === question.nodeId);
       const opponentAnswer = opponentAnswers?.find((answer) => answer.questionId === question.nodeId);
       const userAnswerStatus = this.getAnswerStatus(userAnswer);

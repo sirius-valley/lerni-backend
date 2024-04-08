@@ -4,8 +4,10 @@ export class SimpleProfessortDto {
   profession: string | null;
   description?: string | null;
   image?: string | null;
+  id: string;
 
   constructor(professor: SimpleProfessortDto) {
+    this.id = professor.id;
     this.name = professor.name;
     this.lastname = professor.lastname;
     this.profession = professor.profession;

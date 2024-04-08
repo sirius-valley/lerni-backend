@@ -7,6 +7,7 @@ export class StudentDto {
   city?: string;
   image?: string;
   authId: string;
+  email?: string;
 
   constructor(data: StudentDto) {
     this.id = data.id;
@@ -17,5 +18,6 @@ export class StudentDto {
     this.city = data.city;
     this.image = data.image;
     this.authId = data.authId;
+    this.email = data?.email;
   }
 }

@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { introductionID } from '../../src/const';
 import {
   authId,
+  authId2,
   FractureB2Block,
   FractureB2PillId1,
   FractureB2PillVersionId1,
@@ -45,6 +46,7 @@ import {
   questionnaireId,
   questionnaireVersionId,
   studentId,
+  studentId2,
   studentProgramId,
   studentTriviaMatchId,
   teacherId,
@@ -629,13 +631,26 @@ async function main() {
     },
   });
 
+  await prisma.auth.upsert({
+    where: { id: authId2 },
+    update: {
+      email: 'monosteve123+test2@gmail.com',
+      password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+    },
+    create: {
+      id: authId2,
+      email: 'monosteve123+test2@gmail.com',
+      password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+    },
+  });
+
   await prisma.student.upsert({
     where: { id: studentId },
     update: {
-      name: 'John',
-      lastname: 'Doe',
-      career: 'Computer Science',
-      city: 'New York',
+      name: 'Lucas',
+      lastname: 'Gonzalez',
+      career: 'Oncología',
+      city: 'San Isidro',
       auth: {
         connect: {
           id: authId,
@@ -644,13 +659,39 @@ async function main() {
     },
     create: {
       id: studentId,
-      name: 'John',
-      lastname: 'Doe',
-      career: 'Computer Science',
-      city: 'New York',
+      name: 'Lucas',
+      lastname: 'Gonzalez',
+      career: 'Oncología',
+      city: 'San Isidro',
       auth: {
         connect: {
           id: authId,
+        },
+      },
+    },
+  });
+  await prisma.student.upsert({
+    where: { id: studentId2 },
+    update: {
+      name: 'Mariano',
+      lastname: 'Ramirez',
+      career: 'Urología',
+      city: 'San Martín',
+      auth: {
+        connect: {
+          id: authId2,
+        },
+      },
+    },
+    create: {
+      id: studentId2,
+      name: 'Mariano',
+      lastname: 'Ramirez',
+      career: 'Urología',
+      city: 'San Martín',
+      auth: {
+        connect: {
+          id: authId2,
         },
       },
     },
@@ -688,6 +729,43 @@ async function main() {
     create: {
       id: FractureStudentProgramId,
       studentId: studentId,
+      programVersionId: FractureProgramVersionId,
+    },
+  });
+  // user 2
+  await prisma.studentProgram.upsert({
+    where: { id: studentProgramId + '1' },
+    update: {
+      studentId: studentId2,
+      programVersionId: programVersionId,
+    },
+    create: {
+      id: studentProgramId + '1',
+      studentId: studentId2,
+      programVersionId: programVersionId,
+    },
+  });
+  await prisma.studentProgram.upsert({
+    where: { id: NICstudentProgramId + '1' },
+    update: {
+      studentId: studentId2,
+      programVersionId: NICProgramVersionId,
+    },
+    create: {
+      id: NICstudentProgramId + '1',
+      studentId: studentId2,
+      programVersionId: NICProgramVersionId,
+    },
+  });
+  await prisma.studentProgram.upsert({
+    where: { id: FractureStudentProgramId + '1' },
+    update: {
+      studentId: studentId2,
+      programVersionId: FractureProgramVersionId,
+    },
+    create: {
+      id: FractureStudentProgramId + '1',
+      studentId: studentId2,
       programVersionId: FractureProgramVersionId,
     },
   });
@@ -792,7 +870,7 @@ async function main() {
     },
   });
 
-  await extraPrograms(10);
+  // await extraPrograms(10);
 }
 
 main()
