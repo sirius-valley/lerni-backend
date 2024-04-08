@@ -50,12 +50,12 @@ export class TriviaRepository {
     return matches.find((match) => match.studentTriviaMatches.length === 1);
   }
 
-  public async createStudentTriviaMatch(studentId: string, triviaMatchId: string) {
+  public async createStudentTriviaMatch(studentId: string, triviaMatchId: string, today: Date) {
     return this.prisma.studentTriviaMatch.create({
       data: {
         studentId,
         triviaMatchId,
-        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
+        completeBefore: new Date(today.getTime() + 72 * 60 * 60 * 1000),
       },
     });
   }
