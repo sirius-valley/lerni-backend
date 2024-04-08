@@ -346,7 +346,6 @@ export class TriviaService {
   }
 
   private triviaMatchStatus(triviaMatch: any, trivia: Trivia, opponent?: any) {
-    console.log(triviaMatch);
     if (triviaMatch._count.triviaAnswers >= trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
     if (opponent && triviaMatch._count.triviaAnswers === 0) return TriviaAnswerResponseStatus.CHALLENGED;
     return TriviaAnswerResponseStatus.IN_PROGRESS;
