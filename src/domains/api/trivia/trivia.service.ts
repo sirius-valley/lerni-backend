@@ -441,7 +441,7 @@ export class TriviaService {
 
   private async checkNotFinishStatus(trivia: any, today: Date) {
     //add into getStatus
-    if (!trivia.completeBefore) return false;
+    if (!trivia.completeBefore) return true;
     if (today > trivia.completeBefore) {
       await this.triviaRepository.updateFinishDate(trivia.id, today);
       const triviaMatch = await this.triviaRepository.getStudentMatchbyTriviaMachtId(trivia.triviaMatchId);
