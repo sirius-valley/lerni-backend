@@ -21,6 +21,9 @@ export class TriviaRepository {
             },
           },
         },
+        NOT: {
+          finishedDateTime: null,
+        },
       },
     });
   }
