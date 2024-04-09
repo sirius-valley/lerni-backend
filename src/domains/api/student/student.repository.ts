@@ -26,15 +26,16 @@ export class StudentRepository {
   }
 
   async findStudentByEmail(email: string): Promise<StudentDto | SimpleEmptyStudentDto> {
-    const data = await this.prisma.student.findFirst({
+    const data = await this.prisma.auth.findFirst({
       where: {
-        auth: {
-          email,
-        },
+        email,
+      },
+      include: {
+        user: true,
       },
     });
     return data
-      ? new StudentDto({ ...data, email: email } as StudentDto)
+      ? new StudentDto({ ...data.user, email: email } as StudentDto)
       : new SimpleEmptyStudentDto({ email: email } as SimpleEmptyStudentDto);
   }
 
@@ -55,7 +56,7 @@ export class StudentRepository {
   }
 
   async enrollStudent(studentId: string, programVersionId: string) {
-    return await this.prisma.studentProgram.create({
+    return this.prisma.studentProgram.create({
       data: {
         studentId,
         programVersionId,
