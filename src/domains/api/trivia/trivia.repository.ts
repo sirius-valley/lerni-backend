@@ -21,6 +21,9 @@ export class TriviaRepository {
             },
           },
         },
+        NOT: {
+          finishedDateTime: null,
+        },
       },
     });
   }
@@ -194,10 +197,18 @@ export class TriviaRepository {
       },
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
+      include: {
+        triviaMatch: true,
+      },
     });
     const total = await this.prisma.studentTriviaMatch.count({
       where: {
         studentId,
+        triviaMatch: {
+          isNot: {
+            finishedDateTime: null,
+          },
+        },
       },
     });
 
