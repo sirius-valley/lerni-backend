@@ -86,7 +86,7 @@ export class TriviaService {
     if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
     const studentTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === student.id);
     if (!studentTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
-    const validTime = await this.checkNotFinishStatus(triviaMatch.trivia, new Date());
+    const validTime = await this.checkNotFinishStatus(triviaMatch.studentTriviaMatches, new Date());
     if (studentTriviaMatch.triviaAnswers.length === 0 && validTime) {
       await this.triviaRepository.resetTimer(studentTriviaMatch.id, new Date(new Date().getTime() + 72 * 60 * 60 * 1000));
     } else if (!validTime) {
@@ -160,7 +160,7 @@ export class TriviaService {
   }
 
   private async assignMatchToStudent(studentId: string, triviaMatchId: string) {
-    return await this.triviaRepository.createStudentTriviaMatch(studentId, triviaMatchId);
+    return await this.triviaRepository.createStudentTriviaMatch(studentId, triviaMatchId, new Date());
   }
 
   private async createTriviaMatch(studentId: string, programVersionId: string) {
@@ -444,6 +444,7 @@ export class TriviaService {
 
   private async checkNotFinishStatus(trivia: any, today: Date) {
     //add into getStatus
+    if (!trivia.completeBefore) return true;
     if (today > trivia.completeBefore) {
       await this.triviaRepository.updateFinishDate(trivia.id, today);
       const triviaMatch = await this.triviaRepository.getStudentMatchbyTriviaMachtId(trivia.triviaMatchId);
