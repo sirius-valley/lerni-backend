@@ -3,6 +3,7 @@ import { PrismaService } from '../../../prisma.service';
 import { CursorPagination } from '../../../types/cursor-pagination.interface';
 import { CommentRequestDto } from './dtos/comment-request.dto';
 import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
+import { TriviaRequestDto } from '../trivia/dto/trivia-request.dto';
 
 @Injectable()
 export class ProgramRepository {
@@ -607,6 +608,20 @@ export class ProgramRepository {
                 },
               },
             },
+          },
+        },
+      },
+    });
+  }
+
+  async createTriviaWithProgramVersionId(programVersionId: string, data: TriviaRequestDto) {
+    return this.prisma.trivia.create({
+      data: {
+        ...data,
+        programVersions: {
+          create: {
+            programVersionId,
+            order: 1,
           },
         },
       },

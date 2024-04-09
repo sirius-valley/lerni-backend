@@ -23,6 +23,7 @@ import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-req
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { TriviaRequestDto } from '../trivia/dto/trivia-request.dto';
 
 @Injectable()
 export class ProgramService {
@@ -311,9 +312,15 @@ export class ProgramService {
 
     await this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
 
+    await this.addTriviaToProgram(programVersion.id, newProgram.trivia);
+
     await this.enrollStudents(programVersion.id, newProgram.students);
 
     return program;
+  }
+
+  private async addTriviaToProgram(programVersionId: string, data: TriviaRequestDto) {
+    await this.programRepository.createTriviaWithProgramVersionId(programVersionId, data);
   }
 
   public async getProgramDetail(id: string) {
