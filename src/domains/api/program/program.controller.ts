@@ -2,10 +2,11 @@ import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInter
 import { ProgramService } from './program.service';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { CommentRequestDto } from './dtos/comment-request.dto';
 import { ProgramRequestDto } from './dtos/program-request.dto';
+import { ProgramListResponseDto } from './dtos/program-list.dto';
 
 @Controller('api/program')
 @ApiBearerAuth('JWT-auth')
@@ -21,7 +22,9 @@ export class ProgramController {
   }
 
   @Get('list')
-  async getProgramList(@Request() req: ApiRequest, @Query() query: any) {
+  @ApiQuery({ name: 'limit', type: Number })
+  @ApiQuery({ name: 'offset', type: Number })
+  async getProgramList(@Request() req: ApiRequest, @Query() query: any): Promise<ProgramListResponseDto> {
     const { limit, offset } = query as Record<string, string>;
     return await this.programService.getProgramList({
       limit: Number(limit),

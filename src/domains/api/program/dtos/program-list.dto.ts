@@ -13,3 +13,13 @@ export class ProgramListDto {
     this.programVersionId = programVersionId;
   }
 }
+
+export class ProgramListResponseDto {
+  results?: ProgramListDto[];
+  total: number;
+
+  constructor(results: ProgramListDto[], total: number) {
+    this.results = results ? results : [];
+    this.total = total;
+  }
+}
