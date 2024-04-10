@@ -456,7 +456,11 @@ export class TriviaRepository {
         studentTriviaMatches: {
           include: {
             student: true,
-            triviaAnswers: true,
+            triviaAnswers: {
+              orderBy: {
+                createdAt: 'asc',
+              },
+            },
           },
         },
       },

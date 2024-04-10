@@ -421,13 +421,12 @@ export class TriviaService {
     status: TriviaAnswerResponseStatus,
     opponent?: any,
   ) {
-    const opponentTriviaAnswer = opponent?.triviaAnswers.find((answer) => answer.questionId === questionId);
-    const opponentAnswer = opponentTriviaAnswer
-      ? {
-          id: questionId,
-          isCorrect: opponentTriviaAnswer.isCorrect,
-        }
-      : undefined;
+    const opponentAnswers = opponent?.triviaAnswers.map((answer) => {
+      return {
+        id: answer.questionId,
+        isCorrect: answer.isCorrect,
+      };
+    });
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
@@ -435,7 +434,8 @@ export class TriviaService {
       triviaQuestion,
       isCorrect: springResponse.correct,
       status,
-      opponentAnswer,
+      opponent: opponent ? new SimpleStudentDto(opponent.student) : undefined,
+      opponentAnswers,
       correctOption,
     };
   }
