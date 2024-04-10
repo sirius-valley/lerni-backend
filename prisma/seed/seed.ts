@@ -871,6 +871,7 @@ async function main() {
   });
 
   // await extraPrograms(10);
+  await achievementSeed();
 }
 
 main()
@@ -1192,4 +1193,218 @@ async function extraPrograms(n: number = 10) {
       },
     });
   }
+}
+
+async function achievementSeed() {
+  // Complete Introduction
+  await prisma.achievement.upsert({
+    where: { id: 'achievementId0' },
+    update: {},
+    create: {
+      id: 'achievementId0',
+      name: 'Completar Introducción',
+      trackedValue: 'introduction',
+      achievementLevels: {
+        create: [
+          {
+            id: 'achievementLevelId0',
+            tier: 'DIAMOND',
+            targetValue: 1,
+            description: 'Ahora nos conocemos! Completaste la introducción con éxito!',
+            pointsAwarded: 10,
+            icon: 'icon',
+          },
+        ],
+      },
+    },
+  });
+
+  // Complete Programs
+  await prisma.achievement.upsert({
+    where: { id: 'achievementId1' },
+    update: {},
+    create: {
+      id: 'achievementId1',
+      name: 'Completar Programa',
+      trackedValue: 'program',
+      achievementLevels: {
+        create: [
+          {
+            id: 'achievementLevelId1',
+            tier: 'BRONZE',
+            targetValue: 1,
+            description: 'El camino del apredizaje! Terminaste un programa!',
+            pointsAwarded: 10,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId2',
+            tier: 'SILVER',
+            targetValue: 5,
+            description: 'El camino del apredizaje! Terminaste un programa 5 veces!',
+            pointsAwarded: 20,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId3',
+            tier: 'GOLD',
+            targetValue: 25,
+            description: 'El camino del apredizaje! Terminaste un programa 25 veces!',
+            pointsAwarded: 30,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId4',
+            tier: 'DIAMOND',
+            targetValue: 50,
+            description: 'El camino del apredizaje! Terminaste un programa 50 veces!',
+            pointsAwarded: 40,
+            icon: 'icon',
+          },
+        ],
+      },
+    },
+  });
+
+  // Win Trivias
+
+  await prisma.achievement.upsert({
+    where: { id: 'achievementId2' },
+    update: {},
+    create: {
+      id: 'achievementId2',
+      name: 'Ganar Trivia',
+      trackedValue: 'trivia',
+      achievementLevels: {
+        create: [
+          {
+            id: 'achievementLevelId5',
+            tier: 'BRONZE',
+            targetValue: 1,
+            description: 'Un eruditor gladiador! Ganaste una trivia!',
+            pointsAwarded: 10,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId6',
+            tier: 'SILVER',
+            targetValue: 5,
+            description: 'El camino del apredizaje! Ganaste una trivia 5 veces!',
+            pointsAwarded: 20,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId7',
+            tier: 'GOLD',
+            targetValue: 25,
+            description: 'El camino del apredizaje! Ganaste una trivia 25 veces!',
+            pointsAwarded: 30,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId8',
+            tier: 'DIAMOND',
+            targetValue: 50,
+            description: 'El camino del apredizaje! Ganaste una trivia 50 veces!',
+            pointsAwarded: 40,
+            icon: 'icon',
+          },
+        ],
+      },
+    },
+  });
+
+  // send feedback
+  await prisma.achievement.upsert({
+    where: { id: 'achievementId3' },
+    update: {},
+    create: {
+      id: 'achievementId3',
+      name: 'Dejar Feedback',
+      trackedValue: 'feedback',
+      achievementLevels: {
+        create: [
+          {
+            id: 'achievementLevelId9',
+            tier: 'BRONZE',
+            targetValue: 5,
+            description: 'Tu opinion es importate! Nos diste tu feedback 5 veces!',
+            pointsAwarded: 10,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId10',
+            tier: 'SILVER',
+            targetValue: 25,
+            description: 'Tu opinion es importate! Nos diste tu feedback 25 veces!',
+            pointsAwarded: 20,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId11',
+            tier: 'GOLD',
+            targetValue: 50,
+            description: 'Tu opinion es importate! Nos diste tu feedback 50 veces!',
+            pointsAwarded: 30,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId12',
+            tier: 'DIAMOND',
+            targetValue: 70,
+            description: 'Tu opinion es importate! Nos diste tu feedback 70 veces!',
+            pointsAwarded: 40,
+            icon: 'icon',
+          },
+        ],
+      },
+    },
+  });
+
+  // top 3 in leaderboard
+  await prisma.achievement.upsert({
+    where: { id: 'achievementId4' },
+    update: {},
+    create: {
+      id: 'achievementId4',
+      name: 'Leaderboard',
+      trackedValue: 'leaderboard',
+      achievementLevels: {
+        create: [
+          {
+            id: 'achievementLevelId13',
+            tier: 'BRONZE',
+            targetValue: 1,
+            description: 'La crème de la crème! Terminaste en el podio 1 vez!',
+            pointsAwarded: 10,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId14',
+            tier: 'SILVER',
+            targetValue: 5,
+            description: 'La crème de la crème! Terminaste en el podio 5 veces!',
+            pointsAwarded: 20,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId15',
+            tier: 'GOLD',
+            targetValue: 25,
+            description: 'La crème de la crème! Terminaste en el podio 25 veces!',
+            pointsAwarded: 30,
+            icon: 'icon',
+          },
+          {
+            id: 'achievementLevelId16',
+            tier: 'DIAMOND',
+            targetValue: 50,
+            description: 'La crème de la crème! Terminaste en el podio 50 veces!',
+            pointsAwarded: 40,
+            icon: 'icon',
+          },
+        ],
+      },
+    },
+  });
 }

@@ -361,24 +361,30 @@ model TriviaAnswer {
 model Achievement {
   id           String @id @default(uuid())
   name         String
-  description  String
   trackedValue String
 
   achievementLevels AchievementLevel[]
 }
 
 model AchievementLevel {
-  id            String @id @default(uuid())
-  name          String
+  id            String          @id @default(uuid())
   description   String
   targetValue   Int
   pointsAwarded Int
+  tier          AchievementTier
   icon          String
 
   achievementId String
   achievement   Achievement @relation(fields: [achievementId], references: [id])
 
   studentAchievementLevels StudentAchievementLevel[]
+}
+
+enum AchievementTier {
+  BRONZE
+  SILVER
+  GOLD
+  DIAMOND
 }
 
 model StudentAchievementLevel {
