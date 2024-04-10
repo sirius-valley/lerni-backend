@@ -55,8 +55,8 @@ export class ProgramController {
     return await this.programService.getProgramDetail(id);
   }
 
-  @Get('likes/:id')
-  async getLikesAndDislikes(@Param('id') id: string) {
+  @Get('likes/:ProgramId')
+  async getLikesAndDislikes(@Param('ProgramId') id: string) {
     return await this.programService.getLikesAndDislikes(id);
   }
 

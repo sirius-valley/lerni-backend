@@ -352,7 +352,7 @@ export class ProgramService {
   }
 
   public async getLikesAndDislikes(id: string) {
-    const program = await this.programRepository.getProgramByProgramVersion(id);
+    const program = await this.programRepository.getProgramById(id);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const likes = await this.programRepository.countLikesByProgramId(id);
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
