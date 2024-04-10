@@ -23,6 +23,7 @@ import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-req
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { ProgramVotesDto } from './dtos/program-votes.dto';
 
 @Injectable()
 export class ProgramService {
@@ -356,6 +357,7 @@ export class ProgramService {
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const likes = await this.programRepository.countLikesByProgramId(id);
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
-    return { likes: Number(likes), dislikes: Number(dislikes) };
+    if (likes === 0 && dislikes === 0) return new ProgramVotesDto();
+    return new ProgramVotesDto(likes, dislikes);
   }
 }

@@ -560,9 +560,7 @@ export class ProgramRepository {
     return this.prisma.comment.count({
       where: {
         programId,
-        vote: {
-          in: ['up'],
-        },
+        vote: 'up',
       },
     });
   }
