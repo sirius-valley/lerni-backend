@@ -20,6 +20,15 @@ export class ProgramController {
     return await this.programService.getProgramsByStudentId(req.user.id);
   }
 
+  @Get('list')
+  async getProgramList(@Request() req: ApiRequest, @Query() query: any) {
+    const { limit, offset } = query as Record<string, string>;
+    return await this.programService.getProgramList({
+      limit: Number(limit),
+      offset: Number(offset),
+    });
+  }
+
   @Get(':id')
   async getProgramById(@Request() req: ApiRequest, @Param('id') id: string) {
     return await this.programService.getProgramById(req.user.id, id);

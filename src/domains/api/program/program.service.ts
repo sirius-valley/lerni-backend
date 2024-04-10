@@ -23,6 +23,7 @@ import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-req
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { ProgramListDto } from './dtos/program-list.dto';
 
 @Injectable()
 export class ProgramService {
@@ -357,5 +358,17 @@ export class ProgramService {
     const likes = await this.programRepository.countLikesByProgramId(id);
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
     return { likes: Number(likes), dislikes: Number(dislikes) };
+  }
+
+  public async getProgramList(options: LimitOffsetPagination) {
+    const { results, total } = await this.programRepository.getProgramVersionList(options);
+    if ((await results).length === 0) return { results, total };
+    let newResult: ProgramListDto[];
+    Promise.all(
+      (newResult = (await results).map((item) => {
+        return new ProgramListDto(item.program, item.id);
+      })),
+    );
+    return { results: newResult, total };
   }
 }
