@@ -25,6 +25,7 @@ import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
 import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
+import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
 
 @Injectable()
 export class ProgramService {
@@ -327,7 +328,7 @@ export class ProgramService {
     });
 
     const students = program.studentPrograms.map((item) => {
-      return item;
+      return new StudentDto({ ...(item.student as StudentDto), email: item.student.auth.email });
     });
 
     const pills = program.programVersionPillVersions.map((item) => {
@@ -335,7 +336,7 @@ export class ProgramService {
     });
 
     const questionaries = program.programVersionQuestionnaireVersions.map((item) => {
-      return item.questionnaireVersion;
+      return new QuestionnaireDetailsWeb(item.questionnaireVersion);
     });
 
     return new ProgramAdminDetailsDto({
