@@ -362,7 +362,7 @@ export class ProgramService {
 
   public async getProgramList(options: LimitOffsetPagination): Promise<ProgramListResponseDto> {
     const { results, total } = await this.programRepository.getProgramVersionList(options);
-    if (results.length === 0) return { total };
+    if (results.length === 0) return { results: [], total };
     return {
       results: results.map((item) => {
         return new ProgramListDto(item.program, item.id);
