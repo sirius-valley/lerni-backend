@@ -62,7 +62,6 @@ export class ProgramService {
       .getProgramsNotStartedByStudentId(studentId)
       .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
     const programs = { programsCompleted, programsInProgress, programsNotStarted };
-
     return new ProgramHomeDto(programs);
   }
 
