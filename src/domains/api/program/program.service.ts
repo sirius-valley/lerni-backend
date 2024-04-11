@@ -23,6 +23,8 @@ import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-req
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
+import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 
 @Injectable()
 export class ProgramService {
@@ -321,19 +323,19 @@ export class ProgramService {
     if (!program) throw new HttpException('Program Version not found', HttpStatus.NOT_FOUND);
 
     const trivias = program.programVersionTrivias.map((item) => {
-      return item.trivia;
+      return new TriviaDetailsWeb(item.trivia);
     });
 
     const students = program.studentPrograms.map((item) => {
-      return item.student;
+      return item;
     });
 
     const pills = program.programVersionPillVersions.map((item) => {
-      return item.pillVersion.pill;
+      return new PillDetailsWeb(item.pillVersion, item.order);
     });
 
     const questionaries = program.programVersionQuestionnaireVersions.map((item) => {
-      return item.questionnaireVersion.questionnaire;
+      return item.questionnaireVersion;
     });
 
     return new ProgramAdminDetailsDto({
