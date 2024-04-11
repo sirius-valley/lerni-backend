@@ -614,7 +614,7 @@ export class ProgramRepository {
   }
 
   async getProgramVersionList(options: LimitOffsetPagination) {
-    const results = this.prisma.programVersion.findMany({
+    const results = await this.prisma.programVersion.findMany({
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
       include: {
