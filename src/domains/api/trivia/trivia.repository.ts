@@ -21,6 +21,9 @@ export class TriviaRepository {
             },
           },
         },
+        NOT: {
+          finishedDateTime: null,
+        },
       },
     });
   }
@@ -50,12 +53,12 @@ export class TriviaRepository {
     return matches.find((match) => match.studentTriviaMatches.length === 1);
   }
 
-  public async createStudentTriviaMatch(studentId: string, triviaMatchId: string) {
+  public async createStudentTriviaMatch(studentId: string, triviaMatchId: string, today: Date) {
     return this.prisma.studentTriviaMatch.create({
       data: {
         studentId,
         triviaMatchId,
-        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
+        completeBefore: new Date(today.getTime() + 72 * 60 * 60 * 1000),
       },
     });
   }
@@ -194,10 +197,18 @@ export class TriviaRepository {
       },
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
+      include: {
+        triviaMatch: true,
+      },
     });
     const total = await this.prisma.studentTriviaMatch.count({
       where: {
         studentId,
+        triviaMatch: {
+          isNot: {
+            finishedDateTime: null,
+          },
+        },
       },
     });
 
