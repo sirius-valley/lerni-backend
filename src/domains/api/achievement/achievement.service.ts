@@ -24,7 +24,7 @@ export class AchievementService {
           this.notificationService.sendNotification({
             userId: student.id,
             title: 'Conseguiste un logro',
-            message: `Bieeen! Conseguiste el logro ${achievement.name}! Entra para saber mas`,
+            message: `Bieeen! Conseguiste el logro ${achievement.achievement.name}! Entra para saber mas`,
           });
         }
       }
