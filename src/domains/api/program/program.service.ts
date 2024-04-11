@@ -358,4 +358,13 @@ export class ProgramService {
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
     return { likes: Number(likes), dislikes: Number(dislikes) };
   }
+
+  public async update(programVersionId: string, data: ProgramRequestDto) {
+    //check datos a actualizar
+    const program = await this.programRepository.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    console.log(data);
+    //actualizar datos
+    //return an ok
+  }
 }

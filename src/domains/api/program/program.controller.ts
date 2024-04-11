@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
@@ -63,5 +63,10 @@ export class ProgramController {
   @Get('students/:programVersionId')
   async getProgramStudents(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
     return await this.programService.getProgramVersionStudents(programVersionId);
+  }
+
+  @Put(':programVersionId')
+  async update(@Param('programVersionId') id: string, @Body() data: ProgramRequestDto) {
+    return this.programService.update(id, data);
   }
 }
