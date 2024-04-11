@@ -612,4 +612,17 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getProgramVersionList(options: LimitOffsetPagination) {
+    const results = await this.prisma.programVersion.findMany({
+      skip: options.offset ? options.offset : 0,
+      take: options.limit ? options.limit : 10,
+      include: {
+        program: true,
+      },
+    });
+    const total = await this.prisma.programVersion.count();
+
+    return { results, total };
+  }
 }
