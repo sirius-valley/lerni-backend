@@ -344,20 +344,23 @@ export class TriviaService {
   private async getTriviaMatchStatus(match: any) {
     const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
     const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
-    if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
-      return new TriviaHistoryDto(match.triviaMatchId, TriviaAnswerResponseStatus.WAITING, program.name, 10, 10, null, match.createdAt); // TODO HARDCODED
-    } else if (trivia) {
-      const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
-      return new TriviaHistoryDto(
-        match.triviaMatchId,
-        TriviaAnswerResponseStatus.IN_PROGRESS,
-        program.name,
-        10, // TODO HARDCODED
-        10, // TODO HARDCODED
-        otherMatch ? new SimpleStudentDto(otherMatch.student) : null,
-        match.createdAt,
-      );
-    }
+    if (!trivia) return;
+    const opponent = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
+    return new TriviaHistoryDto(
+      match.triviaMatchId,
+      this.triviaMatchStatus(match, trivia, opponent),
+      program.name,
+      10, // TODO HARDCODED
+      10, // TODO HARDCODED
+      opponent ? new SimpleStudentDto(opponent.student) : null,
+      match.triviaMatch.createdAt,
+    );
+  }
+
+  private triviaMatchStatus(triviaMatch: any, trivia: Trivia, opponent?: any) {
+    if (triviaMatch._count.triviaAnswers >= trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
+    if (opponent && triviaMatch._count.triviaAnswers === 0) return TriviaAnswerResponseStatus.CHALLENGED;
+    return TriviaAnswerResponseStatus.IN_PROGRESS;
   }
 
   public checkValidTriviaTime(trivias: any[]) {
@@ -418,13 +421,12 @@ export class TriviaService {
     status: TriviaAnswerResponseStatus,
     opponent?: any,
   ) {
-    const opponentTriviaAnswer = opponent?.triviaAnswers.find((answer) => answer.questionId === questionId);
-    const opponentAnswer = opponentTriviaAnswer
-      ? {
-          id: questionId,
-          isCorrect: opponentTriviaAnswer.isCorrect,
-        }
-      : undefined;
+    const opponentAnswers = opponent?.triviaAnswers.map((answer) => {
+      return {
+        id: answer.questionId,
+        isCorrect: answer.isCorrect,
+      };
+    });
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
@@ -432,7 +434,8 @@ export class TriviaService {
       triviaQuestion,
       isCorrect: springResponse.correct,
       status,
-      opponentAnswer,
+      opponent: opponent ? new SimpleStudentDto(opponent.student) : undefined,
+      opponentAnswers,
       correctOption,
     };
   }

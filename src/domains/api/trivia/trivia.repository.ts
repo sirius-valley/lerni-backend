@@ -289,7 +289,7 @@ export class TriviaRepository {
   }
 
   public async getNotFinishTrivia(studentId: string, options: LimitOffsetPagination) {
-    return await this.prisma.studentTriviaMatch.findMany({
+    return this.prisma.studentTriviaMatch.findMany({
       where: {
         studentId,
         triviaMatch: {
@@ -456,7 +456,11 @@ export class TriviaRepository {
         studentTriviaMatches: {
           include: {
             student: true,
-            triviaAnswers: true,
+            triviaAnswers: {
+              orderBy: {
+                createdAt: 'asc',
+              },
+            },
           },
         },
       },
