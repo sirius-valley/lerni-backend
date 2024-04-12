@@ -23,6 +23,8 @@ import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-req
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
+import { PillUpdateRequestDto } from '../pill/dtos/pill-update.dto';
 
 @Injectable()
 export class ProgramService {
@@ -359,12 +361,121 @@ export class ProgramService {
     return { likes: Number(likes), dislikes: Number(dislikes) };
   }
 
-  public async update(programVersionId: string, data: ProgramRequestDto) {
+  public async update(programVersionId: string, data: ProgramUpdateRequestDto) {
     //check datos a actualizar
     const program = await this.programRepository.getProgramByProgramVersionId(programVersionId);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
-    console.log(data);
-    //actualizar datos
+    if (
+      !(await this.checkObjs(
+        {
+          name: data.title,
+          description: data.description,
+          hoursToComplete: data.hoursToComplete,
+          pointsReward: data.pointsReward,
+          icon: data.image,
+        },
+        program.program,
+      ))
+    ) {
+      await this.programRepository.updateProgram(
+        program.programId,
+        data.title,
+        data.description,
+        data.hoursToComplete,
+        data.pointsReward,
+        data.image,
+      );
+    }
+
+    const checkPills = await this.checkArrayObj(
+      data.pill,
+      program.programVersionPillVersions.map((item) => {
+        return new PillUpdateRequestDto({
+          id: item.pillVersion.pill.id,
+          name: item.pillVersion.pill.name,
+          description: item.pillVersion.pill.description,
+          version: item.pillVersion.version,
+          teacherComment: item.pillVersion.pill.teacherComment,
+          completionTimeMinutes: item.pillVersion.completionTimeMinutes,
+          block: item.pillVersion.block,
+        });
+      }),
+    );
+    if (!checkPills.value) {
+      if (checkPills.create.length > 0) {
+        this.addPillToProgram(checkPills.create, program.programId);
+      } else if (checkPills.delete.length > 0) {
+        //eliminar pills
+      }
+    }
+    const checkStudentList = await this.checkArrayObj(
+      data.students.map((item) => {
+        return { email: item };
+      }),
+      program.studentPrograms.map((item) => {
+        return { email: item.student.auth.email };
+      }),
+    );
+    if (!checkStudentList.value) {
+      if (checkStudentList.create.length > 0) {
+        console.log(
+          checkStudentList.create.map((element) => {
+            return element.email;
+          }),
+        );
+        this.enrollStudents(
+          program.programId,
+          checkStudentList.create.map((element) => {
+            return element.email;
+          }),
+        );
+      }
+    }
     //return an ok
+  }
+
+  private async checkObjs(newObj: any, oldObj: any) {
+    if (!(newObj && oldObj)) return false;
+    const oldKeys = Object.keys(oldObj);
+
+    const result: string[] = [];
+
+    for (const key of oldKeys) {
+      try {
+        if (newObj[key] !== oldObj[key]) {
+          result.push(key);
+        }
+      } catch {
+        continue;
+      }
+    }
+    return result.length === 0 ? true : false;
+  }
+
+  private async checkArrayObj(newArray: any[], oldArray: any[]) {
+    const result: { value: boolean; update: any[]; create: any[]; delete: any[] } = { value: true, update: [], create: [], delete: [] };
+
+    if (newArray.length !== oldArray.length) {
+      result.value = false;
+    }
+
+    await Promise.all(
+      oldArray.map(async (item, index) => {
+        if (!(await this.checkObjs(item, newArray[index]))) {
+          result.value = false;
+          result.update.push(newArray[index]);
+          newArray.splice(index, 1);
+          oldArray.splice(index, 1);
+        } else {
+          oldArray.splice(index, 1);
+        }
+      }),
+    );
+
+    result.delete = oldArray;
+
+    result.create = newArray;
+
+    return result;
   }
 }

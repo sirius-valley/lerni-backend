@@ -534,7 +534,11 @@ export class ProgramRepository {
         },
         studentPrograms: {
           include: {
-            student: true,
+            student: {
+              include: {
+                auth: true,
+              },
+            },
           },
         },
         program: {
@@ -609,6 +613,21 @@ export class ProgramRepository {
             },
           },
         },
+      },
+    });
+  }
+
+  async updateProgram(id: string, name: string, description: string, hoursToComplete: number, pointsReward: number, icon: string) {
+    return await this.prisma.program.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        description,
+        hoursToComplete,
+        pointsReward,
+        icon,
       },
     });
   }

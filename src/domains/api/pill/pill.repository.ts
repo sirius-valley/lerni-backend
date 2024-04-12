@@ -180,4 +180,6 @@ export class PillRepository {
       },
     });
   }
+
+  // public async deletePill(pillId: string) {}
 }

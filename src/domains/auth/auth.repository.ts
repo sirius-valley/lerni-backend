@@ -44,6 +44,7 @@ export class AuthRepository {
       data: {
         email,
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
+        tokenDevice: null,
         isActive: false,
       },
     });

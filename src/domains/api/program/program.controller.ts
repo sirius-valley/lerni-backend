@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { CommentRequestDto } from './dtos/comment-request.dto';
 import { ProgramRequestDto } from './dtos/program-request.dto';
+import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
 
 @Controller('api/program')
 @ApiBearerAuth('JWT-auth')
@@ -66,7 +67,7 @@ export class ProgramController {
   }
 
   @Put(':programVersionId')
-  async update(@Param('programVersionId') id: string, @Body() data: ProgramRequestDto) {
+  async update(@Param('programVersionId') id: string, @Body() data: ProgramUpdateRequestDto) {
     return this.programService.update(id, data);
   }
 }

@@ -55,11 +55,15 @@ export class StudentRepository {
   }
 
   async enrollStudent(studentId: string, programVersionId: string) {
-    return await this.prisma.studentProgram.create({
-      data: {
-        studentId,
-        programVersionId,
-      },
-    });
+    try {
+      return await this.prisma.studentProgram.create({
+        data: {
+          studentId,
+          programVersionId,
+        },
+      });
+    } catch {
+      console.log('Error enrolling student');
+    }
   }
 }
