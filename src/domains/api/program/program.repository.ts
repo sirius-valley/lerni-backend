@@ -268,7 +268,11 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
           },
         },
       },
@@ -338,7 +342,11 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
             programVersionPillVersions: {
               include: {
                 pillVersion: {
@@ -404,7 +412,11 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
           },
         },
       },

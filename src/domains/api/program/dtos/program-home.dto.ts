@@ -1,18 +1,14 @@
 import { SimpleProgramDto } from './simple-program.dto';
-import { Program } from '@prisma/client';
+import { ProgramCardDto } from './program-card.dto';
 
 export class ProgramHomeDto {
   programsCompleted: SimpleProgramDto[];
   programsInProgress: SimpleProgramDto[];
   programsNotStarted: SimpleProgramDto[];
 
-  constructor(programs: {
-    programsCompleted: Program[];
-    programsInProgress: { program: Program; progress: number }[];
-    programsNotStarted: Program[];
-  }) {
-    this.programsCompleted = programs.programsCompleted.map((program) => new SimpleProgramDto(program, 100));
-    this.programsInProgress = programs.programsInProgress.map((program) => new SimpleProgramDto(program.program, program.progress));
-    this.programsNotStarted = programs.programsNotStarted.map((program) => new SimpleProgramDto(program, 0));
+  constructor(programs: { programsCompleted: any[]; programsInProgress: { program: any; progress: number }[]; programsNotStarted: any[] }) {
+    this.programsCompleted = programs.programsCompleted.map((program) => new ProgramCardDto(program, 100));
+    this.programsInProgress = programs.programsInProgress.map((program) => new ProgramCardDto(program.program, program.progress));
+    this.programsNotStarted = programs.programsNotStarted.map((program) => new ProgramCardDto(program, 0));
   }
 }
