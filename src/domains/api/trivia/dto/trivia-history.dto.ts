@@ -7,21 +7,27 @@ export class TriviaHistoryDto {
   opponent: SimpleStudentDto | null;
   programName: string;
   score: number;
+  opponentScore: number;
   createAt?: Date;
+  finishedDateTime?: Date | null;
 
   constructor(
     id: string,
     status: TriviaAnswerResponseStatus,
     programName: string,
     score: number,
+    opponentScore: number,
     opponent: SimpleStudentDto | null,
     createAt?: Date,
+    finishedDateTime?: Date | null,
   ) {
     this.id = id;
     this.status = status;
     this.opponent = opponent ? opponent : null;
     this.programName = programName;
     this.score = score;
+    this.opponentScore = opponentScore;
     this.createAt = createAt;
+    this.finishedDateTime = finishedDateTime;
   }
 }

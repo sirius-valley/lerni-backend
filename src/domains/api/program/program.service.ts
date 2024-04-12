@@ -23,6 +23,8 @@ import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-req
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
+import { ProgramVotesDto } from './dtos/program-votes.dto';
 import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
@@ -355,10 +357,22 @@ export class ProgramService {
   }
 
   public async getLikesAndDislikes(id: string) {
-    const program = await this.programRepository.getProgramByProgramVersion(id);
+    const program = await this.programRepository.getProgramById(id);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const likes = await this.programRepository.countLikesByProgramId(id);
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
-    return { likes: Number(likes), dislikes: Number(dislikes) };
+    if (likes === 0 && dislikes === 0) return new ProgramVotesDto();
+    return new ProgramVotesDto(likes, dislikes);
+  }
+
+  public async getProgramList(options: LimitOffsetPagination): Promise<ProgramListResponseDto> {
+    const { results, total } = await this.programRepository.getProgramVersionList(options);
+    if (results.length === 0) return { results: [], total };
+    return {
+      results: results.map((item) => {
+        return new ProgramListDto(item.program, item.id);
+      }),
+      total,
+    };
   }
 }

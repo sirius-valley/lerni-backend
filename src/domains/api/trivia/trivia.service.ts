@@ -86,7 +86,7 @@ export class TriviaService {
     if (!triviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
     const studentTriviaMatch = triviaMatch.studentTriviaMatches.find((match) => match.studentId === student.id);
     if (!studentTriviaMatch) throw new HttpException('Trivia match not found', HttpStatus.NOT_FOUND);
-    const validTime = await this.checkNotFinishStatus(triviaMatch.trivia, new Date());
+    const validTime = await this.checkNotFinishStatus(triviaMatch.studentTriviaMatches, new Date());
     if (studentTriviaMatch.triviaAnswers.length === 0 && validTime) {
       await this.triviaRepository.resetTimer(studentTriviaMatch.id, new Date(new Date().getTime() + 72 * 60 * 60 * 1000));
     } else if (!validTime) {
@@ -160,7 +160,7 @@ export class TriviaService {
   }
 
   private async assignMatchToStudent(studentId: string, triviaMatchId: string) {
-    return await this.triviaRepository.createStudentTriviaMatch(studentId, triviaMatchId);
+    return await this.triviaRepository.createStudentTriviaMatch(studentId, triviaMatchId, new Date());
   }
 
   private async createTriviaMatch(studentId: string, programVersionId: string) {
@@ -210,7 +210,7 @@ export class TriviaService {
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
         { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers) },
-        this.calcualteMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
+        this.calculateMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
         opponent ? new SimpleStudentDto(opponent.student) : undefined,
       );
     }
@@ -276,41 +276,52 @@ export class TriviaService {
     const options = { limit: Number(10), offset: (page - 1) * 10 };
     const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
 
-    await Promise.all(
+    const newResults = await Promise.all(
       results.map(async (item) => {
         const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
         const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId);
         if (otherMatches) {
-          const oponent = await this.studentService.getStudentById(otherMatches.studentId);
-          const result = await this.getTriviaResult(item.studentId, otherMatches.studentId);
-          return new TriviaHistoryDto(item.triviaMatchId, result, program.name, 10, oponent, item.createdAt);
+          const opponent = await this.studentService.getStudentById(otherMatches.studentId);
+          const { status, studentScore, opponentScore } = await this.getTriviaResult(item.id, otherMatches.id);
+          return new TriviaHistoryDto(
+            item.triviaMatchId,
+            status,
+            program.name,
+            studentScore,
+            opponentScore,
+            opponent,
+            item.createdAt,
+            item.triviaMatch.finishedDateTime,
+          );
         }
       }),
     );
 
-    return { results: results, totalPages: Math.ceil(total / 10) };
+    return { results: newResults, totalPages: Math.ceil(total / 10) };
   }
 
   private async getProgramByTriviaMatchId(triviaMatchId: string) {
     const triviaMatch = await this.triviaRepository.getTriviaMatchById(triviaMatchId);
-    if (!triviaMatch) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    if (!triviaMatch) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const trivia = await this.triviaRepository.getTriviaById(triviaMatch?.triviaId);
-    if (!trivia) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    if (!trivia) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const triviaVersion = await this.triviaRepository.getProgramTriviaVersionByTriviaId(trivia.id);
     if (!triviaVersion) throw new HttpException('Trivia version not found', HttpStatus.NOT_FOUND);
     const program = await this.programService.getProgramByProgramVersionId(triviaVersion?.programVersionId);
-    if (!program) throw new HttpException('Progam not found', HttpStatus.NOT_FOUND);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     return program;
   }
 
   private async getTriviaResult(studentId: string, oponentId: string) {
     const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
     const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
-    return otherAnswer > myAnswer
-      ? TriviaAnswerResponseStatus.LOST
-      : otherAnswer < myAnswer
-        ? TriviaAnswerResponseStatus.WON
-        : TriviaAnswerResponseStatus.TIED;
+    const status =
+      otherAnswer > myAnswer
+        ? TriviaAnswerResponseStatus.LOST
+        : otherAnswer < myAnswer
+          ? TriviaAnswerResponseStatus.WON
+          : TriviaAnswerResponseStatus.TIED;
+    return { status, studentScore: myAnswer, opponentScore: otherAnswer };
   }
 
   public async getTriviaStatus(student: StudentDto, page: number) {
@@ -325,7 +336,7 @@ export class TriviaService {
     const programsWithNoTriviaMatch = await this.triviaRepository.getCompletedProgramsWithNoTriviaMatchByStudentId(student.id);
     programsWithNoTriviaMatch.forEach((studentProgram) => {
       const program = studentProgram.programVersion.program;
-      trivias.push(new TriviaHistoryDto(program.id, TriviaAnswerResponseStatus.NOT_STARTED, program.name, 0, null));
+      trivias.push(new TriviaHistoryDto(program.id, TriviaAnswerResponseStatus.NOT_STARTED, program.name, 0, 0, null)); // TODO HARDCODED
     });
     return trivias;
   }
@@ -333,19 +344,23 @@ export class TriviaService {
   private async getTriviaMatchStatus(match: any) {
     const program = await this.getProgramByTriviaMatchId(match.triviaMatchId);
     const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
-    if (trivia && trivia?.questionCount === match._count.triviaAnswers) {
-      return new TriviaHistoryDto(match.triviaMatchId, TriviaAnswerResponseStatus.WAITING, program.name, 10, null, match.createdAt);
-    } else if (trivia) {
-      const otherMatch = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
-      return new TriviaHistoryDto(
-        match.triviaMatchId,
-        TriviaAnswerResponseStatus.IN_PROGRESS,
-        program.name,
-        10,
-        otherMatch ? new SimpleStudentDto(otherMatch.student) : null,
-        match.createdAt,
-      );
-    }
+    if (!trivia) return;
+    const opponent = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
+    return new TriviaHistoryDto(
+      match.triviaMatchId,
+      this.triviaMatchStatus(match, trivia, opponent),
+      program.name,
+      10, // TODO HARDCODED
+      10, // TODO HARDCODED
+      opponent ? new SimpleStudentDto(opponent.student) : null,
+      match.triviaMatch.createdAt,
+    );
+  }
+
+  private triviaMatchStatus(triviaMatch: any, trivia: Trivia, opponent?: any) {
+    if (triviaMatch._count.triviaAnswers >= trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
+    if (opponent && triviaMatch._count.triviaAnswers === 0) return TriviaAnswerResponseStatus.CHALLENGED;
+    return TriviaAnswerResponseStatus.IN_PROGRESS;
   }
 
   public checkValidTriviaTime(trivias: any[]) {
@@ -375,10 +390,10 @@ export class TriviaService {
     if (!opponentTriviaMatch) {
       if (studentTriviaMatch.triviaAnswers.length >= trivia.questionCount) return TriviaAnswerResponseStatus.WAITING;
       return TriviaAnswerResponseStatus.IN_PROGRESS;
-    } else return this.calcualteMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers, trivia.questionCount);
+    } else return this.calculateMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers, trivia.questionCount);
   }
 
-  private calcualteMatchResult(studentAnswers: TriviaAnswer[], opponentAnswers: TriviaAnswer[], questionCount: number) {
+  private calculateMatchResult(studentAnswers: TriviaAnswer[], opponentAnswers: TriviaAnswer[], questionCount: number) {
     const studentCorrectAnswers = studentAnswers.filter((answer) => answer.isCorrect).length;
     const opponentCorrectAnswers = opponentAnswers.filter((answer) => answer.isCorrect).length;
     const studentsQuestionsLeft = questionCount - studentAnswers.length;
@@ -406,13 +421,12 @@ export class TriviaService {
     status: TriviaAnswerResponseStatus,
     opponent?: any,
   ) {
-    const opponentTriviaAnswer = opponent?.triviaAnswers.find((answer) => answer.questionId === questionId);
-    const opponentAnswer = opponentTriviaAnswer
-      ? {
-          id: questionId,
-          isCorrect: opponentTriviaAnswer.isCorrect,
-        }
-      : undefined;
+    const opponentAnswers = opponent?.triviaAnswers.map((answer) => {
+      return {
+        id: answer.questionId,
+        isCorrect: answer.isCorrect,
+      };
+    });
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
@@ -420,7 +434,8 @@ export class TriviaService {
       triviaQuestion,
       isCorrect: springResponse.correct,
       status,
-      opponentAnswer,
+      opponent: opponent ? new SimpleStudentDto(opponent.student) : undefined,
+      opponentAnswers,
       correctOption,
     };
   }
@@ -441,6 +456,7 @@ export class TriviaService {
 
   private async checkNotFinishStatus(trivia: any, today: Date) {
     //add into getStatus
+    if (!trivia.completeBefore) return true;
     if (today > trivia.completeBefore) {
       await this.triviaRepository.updateFinishDate(trivia.id, today);
       const triviaMatch = await this.triviaRepository.getStudentMatchbyTriviaMachtId(trivia.triviaMatchId);

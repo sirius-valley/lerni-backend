@@ -13,9 +13,9 @@ export class NotificationService {
 
   public async sendNotification(params: NotificationDto) {
     const token = await this.notificationRepository.searchToken(params.userId);
-    if (!token) throw new HttpException('Token not Found', HttpStatus.NOT_FOUND);
+    if (!token) return undefined;
 
-    if (!token.tokenDevice) throw new HttpException('Token is empty', HttpStatus.NOT_FOUND);
+    if (!token.tokenDevice) return undefined;
 
     const payload = JSON.stringify(
       new InputNotificationDto({ default: 'default', body: params.message, title: params.title, sound: 'default' }),
