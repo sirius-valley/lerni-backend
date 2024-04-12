@@ -361,6 +361,7 @@ model TriviaAnswer {
 model Achievement {
   id           String @id @default(uuid())
   name         String
+  description  String
   trackedValue String
 
   achievementLevels AchievementLevel[]

@@ -39,9 +39,11 @@ export class AchievementService {
       return new AchievementDto({
         id: achievement.id,
         name: achievement.name,
+        description: achievement.description,
         levels: achievement.achievementLevels.map((level) => {
           const progress = level.studentAchievementLevels[0] ? level.studentAchievementLevels[0].progress : 0;
-          return new AchievementLevelProgressDto(level, progress);
+          const unlocked = progress >= level.targetValue;
+          return new AchievementLevelProgressDto(level, progress, unlocked);
         }),
       });
     });

@@ -5,15 +5,17 @@ export class AchievementLevelProgressDto {
   description: string;
   targetValue: number;
   progress: number;
+  unlocked: boolean;
   tier: AchievementTier;
   pointsAwarded: number;
   icon: string;
 
-  constructor(data: AchievementLevel, progress: number) {
+  constructor(data: AchievementLevel, progress: number, unlocked: boolean) {
     this.id = data.id;
     this.description = data.description;
     this.targetValue = data.targetValue;
     this.progress = progress;
+    this.unlocked = unlocked;
     this.tier = data.tier;
     this.pointsAwarded = data.pointsAwarded;
     this.icon = data.icon;
