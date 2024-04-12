@@ -59,4 +59,23 @@ export class AchievementRepository {
       },
     });
   }
+
+  async getAllAchievementsByStudentId(studentId: string) {
+    return this.prisma.achievement.findMany({
+      include: {
+        achievementLevels: {
+          orderBy: {
+            tier: 'asc',
+          },
+          include: {
+            studentAchievementLevels: {
+              where: {
+                studentId,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
