@@ -13,5 +13,6 @@ import { NotificationModule } from '../notification/notification.module';
   controllers: [TriviaController],
   imports: [ProgramModule, StudentModule, SpringPillModule, NotificationModule],
   providers: [TriviaService, TriviaRepository, PrismaService, HeadlandsAdapter],
+  exports: [TriviaModule, TriviaRepository],
 })
 export class TriviaModule {}

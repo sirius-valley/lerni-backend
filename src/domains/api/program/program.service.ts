@@ -25,6 +25,7 @@ import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
 import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
 import { ProgramVotesDto } from './dtos/program-votes.dto';
+import { TriviaRepository } from '../trivia/trivia.repository';
 
 @Injectable()
 export class ProgramService {
@@ -35,6 +36,7 @@ export class ProgramService {
     private readonly studentService: StudentService,
     private readonly studentRepository: StudentRepository,
     private readonly authService: AuthService,
+    private readonly triviaRepository: TriviaRepository,
   ) {}
 
   public async getProgramById(studentId: string, programId: string) {
@@ -298,6 +300,16 @@ export class ProgramService {
     );
   }
 
+  public async addTriviaToProgram(programVersionId: string, trivia: any) {
+    const newTrivia = await this.triviaRepository.create(trivia.block, trivia.questionCount);
+    const programVersionTrivia = await this.triviaRepository.createTriviaProgram(
+      programVersionId,
+      newTrivia.id,
+      trivia.order ? trivia.order : 1,
+    );
+    return programVersionTrivia;
+  }
+
   public async createProgram(newProgram: ProgramRequestDto) {
     const program = await this.programRepository.createProgram(
       newProgram.title,
@@ -315,6 +327,10 @@ export class ProgramService {
     await this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
 
     await this.enrollStudents(programVersion.id, newProgram.students);
+
+    if (newProgram.trivia) {
+      await this.addTriviaToProgram(programVersion.id, newProgram.trivia);
+    }
 
     return program;
   }
