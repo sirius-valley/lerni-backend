@@ -1,6 +1,7 @@
-import { IsArray, IsEmail, IsInt, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsArray, IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 import { PillRequestDto } from '../../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../../questionnaire/dtos/questionnaire-request.dto';
+import { TriviaRequestDto } from '../../trivia/dto/trivia-request.dto';
 
 export class ProgramRequestDto {
   @IsNotEmpty()
@@ -26,8 +27,8 @@ export class ProgramRequestDto {
   @IsNotEmpty()
   questionnaire: QuestionnaireRequestDto;
 
-  @IsString()
-  trivia: string;
+  @IsOptional()
+  trivia: TriviaRequestDto;
 
   @IsArray()
   @IsEmail({}, { each: true })

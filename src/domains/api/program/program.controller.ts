@@ -2,11 +2,12 @@ import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards, Use
 import { ProgramService } from './program.service';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
 import { CommentRequestDto } from './dtos/comment-request.dto';
 import { ProgramRequestDto } from './dtos/program-request.dto';
 import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
+import { ProgramListResponseDto } from './dtos/program-list.dto';
 
 @Controller('api/program')
 @ApiBearerAuth('JWT-auth')
@@ -19,6 +20,17 @@ export class ProgramController {
   @Get('home')
   async getProgramsByStudentId(@Request() req: ApiRequest) {
     return await this.programService.getProgramsByStudentId(req.user.id);
+  }
+
+  @Get('list')
+  @ApiQuery({ name: 'limit', type: Number })
+  @ApiQuery({ name: 'offset', type: Number })
+  async getProgramList(@Request() req: ApiRequest, @Query() query: any): Promise<ProgramListResponseDto> {
+    const { limit, offset } = query as Record<string, string>;
+    return await this.programService.getProgramList({
+      limit: Number(limit),
+      offset: Number(offset),
+    });
   }
 
   @Get(':id')
@@ -56,8 +68,8 @@ export class ProgramController {
     return await this.programService.getProgramDetail(id);
   }
 
-  @Get('likes/:id')
-  async getLikesAndDislikes(@Param('id') id: string) {
+  @Get('likes/:ProgramId')
+  async getLikesAndDislikes(@Param('ProgramId') id: string) {
     return await this.programService.getLikesAndDislikes(id);
   }
 

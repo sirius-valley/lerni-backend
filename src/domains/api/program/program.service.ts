@@ -25,6 +25,9 @@ import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
 import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
 import { PillUpdateRequestDto } from '../pill/dtos/pill-update.dto';
+import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
+import { ProgramVotesDto } from './dtos/program-votes.dto';
+import { TriviaRepository } from '../trivia/trivia.repository';
 
 @Injectable()
 export class ProgramService {
@@ -35,6 +38,7 @@ export class ProgramService {
     private readonly studentService: StudentService,
     private readonly studentRepository: StudentRepository,
     private readonly authService: AuthService,
+    private readonly triviaRepository: TriviaRepository,
   ) {}
 
   public async getProgramById(studentId: string, programId: string) {
@@ -285,16 +289,27 @@ export class ProgramService {
   public async enrollStudents(programId: string, newStudents: string[]) {
     const students = await this.studentService.getStudentsByEmail(newStudents);
 
-    Promise.all(
+    await Promise.all(
       students.map(async (student) => {
         if (student instanceof StudentDto) {
           await this.studentRepository.enrollStudent(student.id, programId);
         } else {
           const temporalStudent = await this.authService.temporalRegister(student.email);
-          await this.studentRepository.enrollStudent(temporalStudent.id, programId);
+          if (!temporalStudent.user?.id) throw new HttpException("Can't enrrol student", HttpStatus.BAD_REQUEST);
+          await this.studentRepository.enrollStudent(temporalStudent.user.id, programId);
         }
       }),
     );
+  }
+
+  public async addTriviaToProgram(programVersionId: string, trivia: any) {
+    const newTrivia = await this.triviaRepository.create(trivia.block, trivia.questionCount);
+    const programVersionTrivia = await this.triviaRepository.createTriviaProgram(
+      programVersionId,
+      newTrivia.id,
+      trivia.order ? trivia.order : 1,
+    );
+    return programVersionTrivia;
   }
 
   public async createProgram(newProgram: ProgramRequestDto) {
@@ -314,6 +329,10 @@ export class ProgramService {
     await this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
 
     await this.enrollStudents(programVersion.id, newProgram.students);
+
+    if (newProgram.trivia) {
+      await this.addTriviaToProgram(programVersion.id, newProgram.trivia);
+    }
 
     return program;
   }
@@ -354,11 +373,23 @@ export class ProgramService {
   }
 
   public async getLikesAndDislikes(id: string) {
-    const program = await this.programRepository.getProgramByProgramVersion(id);
+    const program = await this.programRepository.getProgramById(id);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     const likes = await this.programRepository.countLikesByProgramId(id);
     const dislikes = await this.programRepository.countDislikesByProgramId(id);
-    return { likes: Number(likes), dislikes: Number(dislikes) };
+    if (likes === 0 && dislikes === 0) return new ProgramVotesDto();
+    return new ProgramVotesDto(likes, dislikes);
+  }
+
+  public async getProgramList(options: LimitOffsetPagination): Promise<ProgramListResponseDto> {
+    const { results, total } = await this.programRepository.getProgramVersionList(options);
+    if (results.length === 0) return { results: [], total };
+    return {
+      results: results.map((item) => {
+        return new ProgramListDto(item.program, item.id);
+      }),
+      total,
+    };
   }
 
   public async update(programVersionId: string, data: ProgramUpdateRequestDto) {

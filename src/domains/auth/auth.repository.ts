@@ -30,6 +30,9 @@ export class AuthRepository {
   async findAuthByEmail(email: string) {
     return this.prisma.auth.findUnique({
       where: { email },
+      include: {
+        user: true,
+      },
     });
   }
 
@@ -46,6 +49,12 @@ export class AuthRepository {
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
         tokenDevice: null,
         isActive: false,
+        user: {
+          create: {},
+        },
+      },
+      include: {
+        user: true,
       },
     });
   }
