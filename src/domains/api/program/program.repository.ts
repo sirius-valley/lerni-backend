@@ -631,4 +631,16 @@ export class ProgramRepository {
       },
     });
   }
+
+  async downStudentProgram(email: string) {
+    return await this.prisma.studentProgram.deleteMany({
+      where: {
+        student: {
+          auth: {
+            email,
+          },
+        },
+      },
+    });
+  }
 }

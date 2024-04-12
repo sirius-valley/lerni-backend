@@ -405,7 +405,9 @@ export class ProgramService {
       if (checkPills.create.length > 0) {
         this.addPillToProgram(checkPills.create, program.programId);
       } else if (checkPills.delete.length > 0) {
-        //eliminar pills
+        checkPills.delete.map(async (pill) => {
+          await this.pillRepository.deletePill(pill.id);
+        });
       }
     }
     const checkStudentList = await this.checkArrayObj(
@@ -418,17 +420,17 @@ export class ProgramService {
     );
     if (!checkStudentList.value) {
       if (checkStudentList.create.length > 0) {
-        console.log(
-          checkStudentList.create.map((element) => {
-            return element.email;
-          }),
-        );
         this.enrollStudents(
           program.programId,
           checkStudentList.create.map((element) => {
             return element.email;
           }),
         );
+      }
+      if (checkStudentList.delete.length > 0) {
+        checkStudentList.delete.map(async (student) => {
+          this.programRepository.downStudentProgram(student.email);
+        });
       }
     }
     //return an ok
