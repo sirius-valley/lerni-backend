@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { NotificationService } from '../notification/notification.service';
 import { AchievementRepository } from './achievement.repository';
+import { AchievementLevelProgressDto } from './dtos/achievement-level-progress.dto';
+import { AchievementDto } from './dtos/achievement.dto';
 
 @Injectable()
 export class AchievementService {
@@ -29,6 +31,22 @@ export class AchievementService {
         }
       }
     }
+  }
+
+  public async getAchievementsByStudentId(studentId: string) {
+    const achievements = await this.achievementRepository.getAllAchievementsByStudentId(studentId);
+    return achievements.map((achievement) => {
+      return new AchievementDto({
+        id: achievement.id,
+        name: achievement.name,
+        description: achievement.description,
+        levels: achievement.achievementLevels.map((level) => {
+          const progress = level.studentAchievementLevels[0] ? level.studentAchievementLevels[0].progress : 0;
+          const unlocked = progress >= level.targetValue;
+          return new AchievementLevelProgressDto(level, progress, unlocked);
+        }),
+      });
+    });
   }
 
   private async findAchievement(trackedValue: string) {
