@@ -1022,7 +1022,7 @@ async function extraPrograms(n: number = 10) {
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
       },
       create: {
-        id: authId,
+        id: authId1,
         email: `monosteve123${i}@gmail.com`,
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
       },
