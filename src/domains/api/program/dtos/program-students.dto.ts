@@ -1,15 +1,17 @@
-import { SimpleStudentDto } from '../../student/dtos/simple-student.dto';
-
 export class ProgramStudentsDto {
   programId: string;
   programVersionId: string;
   totalStudents: number;
-  studentsCompleted: SimpleStudentDto[];
+  notStarted: number;
+  inProgress: number;
+  completed: number;
 
   constructor(data: any) {
     this.programId = data.programId;
     this.programVersionId = data.programVersionId;
     this.totalStudents = data.totalStudents;
-    this.studentsCompleted = data.studentsCompleted;
+    this.notStarted = data.notStarted;
+    this.inProgress = data.inProgress;
+    this.completed = data.completed;
   }
 }

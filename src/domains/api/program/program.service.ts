@@ -21,7 +21,6 @@ import { AuthService } from '../../auth/auth.service';
 import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
-import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
 import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
 import { ProgramVotesDto } from './dtos/program-votes.dto';
@@ -87,10 +86,16 @@ export class ProgramService {
     if (!program) throw new HttpException('Program not found', 404);
     const students = await this.programRepository.getStudentsByProgramVersionId(programVersionId);
     const completedStudents = students.filter((student) => student.questionnaireSubmissions.some((qs) => qs.progress === 100));
+    const notStartedStudents = students.filter((student) => student.pillSubmissions.length === 0);
+    const inProgressStudents = students.filter(
+      (student) => student.pillSubmissions.length !== 0 && student.questionnaireSubmissions.every((qs) => qs.progress !== 100),
+    );
     return new ProgramStudentsDto({
       programVersionId,
       totalStudents: students.length,
-      studentsCompleted: completedStudents.map((student) => new SimpleStudentDto(student)),
+      notStarted: notStartedStudents.length,
+      inProgress: inProgressStudents.length,
+      completed: completedStudents.length,
     });
   }
 
