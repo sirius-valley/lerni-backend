@@ -541,4 +541,18 @@ export class TriviaRepository {
       },
     });
   }
+
+  async delete(id: string) {
+    await this.prisma.programVersionTrivia.deleteMany({
+      where: {
+        triviaId: id,
+      },
+    });
+
+    return await this.prisma.trivia.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

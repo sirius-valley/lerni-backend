@@ -396,6 +396,7 @@ export class ProgramService {
     //check datos a actualizar
     const program = await this.programRepository.getProgramByProgramVersionId(programVersionId);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    let newProgram;
     if (
       !(await this.checkObjs(
         {
@@ -408,7 +409,7 @@ export class ProgramService {
         program.program,
       ))
     ) {
-      await this.programRepository.updateProgram(
+      newProgram = await this.programRepository.updateProgram(
         program.programId,
         data.title,
         data.description,
@@ -434,7 +435,7 @@ export class ProgramService {
     );
     if (!checkPills.value) {
       if (checkPills.create.length > 0) {
-        this.addPillToProgram(checkPills.create, program.programId);
+        this.addPillToProgram(checkPills.create, programVersionId);
       } else if (checkPills.delete.length > 0) {
         checkPills.delete.map(async (pill) => {
           await this.pillRepository.deletePill(pill.id);
@@ -443,10 +444,10 @@ export class ProgramService {
     }
     const checkStudentList = await this.checkArrayObj(
       data.students.map((item) => {
-        return { email: item };
+        return { id: item };
       }),
       program.studentPrograms.map((item) => {
-        return { email: item.student.auth.email };
+        return { id: item.student.id };
       }),
     );
     if (!checkStudentList.value) {
@@ -454,17 +455,34 @@ export class ProgramService {
         this.enrollStudents(
           program.programId,
           checkStudentList.create.map((element) => {
-            return element.email;
+            return element.id;
           }),
         );
       }
       if (checkStudentList.delete.length > 0) {
         checkStudentList.delete.map(async (student) => {
-          this.programRepository.downStudentProgram(student.email);
+          this.programRepository.downStudentProgram(student.id);
         });
       }
     }
-    //return an ok
+
+    const checkTrivia = await this.checkObjs(data.trivia, program.programVersionTrivias[0].trivia);
+
+    if (checkTrivia) {
+      this.triviaRepository.delete(program.programVersionTrivias[0].trivia.id);
+      this.triviaRepository.create(data.trivia, 12);
+    }
+
+    const checkQuestionarie = await this.checkObjs(
+      data.questionnaire,
+      program.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaire,
+    );
+
+    if (checkQuestionarie) {
+      this.questionnaireRepository.delete(program.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaire.id);
+      this.addQuestionnaireToProgram(program.programId, data.questionnaire);
+    }
+    return newProgram;
   }
 
   private async checkObjs(newObj: any, oldObj: any) {
@@ -488,19 +506,21 @@ export class ProgramService {
   private async checkArrayObj(newArray: any[], oldArray: any[]) {
     const result: { value: boolean; update: any[]; create: any[]; delete: any[] } = { value: true, update: [], create: [], delete: [] };
 
-    if (newArray.length !== oldArray.length) {
-      result.value = false;
-    }
-
     await Promise.all(
       oldArray.map(async (item, index) => {
-        if (!(await this.checkObjs(item, newArray[index]))) {
+        const itemToSearch = newArray.findIndex((find) => find.id === item.id);
+        if (itemToSearch === -1) {
+          oldArray.splice(index, 1);
           result.value = false;
-          result.update.push(newArray[index]);
-          newArray.splice(index, 1);
-          oldArray.splice(index, 1);
         } else {
-          oldArray.splice(index, 1);
+          if (!(await this.checkObjs(item, newArray[itemToSearch]))) {
+            result.value = false;
+            result.update.push(newArray[index]);
+            newArray.splice(index, 1);
+            oldArray.splice(index, 1);
+          } else {
+            oldArray.splice(index, 1);
+          }
         }
       }),
     );
