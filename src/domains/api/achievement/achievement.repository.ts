@@ -78,4 +78,40 @@ export class AchievementRepository {
       },
     });
   }
+
+  async getStudentAchievementLevelsByStudentId(studentId: string) {
+    return this.prisma.studentAchievementLevel.findMany({
+      where: {
+        studentId,
+      },
+      orderBy: [
+        {
+          completedAt: 'asc',
+        },
+        {
+          progress: 'desc',
+        },
+      ],
+      take: 5,
+      include: {
+        achievementLevel: true,
+      },
+    });
+  }
+
+  async getAchievementLevelsNotStartedByStudentId(studentId: string) {
+    return this.prisma.achievementLevel.findMany({
+      where: {
+        studentAchievementLevels: {
+          none: {
+            studentId,
+          },
+        },
+      },
+      orderBy: {
+        tier: 'asc',
+      },
+      take: 5,
+    });
+  }
 }

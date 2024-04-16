@@ -17,4 +17,9 @@ export class AchievementController {
   async getAllAchievements(@Request() req: ApiRequest) {
     return this.achievementService.getAchievementsByStudentId(req.user.id);
   }
+
+  @Get('recent')
+  async getRecentStudentAchievements(@Request() req: ApiRequest) {
+    return this.achievementService.getRecentAchievementsCompletedByStudentId(req.user.id);
+  }
 }

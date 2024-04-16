@@ -49,6 +49,18 @@ export class AchievementService {
     });
   }
 
+  public async getRecentAchievementsCompletedByStudentId(studentId: string) {
+    const studentAchievements = await this.achievementRepository.getStudentAchievementLevelsByStudentId(studentId);
+    const achievementProgress = studentAchievements.map((achievement) => {
+      const unlocked = achievement.progress >= achievement.achievementLevel.targetValue;
+      return new AchievementLevelProgressDto(achievement.achievementLevel, achievement.progress, unlocked);
+    });
+    if (studentAchievements.length >= 5) return achievementProgress;
+    const achievementsNotStarted = await this.achievementRepository.getAchievementLevelsNotStartedByStudentId(studentId);
+    achievementsNotStarted.map((level) => achievementProgress.push(new AchievementLevelProgressDto(level, 0, false)));
+    return achievementProgress.slice(0, 5);
+  }
+
   private async findAchievement(trackedValue: string) {
     return await this.achievementRepository.getAchievementLevelByTrackedValue(trackedValue);
   }
