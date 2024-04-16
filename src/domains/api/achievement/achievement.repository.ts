@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { LimitOffsetPagination } from '../../../types/limit-offset.pagination';
 
 @Injectable()
 export class AchievementRepository {
@@ -79,7 +80,7 @@ export class AchievementRepository {
     });
   }
 
-  async getStudentAchievementLevelsByStudentId(studentId: string) {
+  async getStudentAchievementLevelsByStudentId(studentId: string, options: LimitOffsetPagination) {
     return this.prisma.studentAchievementLevel.findMany({
       where: {
         studentId,
@@ -92,14 +93,15 @@ export class AchievementRepository {
           progress: 'desc',
         },
       ],
-      take: 5,
+      take: options.limit,
+      skip: options.offset,
       include: {
         achievementLevel: true,
       },
     });
   }
 
-  async getAchievementLevelsNotStartedByStudentId(studentId: string) {
+  async getAchievementLevelsNotStartedByStudentId(studentId: string, options: LimitOffsetPagination) {
     return this.prisma.achievementLevel.findMany({
       where: {
         studentAchievementLevels: {
@@ -111,7 +113,8 @@ export class AchievementRepository {
       orderBy: {
         tier: 'asc',
       },
-      take: 5,
+      take: options.limit,
+      skip: options.offset,
     });
   }
 }
