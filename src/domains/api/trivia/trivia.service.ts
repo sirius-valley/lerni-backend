@@ -35,6 +35,7 @@ export class TriviaService {
   ) {
     this.checkIn72Hours();
   }
+
   private checkIn72Hours = () => {
     cron.schedule(' * */60 * * *', () => {
       this.checkAllNotFinishStatus();
@@ -199,7 +200,7 @@ export class TriviaService {
       answer: lastAnswer ? JSON.parse(lastAnswer.value) : undefined,
     };
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== user.id);
-    const opponentAnswers = opponent ? opponent.triviaAnswers : [];
+    const opponentAnswers = opponent ? this.getTriviaAnswersUntilQuestionId(opponent.triviaAnswers, dataToSpring.questionId) : [];
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
@@ -421,12 +422,14 @@ export class TriviaService {
     status: TriviaAnswerResponseStatus,
     opponent?: any,
   ) {
-    const opponentAnswers = opponent?.triviaAnswers.map((answer) => {
-      return {
-        id: answer.questionId,
-        isCorrect: answer.isCorrect,
-      };
-    });
+    const opponentAnswers = opponent
+      ? this.getTriviaAnswersUntilQuestionId(opponent?.triviaAnswers, questionId).map((answer) => {
+          return {
+            id: answer.questionId,
+            isCorrect: answer.isCorrect,
+          };
+        })
+      : undefined;
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
@@ -438,6 +441,12 @@ export class TriviaService {
       opponentAnswers,
       correctOption,
     };
+  }
+
+  private getTriviaAnswersUntilQuestionId(answers: TriviaAnswer[], questionId?: string) {
+    if (!questionId) return [];
+    const index = answers.findIndex((answer) => answer.questionId === questionId);
+    return index !== -1 ? answers.slice(0, index + 1) : answers;
   }
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
@@ -487,6 +496,7 @@ export class TriviaService {
     }
     return true;
   }
+
   private filterOptions(options: string[]) {
     return options.filter((option) => option !== 'timeout' && option !== 'left');
   }
