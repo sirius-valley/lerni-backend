@@ -301,7 +301,7 @@ export class ProgramService {
   }
 
   public async addTriviaToProgram(programVersionId: string, trivia: any) {
-    const newTrivia = await this.triviaRepository.create(trivia.block, trivia.questionCount);
+    const newTrivia = await this.triviaRepository.create(trivia.block, trivia.questionCount ? trivia.questionCount : 12);
     const programVersionTrivia = await this.triviaRepository.createTriviaProgram(
       programVersionId,
       newTrivia.id,

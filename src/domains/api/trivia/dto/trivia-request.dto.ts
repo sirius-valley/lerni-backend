@@ -4,7 +4,7 @@ export class TriviaRequestDto {
   @IsNotEmpty()
   block: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   questionsCount: number;
 
   @IsOptional()
