@@ -76,4 +76,9 @@ export class ProgramController {
   async getProgramStudents(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
     return await this.programService.getProgramVersionStudents(programVersionId);
   }
+
+  @Get('questionnaires/:programVersionId')
+  async getQuestionnaireAttempts(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
+    return await this.programService.getQuestionnaireAttemptsQuantity(programVersionId);
+  }
 }

@@ -642,4 +642,24 @@ export class ProgramRepository {
 
     return { results, total };
   }
+
+  async getStudentsWithCompletedQuestionnaireByProgramVersionId(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+        questionnaireSubmissions: {
+          some: {
+            progress: 100,
+          },
+        },
+      },
+      include: {
+        questionnaireSubmissions: true,
+      },
+    });
+  }
 }

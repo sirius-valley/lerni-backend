@@ -99,6 +99,20 @@ export class ProgramService {
     });
   }
 
+  public async getQuestionnaireAttemptsQuantity(programVersionId: string) {
+    const program = await this.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', 404);
+    const students = await this.programRepository.getStudentsWithCompletedQuestionnaireByProgramVersionId(programVersionId);
+    const questionnaireAttemptQuantity = students.map((student) => student.questionnaireSubmissions.length);
+    const frequencyMap = questionnaireAttemptQuantity.reduce((acc, num) => {
+      acc[num] = (acc[num] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(frequencyMap)
+      .map(([x, y]) => ({ attempts: Number.parseInt(x), studentQty: y }))
+      .slice(0, 5);
+  }
+
   private programIsComplete(studentProgram: any) {
     return (
       studentProgram.programVersion.programVersionQuestionnaireVersions[0]?.questionnaireVersion.questionnaireSubmissions[0]?.progress ===
