@@ -38,4 +38,8 @@ export class StudentService {
   public async getStudentById(id: string) {
     return await this.studentRepository.findStudentById(id);
   }
+
+  public addPoints(studentId: string, amount: number, entityId: string, sourceEntity: string) {
+    return this.studentRepository.addPoints(studentId, amount, entityId, sourceEntity);
+  }
 }
