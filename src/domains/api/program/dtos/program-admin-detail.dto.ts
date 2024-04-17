@@ -1,4 +1,8 @@
 import { TeacherDto } from '../../pill/dtos/teacher.dto';
+import { PillDetailsWeb } from '../../pill/dtos/pill-details-web.dto';
+import { QuestionnaireDetailsWeb } from '../../questionnaire/dtos/questionnaire-details-web.dto';
+import { StudentDto } from '../../student/dtos/student.dto';
+import { TriviaDetailsWeb } from '../../trivia/dto/trivia-details-web.dto';
 
 export class ProgramAdminDetailsDto {
   id: string;
@@ -8,10 +12,10 @@ export class ProgramAdminDetailsDto {
   estimatedHours: number;
   points: number;
   programDescription: string;
-  pills: any[];
-  questionnaire: any[];
-  students: any[];
-  trivias: any[];
+  pills: PillDetailsWeb[];
+  questionnaire: QuestionnaireDetailsWeb[];
+  students: StudentDto[];
+  trivias: TriviaDetailsWeb[];
 
   constructor(programDetailsDto: ProgramAdminDetailsDto) {
     this.id = programDetailsDto.id;
