@@ -516,7 +516,7 @@ export class ProgramRepository {
   }
 
   async getProgramByProgramVersionId(id: string) {
-    return await this.prisma.programVersion.findUnique({
+    return this.prisma.programVersion.findUnique({
       where: {
         id,
       },
@@ -546,7 +546,15 @@ export class ProgramRepository {
         },
         studentPrograms: {
           include: {
-            student: true,
+            student: {
+              include: {
+                auth: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
           },
         },
         program: {
