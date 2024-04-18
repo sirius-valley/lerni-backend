@@ -374,11 +374,11 @@ export class ProgramService {
     });
   }
 
-  public async getLikesAndDislikes(id: string) {
-    const program = await this.programRepository.getProgramById(id);
+  public async getLikesAndDislikes(programVersionId: string) {
+    const program = await this.getProgramByProgramVersionId(programVersionId);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
-    const likes = await this.programRepository.countLikesByProgramId(id);
-    const dislikes = await this.programRepository.countDislikesByProgramId(id);
+    const likes = await this.programRepository.countLikesByProgramId(program.id);
+    const dislikes = await this.programRepository.countDislikesByProgramId(program.id);
     if (likes === 0 && dislikes === 0) return new ProgramVotesDto();
     return new ProgramVotesDto(likes, dislikes);
   }
