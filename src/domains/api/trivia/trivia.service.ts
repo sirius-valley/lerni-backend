@@ -555,7 +555,7 @@ export class TriviaService {
         if (opponent) this.studentService.addPoints(opponent, points / 2, triviaMatchId, 'trivia');
         break;
       case TriviaAnswerResponseStatus.LOST:
-        if (opponent) this.studentService.addPoints(opponent, points / 2, triviaMatchId, 'trivia');
+        if (opponent) this.studentService.addPoints(opponent, points, triviaMatchId, 'trivia');
     }
   }
 }
