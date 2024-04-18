@@ -108,6 +108,7 @@ export class TriviaService {
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
     const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, triviaMatch.trivia, opponent);
     if (triviaStatus !== TriviaAnswerResponseStatus.IN_PROGRESS) {
+      this.addPoint(student.id, triviaMatch.id, triviaStatus, triviaMatch.trivia.pointsReward, opponent?.studentId);
       if (triviaStatus === TriviaAnswerResponseStatus.LOST && opponent) {
         this.notificationService.sendNotification({
           userId: opponent.studentId,
@@ -542,5 +543,19 @@ export class TriviaService {
     if (answer.value === 'timeout') return TriviaAnswerStatus.TIMEDOUT;
     if (answer.value === 'left') return TriviaAnswerStatus.LEFT;
     return TriviaAnswerStatus.INCORRECT;
+  }
+
+  private addPoint(studentId: string, triviaMatchId: string, status: TriviaAnswerResponseStatus, points: number, opponent?: string) {
+    switch (status) {
+      case TriviaAnswerResponseStatus.WON:
+        this.studentService.addPoints(studentId, points, triviaMatchId, 'trivia');
+        break;
+      case TriviaAnswerResponseStatus.TIED:
+        this.studentService.addPoints(studentId, points / 2, triviaMatchId, 'trivia');
+        if (opponent) this.studentService.addPoints(opponent, points / 2, triviaMatchId, 'trivia');
+        break;
+      case TriviaAnswerResponseStatus.LOST:
+        if (opponent) this.studentService.addPoints(opponent, points, triviaMatchId, 'trivia');
+    }
   }
 }

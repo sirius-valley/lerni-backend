@@ -66,6 +66,9 @@ export class PillService {
 
     if (answerRequest.pillId === introductionID) {
       student = await this.saveIntroductionProgress(student, answerRequest);
+      if (springProgress.completed) {
+        this.studentRepository.addPoints(student.id, 5, introductionID, 'introduction');
+      }
     }
 
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);

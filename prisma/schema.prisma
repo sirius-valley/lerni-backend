@@ -301,6 +301,7 @@ model Trivia {
   id            String   @id @default(uuid())
   block         String
   questionCount Int      @default(12)
+  pointsReward  Int      @default(24)
   createdAt     DateTime @default(now())
 
   programVersions ProgramVersionTrivia[]
