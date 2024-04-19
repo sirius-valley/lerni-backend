@@ -11,20 +11,20 @@ export class AchievementService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  public async updateProgress(student: any, trackedValue: string) {
+  public async updateProgress(studentId: string, trackedValue: string) {
     const achievements = await this.findAchievement(trackedValue);
     if (!achievements) throw new HttpException('achievement not found', HttpStatus.NOT_FOUND);
     for (const achievement of achievements) {
-      const studentAchievement = await this.achievementRepository.getStudentAchievement(student.id, achievement.id);
+      const studentAchievement = await this.achievementRepository.getStudentAchievement(studentId, achievement.id);
       if (!studentAchievement) {
-        await this.achievementRepository.createStudenAchievementLevel(student.id, achievement.id, 1);
+        await this.achievementRepository.createStudenAchievementLevel(studentId, achievement.id, 1);
       } else {
         if (this.calculateProgress(achievement, studentAchievement.progress + 1) < 100) {
           await this.achievementRepository.updateProgress(studentAchievement.id, studentAchievement.progress + 1);
         } else if (studentAchievement.completedAt !== null) {
           await this.achievementRepository.updateCompletedDate(studentAchievement.id, studentAchievement.progress + 1);
           this.notificationService.sendNotification({
-            userId: student.id,
+            userId: studentId,
             title: 'Conseguiste un logro',
             message: `Bieeen! Conseguiste el logro ${achievement.achievement.name}! Entra para saber mas`,
           });

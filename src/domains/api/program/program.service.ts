@@ -28,6 +28,7 @@ import { ProgramVotesDto } from './dtos/program-votes.dto';
 import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
+import { AchievementService } from '../achievement/achievement.service';
 
 @Injectable()
 export class ProgramService {
@@ -38,6 +39,7 @@ export class ProgramService {
     private readonly studentService: StudentService,
     private readonly studentRepository: StudentRepository,
     private readonly authService: AuthService,
+    private readonly achievementService: AchievementService,
   ) {}
 
   public async getProgramById(studentId: string, programId: string) {
@@ -83,6 +85,7 @@ export class ProgramService {
     if (!studentProgram) throw new HttpException('Program not found', 404);
     if (!this.programIsComplete(studentProgram)) throw new HttpException('Program not complete', 400);
     await this.programRepository.createProgramComment(studentId, commentRequest);
+    await this.achievementService.updateProgress(studentProgram.studentId, 'feedback');
   }
 
   public async getProgramVersionStudents(programVersionId: string) {
