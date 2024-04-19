@@ -453,7 +453,7 @@ export class ProgramService {
     if (!checkStudentList.value) {
       if (checkStudentList.create.length > 0) {
         this.enrollStudents(
-          program.programId,
+          program.id,
           checkStudentList.create.map((element) => {
             return element.id;
           }),
@@ -461,7 +461,7 @@ export class ProgramService {
       }
       if (checkStudentList.delete.length > 0) {
         checkStudentList.delete.map(async (student) => {
-          this.programRepository.downStudentProgram(student.id);
+          this.programRepository.downStudentProgram(student.id, programVersionId);
         });
       }
     }

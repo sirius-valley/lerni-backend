@@ -618,7 +618,7 @@ export class ProgramRepository {
     });
   }
 
-  async downStudentProgram(email: string) {
+  async downStudentProgram(email: string, programVersionId: string) {
     return await this.prisma.studentProgram.deleteMany({
       where: {
         student: {
@@ -626,6 +626,7 @@ export class ProgramRepository {
             email,
           },
         },
+        programVersionId,
       },
     });
   }
