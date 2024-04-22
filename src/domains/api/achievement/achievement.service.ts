@@ -41,9 +41,10 @@ export class AchievementService {
         name: achievement.name,
         description: achievement.description,
         levels: achievement.achievementLevels.map((level) => {
-          const progress = level.studentAchievementLevels[0] ? level.studentAchievementLevels[0].progress : 0;
-          const unlocked = progress >= level.targetValue;
-          return new AchievementLevelProgressDto(level, progress, unlocked);
+          const completion = level.studentAchievementLevels[0] ? level.studentAchievementLevels[0].progress : 0;
+          const unlocked = completion >= level.targetValue;
+          const progress = completion / level.targetValue;
+          return new AchievementLevelProgressDto(level, progress, unlocked, completion);
         }),
       });
     });
@@ -52,15 +53,17 @@ export class AchievementService {
   public async getRecentAchievementsCompletedByStudentId(studentId: string) {
     const studentAchievements = await this.achievementRepository.getStudentAchievementLevelsByStudentId(studentId, { limit: 5, offset: 0 });
     const achievementProgress = studentAchievements.map((achievement) => {
-      const unlocked = achievement.progress >= achievement.achievementLevel.targetValue;
-      return new AchievementLevelProgressDto(achievement.achievementLevel, achievement.progress, unlocked);
+      const targetValue = achievement.achievementLevel.targetValue;
+      const unlocked = achievement.progress >= targetValue;
+      const progress = achievement.progress / targetValue;
+      return new AchievementLevelProgressDto(achievement.achievementLevel, progress, unlocked, achievement.progress);
     });
     if (studentAchievements.length >= 5) return achievementProgress;
     const achievementsNotStarted = await this.achievementRepository.getAchievementLevelsNotStartedByStudentId(studentId, {
       limit: 5,
       offset: 0,
     });
-    achievementsNotStarted.map((level) => achievementProgress.push(new AchievementLevelProgressDto(level, 0, false)));
+    achievementsNotStarted.map((level) => achievementProgress.push(new AchievementLevelProgressDto(level, 0, false, 0)));
     return achievementProgress.slice(0, 5);
   }
 
