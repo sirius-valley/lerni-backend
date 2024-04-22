@@ -62,4 +62,15 @@ export class StudentRepository {
       },
     });
   }
+
+  async addPoints(studentId: string, amount: number, entityId: string, sourceEntity: string) {
+    return this.prisma.pointRecord.create({
+      data: {
+        studentId,
+        amount,
+        entityId,
+        sourceEntity,
+      },
+    });
+  }
 }

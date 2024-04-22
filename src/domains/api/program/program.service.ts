@@ -21,7 +21,6 @@ import { AuthService } from '../../auth/auth.service';
 import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
-import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
 import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
 import { ProgramVotesDto } from './dtos/program-votes.dto';
@@ -93,11 +92,31 @@ export class ProgramService {
     if (!program) throw new HttpException('Program not found', 404);
     const students = await this.programRepository.getStudentsByProgramVersionId(programVersionId);
     const completedStudents = students.filter((student) => student.questionnaireSubmissions.some((qs) => qs.progress === 100));
+    const notStartedStudents = students.filter((student) => student.pillSubmissions.length === 0);
+    const inProgressStudents = students.filter(
+      (student) => student.pillSubmissions.length !== 0 && student.questionnaireSubmissions.every((qs) => qs.progress !== 100),
+    );
     return new ProgramStudentsDto({
       programVersionId,
       totalStudents: students.length,
-      studentsCompleted: completedStudents.map((student) => new SimpleStudentDto(student)),
+      notStarted: notStartedStudents.length,
+      inProgress: inProgressStudents.length,
+      completed: completedStudents.length,
     });
+  }
+
+  public async getQuestionnaireAttemptsQuantity(programVersionId: string) {
+    const program = await this.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', 404);
+    const students = await this.programRepository.getStudentsWithCompletedQuestionnaireByProgramVersionId(programVersionId);
+    const questionnaireAttemptQuantity = students.map((student) => student.questionnaireSubmissions.length);
+    const frequencyMap = questionnaireAttemptQuantity.reduce((acc, num) => {
+      acc[num] = (acc[num] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(frequencyMap)
+      .map(([x, y]) => ({ attempts: Number.parseInt(x), studentQty: y }))
+      .slice(0, 5);
   }
 
   private programIsComplete(studentProgram: any) {
@@ -358,11 +377,11 @@ export class ProgramService {
     });
   }
 
-  public async getLikesAndDislikes(id: string) {
-    const program = await this.programRepository.getProgramById(id);
+  public async getLikesAndDislikes(programVersionId: string) {
+    const program = await this.getProgramByProgramVersionId(programVersionId);
     if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
-    const likes = await this.programRepository.countLikesByProgramId(id);
-    const dislikes = await this.programRepository.countDislikesByProgramId(id);
+    const likes = await this.programRepository.countLikesByProgramId(program.id);
+    const dislikes = await this.programRepository.countDislikesByProgramId(program.id);
     if (likes === 0 && dislikes === 0) return new ProgramVotesDto();
     return new ProgramVotesDto(likes, dislikes);
   }

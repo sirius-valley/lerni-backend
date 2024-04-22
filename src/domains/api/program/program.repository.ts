@@ -463,10 +463,10 @@ export class ProgramRepository {
   }
 
   async getProgramByProgramVersion(programVersionId: string) {
-    return await this.prisma.program.findFirst({
+    return this.prisma.program.findFirst({
       where: {
         versions: {
-          every: {
+          some: {
             id: programVersionId,
           },
         },
@@ -605,6 +605,17 @@ export class ProgramRepository {
         },
       },
       include: {
+        pillSubmissions: {
+          where: {
+            pillVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
         questionnaireSubmissions: {
           where: {
             questionnaireVersion: {
@@ -639,5 +650,25 @@ export class ProgramRepository {
     const total = await this.prisma.programVersion.count();
 
     return { results, total };
+  }
+
+  async getStudentsWithCompletedQuestionnaireByProgramVersionId(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+        questionnaireSubmissions: {
+          some: {
+            progress: 100,
+          },
+        },
+      },
+      include: {
+        questionnaireSubmissions: true,
+      },
+    });
   }
 }
