@@ -72,7 +72,7 @@ export class QuestionnaireService {
       );
 
       const leaderboard: any = await this.programRepository.getLeaderBoardByQuestionnaireId(answerRequest.questionnaireId, student.id);
-      if (leaderboard.filter((item: any) => item.studentId === student.id))
+      if (leaderboard.slice(0, 3).filter((item: any) => item.studentId === student.id))
         this.achievementService.updateProgress(student.id, 'leaderboard');
     }
 
