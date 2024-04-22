@@ -666,7 +666,17 @@ export class ProgramRepository {
         },
       },
       include: {
-        questionnaireSubmissions: true,
+        questionnaireSubmissions: {
+          where: {
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
