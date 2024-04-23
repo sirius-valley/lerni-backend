@@ -20,6 +20,7 @@ import { TriviaDetailsDto } from './dto/trivia-details.dto';
 import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
 import { ThreadRequestDto } from '../pill/dtos/thread-request.dto';
 import { NotificationService } from '../notification/notification.service';
+import { AchievementService } from '../achievement/achievement.service';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -32,6 +33,7 @@ export class TriviaService {
     private readonly studentService: StudentService,
     private readonly headlandsAdapter: HeadlandsAdapter,
     private readonly notificationService: NotificationService,
+    private readonly achievementService: AchievementService,
   ) {
     this.checkIn72Hours();
   }
@@ -108,6 +110,7 @@ export class TriviaService {
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
     const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, triviaMatch.trivia, opponent);
     if (triviaStatus !== TriviaAnswerResponseStatus.IN_PROGRESS) {
+      if (triviaStatus === TriviaAnswerResponseStatus.WON) await this.achievementService.updateProgress(student.id, 'trivia');
       this.addPoint(student.id, triviaMatch.id, triviaStatus, triviaMatch.trivia.pointsReward, opponent?.studentId);
       if (triviaStatus === TriviaAnswerResponseStatus.LOST && opponent) {
         this.notificationService.sendNotification({
@@ -115,6 +118,7 @@ export class TriviaService {
           title: 'Ganaste una trivia',
           message: 'Bieeen! Ganaste una trivia! Entra para saber mas’',
         });
+        await this.achievementService.updateProgress(opponent.studentId, 'trivia');
       } else if (triviaStatus === TriviaAnswerResponseStatus.WON && opponent) {
         this.notificationService.sendNotification({
           userId: opponent.studentId,

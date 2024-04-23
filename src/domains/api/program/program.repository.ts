@@ -158,6 +158,7 @@ export class ProgramRepository {
             },
           },
         },
+        student: true,
       },
     });
   }

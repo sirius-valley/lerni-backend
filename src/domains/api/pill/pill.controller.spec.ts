@@ -17,6 +17,7 @@ import { HeadlandsAdapter } from './adapters/headlands.adapter';
 import { ThreadRequestDto } from './dtos/thread-request.dto';
 import { PillBlockDto } from './dtos/pill-block.dto';
 import { ElementType, FormType } from './interfaces/pill.interface';
+import { AchievementModule } from '../achievement/achievement.module';
 
 process.env.NODE_ENV = 'development';
 describe('PillController', () => {
@@ -32,6 +33,7 @@ describe('PillController', () => {
           load: [configuration],
         }),
         StudentModule,
+        AchievementModule,
       ],
       controllers: [PillController],
       providers: [PillService, PillRepository, PrismaService, SpringPillService, HeadlandsAdapter],

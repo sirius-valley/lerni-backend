@@ -7,10 +7,11 @@ import { StudentRepository } from '../student/student.repository';
 import { SpringPillModule } from '../pill-external-api/spring-pill.module';
 import { StudentModule } from '../student/student.module';
 import { HeadlandsAdapter } from './adapters/headlands.adapter';
+import { AchievementModule } from '../achievement/achievement.module';
 
 @Module({
   controllers: [PillController],
-  imports: [SpringPillModule, StudentModule],
+  imports: [SpringPillModule, StudentModule, AchievementModule],
   providers: [PrismaService, PillService, PillRepository, StudentRepository, HeadlandsAdapter],
   exports: [PillService, PillRepository],
 })
