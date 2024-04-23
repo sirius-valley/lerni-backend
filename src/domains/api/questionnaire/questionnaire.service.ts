@@ -71,9 +71,10 @@ export class QuestionnaireService {
         answerRequest.questionnaireId,
       );
 
-      const leaderboard: any = await this.programRepository.getLeaderBoardByQuestionnaireId(answerRequest.questionnaireId, student.id);
-      if (leaderboard.slice(0, 3).filter((item: any) => item.studentId === student.id))
-        this.achievementService.updateProgress(student.id, 'leaderboard');
+      //todo: add when finish the program
+      // const leaderboard: any = await this.programRepository.getLeaderBoardByQuestionnaireId(answerRequest.questionnaireId, student.id);
+      // if (leaderboard.slice(0, 3).filter((item: any) => item.studentId === student.id))
+      //   this.achievementService.updateProgress(student.id, 'leaderboard');
     }
 
     return { questionnaire: new QuestionnaireAnswerDto(formattedBlock, correctValue), teacher };
