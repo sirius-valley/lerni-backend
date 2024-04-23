@@ -20,6 +20,7 @@ import { ElementType, FormType } from './interfaces/pill.interface';
 import { AchievementModule } from '../achievement/achievement.module';
 
 process.env.NODE_ENV = 'development';
+process.env.JWT_SECRET = 'test_secret_long';
 describe('PillController', () => {
   let pillController: PillController;
   let prismaService: DeepMockProxy<PrismaService>;
