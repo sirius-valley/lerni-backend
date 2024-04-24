@@ -433,37 +433,40 @@ export class ProgramService {
         });
       }),
     );
-    if (!checkPills.value) {
-      if (checkPills.create.length > 0) {
-        this.addPillToProgram(checkPills.create, programVersionId);
-      } else if (checkPills.delete.length > 0) {
+
+    if (checkPills.create.length > 0) {
+      await this.addPillToProgram(checkPills.create, programVersionId);
+    }
+    if (checkPills.delete.length > 0) {
+      Promise.all(
         checkPills.delete.map(async (pill) => {
           await this.pillRepository.deletePill(pill.id);
-        });
-      }
+        }),
+      );
     }
+
     const checkStudentList = await this.checkArrayObj(
       data.students.map((item) => {
         return { id: item };
       }),
       program.studentPrograms.map((item) => {
-        return { id: item.student.id };
+        return { id: item.student.auth.email };
       }),
     );
-    if (!checkStudentList.value) {
-      if (checkStudentList.create.length > 0) {
-        this.enrollStudents(
-          program.id,
-          checkStudentList.create.map((element) => {
-            return element.id;
-          }),
-        );
-      }
-      if (checkStudentList.delete.length > 0) {
-        checkStudentList.delete.map(async (student) => {
-          this.programRepository.downStudentProgram(student.id, programVersionId);
-        });
-      }
+
+    if (checkStudentList.create.length > 0) {
+      this.enrollStudents(
+        program.id,
+        checkStudentList.create.map((element) => {
+          return element.id;
+        }),
+      );
+    }
+
+    if (checkStudentList.delete.length > 0) {
+      checkStudentList.delete.map(async (student) => {
+        this.programRepository.downStudentProgram(student.id, programVersionId);
+      });
     }
 
     const checkTrivia = await this.checkObjs(data.trivia, program.programVersionTrivias[0].trivia);
