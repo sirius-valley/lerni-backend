@@ -176,7 +176,7 @@ export class TriviaService {
   private async createTriviaMatch(studentId: string, programVersionId: string) {
     const trivia = await this.triviaRepository.findTriviaByProgramVersionId(programVersionId);
     if (!trivia) throw new HttpException('Trivia not found', HttpStatus.NOT_FOUND);
-    return await this.triviaRepository.createTriviaMatch(studentId, trivia.id);
+    return await this.triviaRepository.createTriviaMatch(studentId, trivia.id, new Date());
   }
 
   private async findOpponent(programVersionId: string, triviaId: string) {
