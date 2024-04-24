@@ -46,8 +46,16 @@ export class TriviaService {
     // check if student is already enrolled in the program
     const programVersion = await this.programService.getProgramVersion(student.id, programId);
     // check if student has already started a trivia match
-    if (await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id))
-      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    const startedTriviaMatch = await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id);
+    if (startedTriviaMatch) {
+      const opponent = startedTriviaMatch.studentTriviaMatches.find((stm) => stm.studentId !== student.id);
+      return new SimpleTriviaDto(
+        startedTriviaMatch.triviaId,
+        startedTriviaMatch.id,
+        new SimpleProgramDto(programVersion.program, 100),
+        opponent ? new SimpleStudentDto(opponent.student) : undefined,
+      );
+    }
     // check if there is a trivia match available
     const triviaMatch = await this.triviaRepository.findTriviaMatchByProgramVersionId(programVersion.id);
     if (triviaMatch) {

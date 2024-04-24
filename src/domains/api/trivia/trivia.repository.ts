@@ -25,6 +25,13 @@ export class TriviaRepository {
           finishedDateTime: null,
         },
       },
+      include: {
+        studentTriviaMatches: {
+          include: {
+            student: true,
+          },
+        },
+      },
     });
   }
 
