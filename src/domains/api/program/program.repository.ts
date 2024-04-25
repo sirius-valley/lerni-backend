@@ -489,7 +489,7 @@ export class ProgramRepository {
 
   async getProgramsNotStartedByStudentId(studentId: string, options: LimitOffsetPagination) {
     const limit = options.limit || 10;
-    const offset = options.offset || 0;
+    const offset = options.offset ? options.offset - 1 : 0;
     const data = await this.prisma.studentProgram.findMany({
       where: {
         studentId,
