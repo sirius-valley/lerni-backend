@@ -209,18 +209,24 @@ export class TriviaService {
       answer: lastAnswer ? JSON.parse(lastAnswer.value) : undefined,
     };
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== user.id);
-    const opponentAnswers = opponent ? this.getTriviaAnswersUntilQuestionId(opponent.triviaAnswers, dataToSpring.questionId) : [];
+    const opponentAnswers = opponent ? opponent.triviaAnswers : [];
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
       const questionBubble = bubbles[bubbles.length - 1];
       const options = this.filterOptions(questionBubble.options);
+      const status = this.calculateMatchResult(
+        userAnswers as TriviaAnswer[],
+        opponentAnswers as TriviaAnswer[],
+        triviaMatch?.trivia?.questionCount,
+      );
+      const opponentSplicedAnswers = this.getTriviaAnswersUntilQuestionId(opponentAnswers, status, dataToSpring.questionId);
       return new QuestionTriviaDto(
         new TriviaQuestionDto(questionBubble.id, questionBubble.question, questionBubble.secondsToAnswer, options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
-        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers) },
-        this.calculateMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
+        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentSplicedAnswers) },
+        status,
         opponent ? new SimpleStudentDto(opponent.student) : undefined,
       );
     }
@@ -432,7 +438,7 @@ export class TriviaService {
     opponent?: any,
   ) {
     const opponentAnswers = opponent
-      ? this.getTriviaAnswersUntilQuestionId(opponent?.triviaAnswers, questionId).map((answer) => {
+      ? this.getTriviaAnswersUntilQuestionId(opponent?.triviaAnswers, status, questionId).map((answer) => {
           return {
             id: answer.questionId,
             isCorrect: answer.isCorrect,
@@ -452,10 +458,10 @@ export class TriviaService {
     };
   }
 
-  private getTriviaAnswersUntilQuestionId(answers: TriviaAnswer[], questionId?: string) {
+  private getTriviaAnswersUntilQuestionId(answers: TriviaAnswer[], status: TriviaAnswerResponseStatus, questionId?: string) {
     if (!questionId) return [];
     const index = answers.findIndex((answer) => answer.questionId === questionId);
-    return index !== -1 ? answers.slice(0, index + 1) : answers;
+    return index !== -1 && status !== TriviaAnswerResponseStatus.LOST ? answers.slice(0, index + 1) : answers;
   }
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
