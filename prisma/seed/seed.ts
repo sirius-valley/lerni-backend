@@ -823,11 +823,13 @@ async function main() {
     update: {
       block: triviaBlock,
       questionCount: 12,
+      pointsReward: 24,
     },
     create: {
       id: triviaId,
       block: triviaBlock,
       questionCount: 12,
+      pointsReward: 24,
     },
   });
 
@@ -1133,11 +1135,13 @@ async function extraPrograms(n: number = 10) {
       update: {
         block: triviaBlock,
         questionCount: 12,
+        pointsReward: 24,
       },
       create: {
         id: triviaId1,
         block: triviaBlock,
         questionCount: 12,
+        pointsReward: 24,
       },
     });
 
@@ -1199,7 +1203,9 @@ async function achievementSeed() {
   // Complete Introduction
   await prisma.achievement.upsert({
     where: { id: 'achievementId0' },
-    update: {},
+    update: {
+      description: 'Ahora nos conocemos! Completaste la introducción con éxito!',
+    },
     create: {
       id: 'achievementId0',
       name: 'Completar Introducción',
@@ -1223,7 +1229,9 @@ async function achievementSeed() {
   // Complete Programs
   await prisma.achievement.upsert({
     where: { id: 'achievementId1' },
-    update: {},
+    update: {
+      description: 'El camino del apredizaje! Terminaste [N] programa!',
+    },
     create: {
       id: 'achievementId1',
       name: 'Completar Programa',
@@ -1272,7 +1280,9 @@ async function achievementSeed() {
 
   await prisma.achievement.upsert({
     where: { id: 'achievementId2' },
-    update: {},
+    update: {
+      description: 'Un eruditor gladiador! Ganaste [N] trivias!',
+    },
     create: {
       id: 'achievementId2',
       name: 'Ganar Trivia',
@@ -1320,7 +1330,9 @@ async function achievementSeed() {
   // send feedback
   await prisma.achievement.upsert({
     where: { id: 'achievementId3' },
-    update: {},
+    update: {
+      description: 'Tu opinión es importante! Nos diste tu feedback [N] veces!',
+    },
     create: {
       id: 'achievementId3',
       name: 'Dejar Feedback',
@@ -1368,7 +1380,9 @@ async function achievementSeed() {
   // top 3 in leaderboard
   await prisma.achievement.upsert({
     where: { id: 'achievementId4' },
-    update: {},
+    update: {
+      description: 'La crème de la crème! Terminaste en el podio [N] veces!',
+    },
     create: {
       id: 'achievementId4',
       name: 'Leaderboard',
