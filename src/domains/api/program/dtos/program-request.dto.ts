@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsInt, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsArray, IsDate, IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 import { PillRequestDto } from '../../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../../questionnaire/dtos/questionnaire-request.dto';
 
@@ -38,4 +38,12 @@ export class ProgramRequestDto {
 
   @IsInt()
   pointsReward: number;
+
+  @IsDate()
+  @IsOptional()
+  startDate: Date;
+
+  @IsDate()
+  @IsOptional()
+  endDate: Date;
 }

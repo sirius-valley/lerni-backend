@@ -63,13 +63,30 @@ export class QuestionnaireService {
     await this.questionnaireRepository.updateQuestionnaireSubmissionProgress(updatedSubmission.id, formattedBlock.progress);
 
     if (formattedBlock.state === QuestionnaireState.COMPLETED) {
+      const programVersion = await this.questionnaireRepository.getProgramVersionByquestionnaireId(answerRequest.questionnaireId);
+      if (!programVersion) throw new HttpException('Program Not found', HttpStatus.NOT_FOUND);
       const pointsAwarded = this.calculatePointsAwarded(updatedSubmission.questionnaireAnswers);
-      this.achievementService.updateProgress(student.id, 'program');
-      await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(
-        updatedSubmission.id,
-        pointsAwarded,
-        answerRequest.questionnaireId,
-      );
+      if (programVersion.endDate && programVersion?.endDate > new Date()) {
+        this.achievementService.updateProgress(student.id, 'program');
+        await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(
+          updatedSubmission.id,
+          pointsAwarded,
+          answerRequest.questionnaireId,
+        );
+      } else if (!programVersion.endDate) {
+        this.achievementService.updateProgress(student.id, 'program');
+        await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(
+          updatedSubmission.id,
+          pointsAwarded,
+          answerRequest.questionnaireId,
+        );
+      } else {
+        await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(
+          updatedSubmission.id,
+          0,
+          answerRequest.questionnaireId,
+        );
+      }
 
       //todo: add when finish the program
       // const leaderboard: any = await this.programRepository.getLeaderBoardByQuestionnaireId(answerRequest.questionnaireId, student.id);

@@ -16,6 +16,8 @@ export class ProgramDetailsDto {
   pills: SimplePillDto[];
   questionnaire: SimpleQuestionnaireDto[];
   leaderBoard: ProgramLeaderboardDto;
+  starDate?: Date;
+  endDate?: Date;
 
   constructor(programDetailsDto: ProgramDetailsDto) {
     this.id = programDetailsDto.id;
@@ -30,5 +32,7 @@ export class ProgramDetailsDto {
     this.pills = programDetailsDto.pills;
     this.questionnaire = programDetailsDto.questionnaire;
     this.leaderBoard = programDetailsDto.leaderBoard;
+    this.starDate = programDetailsDto.starDate;
+    this.endDate = programDetailsDto.endDate;
   }
 }
