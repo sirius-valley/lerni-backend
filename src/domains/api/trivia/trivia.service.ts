@@ -48,8 +48,16 @@ export class TriviaService {
     // check if student is already enrolled in the program
     const programVersion = await this.programService.getProgramVersion(student.id, programId);
     // check if student has already started a trivia match
-    if (await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id))
-      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    const startedTriviaMatch = await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id);
+    if (startedTriviaMatch) {
+      const opponent = startedTriviaMatch.studentTriviaMatches.find((stm) => stm.studentId !== student.id);
+      return new SimpleTriviaDto(
+        startedTriviaMatch.triviaId,
+        startedTriviaMatch.id,
+        new SimpleProgramDto(programVersion.program, 100),
+        opponent ? new SimpleStudentDto(opponent.student) : undefined,
+      );
+    }
     // check if there is a trivia match available
     const triviaMatch = await this.triviaRepository.findTriviaMatchByProgramVersionId(programVersion.id);
     if (triviaMatch) {
@@ -172,7 +180,7 @@ export class TriviaService {
   private async createTriviaMatch(studentId: string, programVersionId: string) {
     const trivia = await this.triviaRepository.findTriviaByProgramVersionId(programVersionId);
     if (!trivia) throw new HttpException('Trivia not found', HttpStatus.NOT_FOUND);
-    return await this.triviaRepository.createTriviaMatch(studentId, trivia.id);
+    return await this.triviaRepository.createTriviaMatch(studentId, trivia.id, new Date());
   }
 
   private async findOpponent(programVersionId: string, triviaId: string) {
@@ -205,18 +213,24 @@ export class TriviaService {
       answer: lastAnswer ? JSON.parse(lastAnswer.value) : undefined,
     };
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== user.id);
-    const opponentAnswers = opponent ? this.getTriviaAnswersUntilQuestionId(opponent.triviaAnswers, dataToSpring.questionId) : [];
+    const opponentAnswers = opponent ? opponent.triviaAnswers : [];
     const nextAnswer = await this.getSpringResponse(auth, triviaMatch, dataToSpring as TriviaAnswerRequestDto);
     if (triviaMatch) {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
       const questionBubble = bubbles[bubbles.length - 1];
       const options = this.filterOptions(questionBubble.options);
+      const status = this.calculateMatchResult(
+        userAnswers as TriviaAnswer[],
+        opponentAnswers as TriviaAnswer[],
+        triviaMatch?.trivia?.questionCount,
+      );
+      const opponentSplicedAnswers = this.getTriviaAnswersUntilQuestionId(opponentAnswers, status, dataToSpring.questionId);
       return new QuestionTriviaDto(
         new TriviaQuestionDto(questionBubble.id, questionBubble.question, questionBubble.secondsToAnswer, options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
-        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers) },
-        this.calculateMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
+        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentSplicedAnswers) },
+        status,
         opponent ? new SimpleStudentDto(opponent.student) : undefined,
       );
     }
@@ -428,7 +442,7 @@ export class TriviaService {
     opponent?: any,
   ) {
     const opponentAnswers = opponent
-      ? this.getTriviaAnswersUntilQuestionId(opponent?.triviaAnswers, questionId).map((answer) => {
+      ? this.getTriviaAnswersUntilQuestionId(opponent?.triviaAnswers, status, questionId).map((answer) => {
           return {
             id: answer.questionId,
             isCorrect: answer.isCorrect,
@@ -448,10 +462,10 @@ export class TriviaService {
     };
   }
 
-  private getTriviaAnswersUntilQuestionId(answers: TriviaAnswer[], questionId?: string) {
+  private getTriviaAnswersUntilQuestionId(answers: TriviaAnswer[], status: TriviaAnswerResponseStatus, questionId?: string) {
     if (!questionId) return [];
     const index = answers.findIndex((answer) => answer.questionId === questionId);
-    return index !== -1 ? answers.slice(0, index + 1) : answers;
+    return index !== -1 && status !== TriviaAnswerResponseStatus.LOST ? answers.slice(0, index + 1) : answers;
   }
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
