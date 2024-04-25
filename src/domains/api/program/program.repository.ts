@@ -231,8 +231,10 @@ export class ProgramRepository {
     });
   }
 
-  async getProgramsCompletedByStudentId(studentId: string) {
-    return this.prisma.studentProgram.findMany({
+  async getProgramsCompletedByStudentId(studentId: string, options: LimitOffsetPagination) {
+    const limit = options.limit || 10;
+    const offset = options.offset || 0;
+    const data = await this.prisma.studentProgram.findMany({
       where: {
         studentId,
         programVersion: {
@@ -265,7 +267,8 @@ export class ProgramRepository {
       orderBy: {
         createdAt: 'desc',
       },
-      take: 6,
+      take: limit,
+      skip: limit * offset,
       include: {
         programVersion: {
           include: {
@@ -278,10 +281,46 @@ export class ProgramRepository {
         },
       },
     });
+
+    const total = await this.prisma.studentProgram.count({
+      where: {
+        studentId,
+        programVersion: {
+          programVersionPillVersions: {
+            every: {
+              pillVersion: {
+                pillSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+          programVersionQuestionnaireVersions: {
+            every: {
+              questionnaireVersion: {
+                questionnaireSubmissions: {
+                  some: {
+                    studentId,
+                    progress: 100,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { data, total };
   }
 
-  async getStudentProgramsInProgressByStudentId(studentId: string) {
-    return this.prisma.studentProgram.findMany({
+  async getStudentProgramsInProgressByStudentId(studentId: string, options: LimitOffsetPagination) {
+    const limit = options.limit || 10;
+    const offset = options.offset || 0;
+    const data = await this.prisma.studentProgram.findMany({
       where: {
         studentId,
         AND: [
@@ -339,7 +378,8 @@ export class ProgramRepository {
       orderBy: {
         createdAt: 'desc',
       },
-      take: 9,
+      take: limit,
+      skip: limit * offset,
       include: {
         programVersion: {
           include: {
@@ -386,10 +426,71 @@ export class ProgramRepository {
         },
       },
     });
+
+    const total = await this.prisma.studentProgram.count({
+      where: {
+        studentId,
+        AND: [
+          {
+            // if there are no submissions it is not in progress
+            NOT: {
+              programVersion: {
+                programVersionPillVersions: {
+                  none: {
+                    pillVersion: {
+                      pillSubmissions: {
+                        some: {
+                          studentId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            NOT: {
+              // if all submissions are 100% it is not in progress
+              programVersion: {
+                programVersionPillVersions: {
+                  every: {
+                    pillVersion: {
+                      pillSubmissions: {
+                        some: {
+                          studentId,
+                          progress: 100,
+                        },
+                      },
+                    },
+                  },
+                },
+                programVersionQuestionnaireVersions: {
+                  every: {
+                    questionnaireVersion: {
+                      questionnaireSubmissions: {
+                        some: {
+                          studentId,
+                          progress: 100,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return { data, total };
   }
 
-  async getProgramsNotStartedByStudentId(studentId: string) {
-    return this.prisma.studentProgram.findMany({
+  async getProgramsNotStartedByStudentId(studentId: string, options: LimitOffsetPagination) {
+    const limit = options.limit || 10;
+    const offset = options.offset || 0;
+    const data = await this.prisma.studentProgram.findMany({
       where: {
         studentId,
         programVersion: {
@@ -409,7 +510,8 @@ export class ProgramRepository {
       orderBy: {
         createdAt: 'desc',
       },
-      take: 6,
+      take: limit,
+      skip: limit * offset,
       include: {
         programVersion: {
           include: {
@@ -422,6 +524,27 @@ export class ProgramRepository {
         },
       },
     });
+
+    const total = await this.prisma.studentProgram.count({
+      where: {
+        studentId,
+        programVersion: {
+          programVersionPillVersions: {
+            none: {
+              pillVersion: {
+                pillSubmissions: {
+                  some: {
+                    studentId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { data, total };
   }
 
   async getProgramPublicComments(programId: string, options: CursorPagination) {

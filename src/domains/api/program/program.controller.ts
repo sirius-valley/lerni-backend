@@ -16,9 +16,10 @@ import { ProgramListResponseDto } from './dtos/program-list.dto';
 export class ProgramController {
   constructor(private programService: ProgramService) {}
 
-  @Get('home')
-  async getProgramsByStudentId(@Request() req: ApiRequest) {
-    return await this.programService.getProgramsByStudentId(req.user.id);
+  @Get('home/:status')
+  async getProgramsByStudentId(@Request() req: ApiRequest, @Param('status') status: string, @Query() query: any) {
+    const { limit, offset } = query as Record<string, string>;
+    return await this.programService.getProgramsByStudentId(req.user.id, status, { limit: Number(limit), offset: Number(offset) });
   }
 
   @Get('list')

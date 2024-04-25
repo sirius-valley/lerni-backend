@@ -4,7 +4,6 @@ import { TeacherDto } from '../pill/dtos/teacher.dto';
 import { SimplePillDto } from './dtos/simple-pill.dto';
 import { SimpleQuestionnaireDto } from './dtos/simple-questionnaire.dto';
 import { ProgramDetailsDto } from './dtos/program-details.dto';
-import { ProgramHomeDto } from './dtos/program-home.dto';
 import { CursorPagination } from '../../../types/cursor-pagination.interface';
 import { CommentDto } from './dtos/comment.dto';
 import { CommentRequestDto } from './dtos/comment-request.dto';
@@ -28,6 +27,7 @@ import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
 import { AchievementService } from '../achievement/achievement.service';
+import { ProgramCardDto } from './dtos/program-card.dto';
 
 @Injectable()
 export class ProgramService {
@@ -50,23 +50,30 @@ export class ProgramService {
     return this.createProgramDetailsDto(programVersion, leaderBoard);
   }
 
-  public async getProgramsByStudentId(studentId: string) {
-    const programsCompleted = await this.programRepository
-      .getProgramsCompletedByStudentId(studentId)
-      .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
-    const inProgress = await this.programRepository.getStudentProgramsInProgressByStudentId(studentId);
-    const programsInProgress = inProgress.map((studentProgram) => {
-      const progress = this.calculateProgress(
-        studentProgram.programVersion.programVersionPillVersions,
-        studentProgram.programVersion.programVersionQuestionnaireVersions[0],
-      );
-      return { program: studentProgram.programVersion.program, progress };
-    });
-    const programsNotStarted = await this.programRepository
-      .getProgramsNotStartedByStudentId(studentId)
-      .then((result) => result.map((studentProgram) => studentProgram.programVersion.program));
-    const programs = { programsCompleted, programsInProgress, programsNotStarted };
-    return new ProgramHomeDto(programs);
+  public async getProgramsByStudentId(studentId: string, status: string, options: LimitOffsetPagination) {
+    switch (status.toLowerCase()) {
+      case 'not_started': {
+        const { data, total } = await this.programRepository.getProgramsNotStartedByStudentId(studentId, options);
+        const programs = data.map((studentprogram) => new ProgramCardDto(studentprogram.programVersion.program, 0));
+        return { programs, maxPage: Math.ceil(total / (options.limit || 10)) };
+      }
+      case 'in_progress': {
+        const { data, total } = await this.programRepository.getStudentProgramsInProgressByStudentId(studentId, options);
+        const programs = data.map((studentProgram) => {
+          const progress = this.calculateProgress(
+            studentProgram.programVersion.programVersionPillVersions,
+            studentProgram.programVersion.programVersionQuestionnaireVersions[0],
+          );
+          return new ProgramCardDto(studentProgram.programVersion.program, progress);
+        });
+        return { programs, maxPage: Math.ceil(total / (options.limit || 10)) };
+      }
+      case 'finished': {
+        const { data, total } = await this.programRepository.getProgramsCompletedByStudentId(studentId, options);
+        const programs = data.map((studentProgram) => new ProgramCardDto(studentProgram.programVersion.program, 100));
+        return { programs, maxPage: Math.ceil(total / (options.limit || 10)) };
+      }
+    }
   }
 
   public async getProgramComments(studentId: string, programId: string, options: CursorPagination) {
