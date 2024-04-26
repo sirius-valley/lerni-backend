@@ -348,9 +348,9 @@ export class ProgramService {
     if (newProgram.startDate || newProgram.endDate) {
       if (newProgram.startDate) {
         cron.schedule(
-          `* ${newProgram.startDate.getMinutes()} ${newProgram.startDate.getHours()} ${newProgram.startDate.getDate()} ${
-            newProgram.startDate.getMonth() + 1
-          }`,
+          `${new Date(newProgram.startDate).getMinutes()} ${new Date(newProgram.startDate).getHours()} ${new Date(
+            newProgram.startDate,
+          ).getDate()} ${new Date(newProgram.startDate).getMonth() + 1} *`,
           async () => {
             const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
             students.map((student) => {
@@ -368,14 +368,15 @@ export class ProgramService {
         );
       }
       if (newProgram.endDate) {
-        const endDateMinus30Minutes = new Date(newProgram.endDate.getTime() - 30 * 60000);
-        const endDateMinus60Minutes = new Date(newProgram.endDate.getTime() - 60 * 60000);
-        const endDateMinusOneDay = new Date(newProgram.endDate.getTime() - 24 * 60 * 60 * 1000);
+        const endDate = new Date(newProgram.endDate);
+        const endDateMinus30Minutes = new Date(endDate.getTime() - 30 * 60000);
+        const endDateMinus60Minutes = new Date(endDate.getTime() - 60 * 60000);
+        const endDateMinusOneDay = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
 
         cron.schedule(
           `* ${endDateMinus30Minutes.getMinutes()} ${endDateMinus30Minutes.getHours()} ${endDateMinus30Minutes.getDate()} ${
             endDateMinus30Minutes.getMonth() + 1
-          }`,
+          } *`,
           async () => {
             const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
             students.map((student) => {
@@ -394,7 +395,7 @@ export class ProgramService {
         cron.schedule(
           `* ${endDateMinus60Minutes.getMinutes()} ${endDateMinus60Minutes.getHours()} ${endDateMinus60Minutes.getDate()} ${
             endDateMinus60Minutes.getMonth() + 1
-          }`,
+          } *`,
           async () => {
             const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
             students.map((student) => {
@@ -413,7 +414,7 @@ export class ProgramService {
         cron.schedule(
           `* ${endDateMinusOneDay.getMinutes()} ${endDateMinusOneDay.getHours()} ${endDateMinusOneDay.getDate()} ${
             endDateMinusOneDay.getMonth() + 1
-          }`,
+          } *`,
           async () => {
             const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
             students.map((student) => {
