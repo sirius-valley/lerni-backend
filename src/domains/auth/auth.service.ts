@@ -87,8 +87,11 @@ export class AuthService {
 
   public async temporalRegister(email: string) {
     const auth = await this.authRepository.findAuthByEmail(email);
-    if (auth) throw false;
+    if (auth) {
+      return auth;
+    }
     const authCreated = await this.authRepository.createTemporalAuth(email);
+    await this.mailService.sendMail(authCreated.email);
     return authCreated;
   }
 }

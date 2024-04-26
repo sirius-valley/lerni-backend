@@ -528,4 +528,37 @@ export class TriviaRepository {
       },
     });
   }
+
+  async create(block: string, questionCount: number) {
+    return await this.prisma.trivia.create({
+      data: {
+        block,
+        questionCount,
+      },
+    });
+  }
+
+  async createTriviaProgram(programVersionId: string, triviaId: string, order: number) {
+    return await this.prisma.programVersionTrivia.create({
+      data: {
+        programVersionId,
+        triviaId,
+        order,
+      },
+    });
+  }
+
+  async delete(id: string) {
+    await this.prisma.programVersionTrivia.deleteMany({
+      where: {
+        triviaId: id,
+      },
+    });
+
+    return await this.prisma.trivia.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

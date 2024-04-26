@@ -562,7 +562,10 @@ export class TriviaService {
     if (answer.value === 'left') return TriviaAnswerStatus.LEFT;
     return TriviaAnswerStatus.INCORRECT;
   }
-
+  
+  public async delete(triviaId: string) {
+    return await this.triviaRepository.delete(triviaId);
+  }
   private addPoint(studentId: string, triviaMatchId: string, status: TriviaAnswerResponseStatus, points: number, opponent?: string) {
     switch (status) {
       case TriviaAnswerResponseStatus.WON:

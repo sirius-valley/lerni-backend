@@ -14,5 +14,6 @@ import { AchievementModule } from '../achievement/achievement.module';
   controllers: [TriviaController],
   imports: [ProgramModule, StudentModule, SpringPillModule, NotificationModule, AchievementModule],
   providers: [TriviaService, TriviaRepository, PrismaService, HeadlandsAdapter],
+  exports: [TriviaModule, TriviaRepository],
 })
 export class TriviaModule {}

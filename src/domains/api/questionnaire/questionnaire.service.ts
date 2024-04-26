@@ -279,4 +279,8 @@ export class QuestionnaireService {
         return [];
     }
   }
+
+  public delete(questionnaireId: string) {
+    return this.questionnaireRepository.delete(questionnaireId);
+  }
 }

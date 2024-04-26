@@ -213,4 +213,18 @@ export class QuestionnaireRepository {
       },
     });
   }
+
+  public async delete(id: string) {
+    await this.prisma.questionnaireVersion.deleteMany({
+      where: {
+        questionnaireId: id,
+      },
+    });
+
+    return await this.prisma.questionnaire.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
