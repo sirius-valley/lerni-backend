@@ -823,11 +823,13 @@ async function main() {
     update: {
       block: triviaBlock,
       questionCount: 12,
+      pointsReward: 24,
     },
     create: {
       id: triviaId,
       block: triviaBlock,
       questionCount: 12,
+      pointsReward: 24,
     },
   });
 
@@ -1022,7 +1024,7 @@ async function extraPrograms(n: number = 10) {
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
       },
       create: {
-        id: authId,
+        id: authId1,
         email: `monosteve123${i}@gmail.com`,
         password: '$2b$10$8mYwGBbOvUJEx63DYIZc0.NQdFyW9x0jcctuKk/D7G0gmCuwaAnrO',
       },
@@ -1133,11 +1135,13 @@ async function extraPrograms(n: number = 10) {
       update: {
         block: triviaBlock,
         questionCount: 12,
+        pointsReward: 24,
       },
       create: {
         id: triviaId1,
         block: triviaBlock,
         questionCount: 12,
+        pointsReward: 24,
       },
     });
 
@@ -1199,10 +1203,13 @@ async function achievementSeed() {
   // Complete Introduction
   await prisma.achievement.upsert({
     where: { id: 'achievementId0' },
-    update: {},
+    update: {
+      description: 'Ahora nos conocemos! Completaste la introducción con éxito!',
+    },
     create: {
       id: 'achievementId0',
       name: 'Completar Introducción',
+      description: 'Ahora nos conocemos! Completaste la introducción con éxito!',
       trackedValue: 'introduction',
       achievementLevels: {
         create: [
@@ -1210,9 +1217,9 @@ async function achievementSeed() {
             id: 'achievementLevelId0',
             tier: 'DIAMOND',
             targetValue: 1,
-            description: 'Ahora nos conocemos! Completaste la introducción con éxito!',
+            description: 'Introducción completa',
             pointsAwarded: 10,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-introudction.png',
           },
         ],
       },
@@ -1222,10 +1229,13 @@ async function achievementSeed() {
   // Complete Programs
   await prisma.achievement.upsert({
     where: { id: 'achievementId1' },
-    update: {},
+    update: {
+      description: 'El camino del apredizaje! Terminaste [N] programa!',
+    },
     create: {
       id: 'achievementId1',
       name: 'Completar Programa',
+      description: 'El camino del apredizaje! Terminaste [N] programa!',
       trackedValue: 'program',
       achievementLevels: {
         create: [
@@ -1233,33 +1243,33 @@ async function achievementSeed() {
             id: 'achievementLevelId1',
             tier: 'BRONZE',
             targetValue: 1,
-            description: 'El camino del apredizaje! Terminaste un programa!',
+            description: '1 Programa',
             pointsAwarded: 10,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-bronze-progam.png',
           },
           {
             id: 'achievementLevelId2',
             tier: 'SILVER',
             targetValue: 5,
-            description: 'El camino del apredizaje! Terminaste un programa 5 veces!',
+            description: '5 Programas',
             pointsAwarded: 20,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-silver-progam.png',
           },
           {
             id: 'achievementLevelId3',
             tier: 'GOLD',
             targetValue: 25,
-            description: 'El camino del apredizaje! Terminaste un programa 25 veces!',
+            description: '25 Programas',
             pointsAwarded: 30,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-gold-progam.png',
           },
           {
             id: 'achievementLevelId4',
             tier: 'DIAMOND',
             targetValue: 50,
-            description: 'El camino del apredizaje! Terminaste un programa 50 veces!',
+            description: '50 Programas',
             pointsAwarded: 40,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-diamond-progam.png',
           },
         ],
       },
@@ -1270,10 +1280,13 @@ async function achievementSeed() {
 
   await prisma.achievement.upsert({
     where: { id: 'achievementId2' },
-    update: {},
+    update: {
+      description: 'Un eruditor gladiador! Ganaste [N] trivias!',
+    },
     create: {
       id: 'achievementId2',
       name: 'Ganar Trivia',
+      description: 'Un eruditor gladiador! Ganaste [N] trivias!',
       trackedValue: 'trivia',
       achievementLevels: {
         create: [
@@ -1281,33 +1294,33 @@ async function achievementSeed() {
             id: 'achievementLevelId5',
             tier: 'BRONZE',
             targetValue: 1,
-            description: 'Un eruditor gladiador! Ganaste una trivia!',
+            description: '1 Trivia',
             pointsAwarded: 10,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-bronze-trivia.png',
           },
           {
             id: 'achievementLevelId6',
             tier: 'SILVER',
             targetValue: 5,
-            description: 'El camino del apredizaje! Ganaste una trivia 5 veces!',
+            description: '5 Trivias',
             pointsAwarded: 20,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-silver-trivia.png',
           },
           {
             id: 'achievementLevelId7',
             tier: 'GOLD',
             targetValue: 25,
-            description: 'El camino del apredizaje! Ganaste una trivia 25 veces!',
+            description: '25 Trivias',
             pointsAwarded: 30,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-gold-trivia.png',
           },
           {
             id: 'achievementLevelId8',
             tier: 'DIAMOND',
             targetValue: 50,
-            description: 'El camino del apredizaje! Ganaste una trivia 50 veces!',
+            description: '50 Trivias',
             pointsAwarded: 40,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-diamond-trivia.png',
           },
         ],
       },
@@ -1317,10 +1330,13 @@ async function achievementSeed() {
   // send feedback
   await prisma.achievement.upsert({
     where: { id: 'achievementId3' },
-    update: {},
+    update: {
+      description: 'Tu opinión es importante! Nos diste tu feedback [N] veces!',
+    },
     create: {
       id: 'achievementId3',
       name: 'Dejar Feedback',
+      description: 'Tu opinión es importante! Nos diste tu feedback [N] veces!',
       trackedValue: 'feedback',
       achievementLevels: {
         create: [
@@ -1328,33 +1344,33 @@ async function achievementSeed() {
             id: 'achievementLevelId9',
             tier: 'BRONZE',
             targetValue: 5,
-            description: 'Tu opinion es importate! Nos diste tu feedback 5 veces!',
+            description: '5 Comentarios',
             pointsAwarded: 10,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-bronze-feedback.png',
           },
           {
             id: 'achievementLevelId10',
             tier: 'SILVER',
             targetValue: 25,
-            description: 'Tu opinion es importate! Nos diste tu feedback 25 veces!',
+            description: '25 Comentarios',
             pointsAwarded: 20,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-silver-feedback.png',
           },
           {
             id: 'achievementLevelId11',
             tier: 'GOLD',
             targetValue: 50,
-            description: 'Tu opinion es importate! Nos diste tu feedback 50 veces!',
+            description: '50 Comentarios',
             pointsAwarded: 30,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-gold-feedback.png',
           },
           {
             id: 'achievementLevelId12',
             tier: 'DIAMOND',
             targetValue: 70,
-            description: 'Tu opinion es importate! Nos diste tu feedback 70 veces!',
+            description: '70 Comentarios',
             pointsAwarded: 40,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-diamond-feedback.png',
           },
         ],
       },
@@ -1364,10 +1380,13 @@ async function achievementSeed() {
   // top 3 in leaderboard
   await prisma.achievement.upsert({
     where: { id: 'achievementId4' },
-    update: {},
+    update: {
+      description: 'La crème de la crème! Terminaste en el podio [N] veces!',
+    },
     create: {
       id: 'achievementId4',
       name: 'Leaderboard',
+      description: 'La crème de la crème! Terminaste en el podio [N] veces!',
       trackedValue: 'leaderboard',
       achievementLevels: {
         create: [
@@ -1375,7 +1394,7 @@ async function achievementSeed() {
             id: 'achievementLevelId13',
             tier: 'BRONZE',
             targetValue: 1,
-            description: 'La crème de la crème! Terminaste en el podio 1 vez!',
+            description: '1 vez en el podio',
             pointsAwarded: 10,
             icon: 'icon',
           },
@@ -1383,7 +1402,7 @@ async function achievementSeed() {
             id: 'achievementLevelId14',
             tier: 'SILVER',
             targetValue: 5,
-            description: 'La crème de la crème! Terminaste en el podio 5 veces!',
+            description: '5 veces en el podio',
             pointsAwarded: 20,
             icon: 'icon',
           },
@@ -1391,7 +1410,7 @@ async function achievementSeed() {
             id: 'achievementLevelId15',
             tier: 'GOLD',
             targetValue: 25,
-            description: 'La crème de la crème! Terminaste en el podio 25 veces!',
+            description: '25 veces en el podio',
             pointsAwarded: 30,
             icon: 'icon',
           },
@@ -1399,7 +1418,7 @@ async function achievementSeed() {
             id: 'achievementLevelId16',
             tier: 'DIAMOND',
             targetValue: 50,
-            description: 'La crème de la crème! Terminaste en el podio 50 veces!',
+            description: '50 veces en el podio',
             pointsAwarded: 40,
             icon: 'icon',
           },

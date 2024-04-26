@@ -11,12 +11,16 @@ import { TeacherDto } from '../pill/dtos/teacher.dto';
 import { QuestionnaireAnswerRequestDto } from './dtos/questionnaire-answer-request.dto';
 import { QuestionnaireProgressResponseDto } from './dtos/questionnaire-progress-response.dto';
 import { QuestionnaireProgressDto } from './dtos/questionnaire-progress.dto';
+import { AchievementService } from '../achievement/achievement.service';
+import { ProgramRepository } from '../program/program.repository';
 
 @Injectable()
 export class QuestionnaireService {
   constructor(
     private readonly questionnaireRepository: QuestionnaireRepository,
     private readonly springPillService: SpringPillService,
+    private readonly achievementService: AchievementService,
+    private readonly programRepository: ProgramRepository,
   ) {}
 
   public async answerQuestionnaire(
@@ -60,11 +64,17 @@ export class QuestionnaireService {
 
     if (formattedBlock.state === QuestionnaireState.COMPLETED) {
       const pointsAwarded = this.calculatePointsAwarded(updatedSubmission.questionnaireAnswers);
+      this.achievementService.updateProgress(student.id, 'program');
       await this.questionnaireRepository.saveCompletedQuestionnaireSubmissionBySubmissionId(
         updatedSubmission.id,
         pointsAwarded,
         answerRequest.questionnaireId,
       );
+
+      //todo: add when finish the program
+      // const leaderboard: any = await this.programRepository.getLeaderBoardByQuestionnaireId(answerRequest.questionnaireId, student.id);
+      // if (leaderboard.slice(0, 3).filter((item: any) => item.studentId === student.id))
+      //   this.achievementService.updateProgress(student.id, 'leaderboard');
     }
 
     return { questionnaire: new QuestionnaireAnswerDto(formattedBlock, correctValue), teacher };

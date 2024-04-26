@@ -158,6 +158,7 @@ export class ProgramRepository {
             },
           },
         },
+        student: true,
       },
     });
   }
@@ -268,7 +269,11 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
           },
         },
       },
@@ -338,7 +343,11 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
             programVersionPillVersions: {
               include: {
                 pillVersion: {
@@ -404,7 +413,11 @@ export class ProgramRepository {
       include: {
         programVersion: {
           include: {
-            program: true,
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
           },
         },
       },
@@ -450,10 +463,10 @@ export class ProgramRepository {
   }
 
   async getProgramByProgramVersion(programVersionId: string) {
-    return await this.prisma.program.findFirst({
+    return this.prisma.program.findFirst({
       where: {
         versions: {
-          every: {
+          some: {
             id: programVersionId,
           },
         },
@@ -504,7 +517,7 @@ export class ProgramRepository {
   }
 
   async getProgramByProgramVersionId(id: string) {
-    return await this.prisma.programVersion.findUnique({
+    return this.prisma.programVersion.findUnique({
       where: {
         id,
       },
@@ -536,7 +549,11 @@ export class ProgramRepository {
           include: {
             student: {
               include: {
-                auth: true,
+                auth: {
+                  select: {
+                    email: true,
+                  },
+                },
               },
             },
           },
@@ -588,6 +605,17 @@ export class ProgramRepository {
         },
       },
       include: {
+        pillSubmissions: {
+          where: {
+            pillVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
         questionnaireSubmissions: {
           where: {
             questionnaireVersion: {
@@ -650,5 +678,35 @@ export class ProgramRepository {
     const total = await this.prisma.programVersion.count();
 
     return { results, total };
+  }
+
+  async getStudentsWithCompletedQuestionnaireByProgramVersionId(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+        questionnaireSubmissions: {
+          some: {
+            progress: 100,
+          },
+        },
+      },
+      include: {
+        questionnaireSubmissions: {
+          where: {
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
   }
 }

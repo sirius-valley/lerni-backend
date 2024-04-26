@@ -68,9 +68,9 @@ export class ProgramController {
     return await this.programService.getProgramDetail(id);
   }
 
-  @Get('likes/:ProgramId')
-  async getLikesAndDislikes(@Param('ProgramId') id: string) {
-    return await this.programService.getLikesAndDislikes(id);
+  @Get('likes/:programVersionId')
+  async getLikesAndDislikes(@Param('programVersionId') programVersionId: string) {
+    return await this.programService.getLikesAndDislikes(programVersionId);
   }
 
   @Get('students/:programVersionId')
@@ -81,5 +81,10 @@ export class ProgramController {
   @Put(':programVersionId')
   async update(@Param('programVersionId') id: string, @Body() data: ProgramUpdateRequestDto) {
     return this.programService.update(id, data);
+  }
+  
+  @Get('questionnaires/:programVersionId')
+  async getQuestionnaireAttempts(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
+    return await this.programService.getQuestionnaireAttemptsQuantity(programVersionId);
   }
 }

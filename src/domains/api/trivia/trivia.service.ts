@@ -20,6 +20,7 @@ import { TriviaDetailsDto } from './dto/trivia-details.dto';
 import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
 import { ThreadRequestDto } from '../pill/dtos/thread-request.dto';
 import { NotificationService } from '../notification/notification.service';
+import { AchievementService } from '../achievement/achievement.service';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -32,9 +33,11 @@ export class TriviaService {
     private readonly studentService: StudentService,
     private readonly headlandsAdapter: HeadlandsAdapter,
     private readonly notificationService: NotificationService,
+    private readonly achievementService: AchievementService,
   ) {
     this.checkIn72Hours();
   }
+
   private checkIn72Hours = () => {
     cron.schedule(' * */60 * * *', () => {
       this.checkAllNotFinishStatus();
@@ -45,8 +48,16 @@ export class TriviaService {
     // check if student is already enrolled in the program
     const programVersion = await this.programService.getProgramVersion(student.id, programId);
     // check if student has already started a trivia match
-    if (await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id))
-      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    const startedTriviaMatch = await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id);
+    if (startedTriviaMatch) {
+      const opponent = startedTriviaMatch.studentTriviaMatches.find((stm) => stm.studentId !== student.id);
+      return new SimpleTriviaDto(
+        startedTriviaMatch.triviaId,
+        startedTriviaMatch.id,
+        new SimpleProgramDto(programVersion.program, 100),
+        opponent ? new SimpleStudentDto(opponent.student) : undefined,
+      );
+    }
     // check if there is a trivia match available
     const triviaMatch = await this.triviaRepository.findTriviaMatchByProgramVersionId(programVersion.id);
     if (triviaMatch) {
@@ -107,12 +118,15 @@ export class TriviaService {
     const opponent = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
     const triviaStatus = this.getMatchStatus(updatedStudentTriviaMatch, triviaMatch.trivia, opponent);
     if (triviaStatus !== TriviaAnswerResponseStatus.IN_PROGRESS) {
+      if (triviaStatus === TriviaAnswerResponseStatus.WON) await this.achievementService.updateProgress(student.id, 'trivia');
+      this.addPoint(student.id, triviaMatch.id, triviaStatus, triviaMatch.trivia.pointsReward, opponent?.studentId);
       if (triviaStatus === TriviaAnswerResponseStatus.LOST && opponent) {
         this.notificationService.sendNotification({
           userId: opponent.studentId,
           title: 'Ganaste una trivia',
           message: 'Bieeen! Ganaste una trivia! Entra para saber mas’',
         });
+        await this.achievementService.updateProgress(opponent.studentId, 'trivia');
       } else if (triviaStatus === TriviaAnswerResponseStatus.WON && opponent) {
         this.notificationService.sendNotification({
           userId: opponent.studentId,
@@ -166,7 +180,7 @@ export class TriviaService {
   private async createTriviaMatch(studentId: string, programVersionId: string) {
     const trivia = await this.triviaRepository.findTriviaByProgramVersionId(programVersionId);
     if (!trivia) throw new HttpException('Trivia not found', HttpStatus.NOT_FOUND);
-    return await this.triviaRepository.createTriviaMatch(studentId, trivia.id);
+    return await this.triviaRepository.createTriviaMatch(studentId, trivia.id, new Date());
   }
 
   private async findOpponent(programVersionId: string, triviaId: string) {
@@ -205,12 +219,18 @@ export class TriviaService {
       const bubbles: SpringData[] = await this.mergeData(nextAnswer, JSON.parse(triviaMatch?.trivia?.block));
       const questionBubble = bubbles[bubbles.length - 1];
       const options = this.filterOptions(questionBubble.options);
+      const status = this.calculateMatchResult(
+        userAnswers as TriviaAnswer[],
+        opponentAnswers as TriviaAnswer[],
+        triviaMatch?.trivia?.questionCount,
+      );
+      const opponentSplicedAnswers = this.getTriviaAnswersUntilQuestionId(opponentAnswers, status, dataToSpring.questionId);
       return new QuestionTriviaDto(
         new TriviaQuestionDto(questionBubble.id, questionBubble.question, questionBubble.secondsToAnswer, options),
         userAnswers.length + 1,
         triviaMatch?.trivia?.questionCount,
-        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentAnswers) },
-        this.calculateMatchResult(userAnswers as TriviaAnswer[], opponentAnswers as TriviaAnswer[], triviaMatch?.trivia?.questionCount),
+        { me: this.getSimpleAnswers(userAnswers), opponent: this.getSimpleAnswers(opponentSplicedAnswers) },
+        status,
         opponent ? new SimpleStudentDto(opponent.student) : undefined,
       );
     }
@@ -421,12 +441,14 @@ export class TriviaService {
     status: TriviaAnswerResponseStatus,
     opponent?: any,
   ) {
-    const opponentAnswers = opponent?.triviaAnswers.map((answer) => {
-      return {
-        id: answer.questionId,
-        isCorrect: answer.isCorrect,
-      };
-    });
+    const opponentAnswers = opponent
+      ? this.getTriviaAnswersUntilQuestionId(opponent?.triviaAnswers, status, questionId).map((answer) => {
+          return {
+            id: answer.questionId,
+            isCorrect: answer.isCorrect,
+          };
+        })
+      : undefined;
     const correctOption = triviaBlock.elements.find((question) => question.id === questionId).metadata.metadata.correct_answer;
     const nextQuestionId = springResponse.nodes[springResponse.nodes.length - 1].nodeId;
     const triviaQuestion = this.getTriviaQuestion(triviaBlock, nextQuestionId);
@@ -438,6 +460,12 @@ export class TriviaService {
       opponentAnswers,
       correctOption,
     };
+  }
+
+  private getTriviaAnswersUntilQuestionId(answers: TriviaAnswer[], status: TriviaAnswerResponseStatus, questionId?: string) {
+    if (!questionId) return [];
+    const index = answers.findIndex((answer) => answer.questionId === questionId);
+    return index !== -1 && status !== TriviaAnswerResponseStatus.LOST ? answers.slice(0, index + 1) : answers;
   }
 
   private getTriviaQuestion(triviaBlock: any, questionId: string) {
@@ -487,6 +515,7 @@ export class TriviaService {
     }
     return true;
   }
+
   private filterOptions(options: string[]) {
     return options.filter((option) => option !== 'timeout' && option !== 'left');
   }
@@ -533,8 +562,21 @@ export class TriviaService {
     if (answer.value === 'left') return TriviaAnswerStatus.LEFT;
     return TriviaAnswerStatus.INCORRECT;
   }
-
+  
   public async delete(triviaId: string) {
     return await this.triviaRepository.delete(triviaId);
+  }
+  private addPoint(studentId: string, triviaMatchId: string, status: TriviaAnswerResponseStatus, points: number, opponent?: string) {
+    switch (status) {
+      case TriviaAnswerResponseStatus.WON:
+        this.studentService.addPoints(studentId, points, triviaMatchId, 'trivia');
+        break;
+      case TriviaAnswerResponseStatus.TIED:
+        this.studentService.addPoints(studentId, points / 2, triviaMatchId, 'trivia');
+        if (opponent) this.studentService.addPoints(opponent, points / 2, triviaMatchId, 'trivia');
+        break;
+      case TriviaAnswerResponseStatus.LOST:
+        if (opponent) this.studentService.addPoints(opponent, points, triviaMatchId, 'trivia');
+    }
   }
 }

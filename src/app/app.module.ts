@@ -12,6 +12,7 @@ import { SearchModule } from 'src/domains/api/search/search.module';
 import { ProfessorModule } from 'src/domains/api/professor/professor.module';
 import { TriviaModule } from '../domains/api/trivia/trivia.module';
 import { NotificationModule } from 'src/domains/api/notification/notification.module';
+import { AchievementModule } from '../domains/api/achievement/achievement.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { NotificationModule } from 'src/domains/api/notification/notification.mo
     ProfessorModule,
     TriviaModule,
     NotificationModule,
+    AchievementModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],

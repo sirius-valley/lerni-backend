@@ -13,6 +13,7 @@ import { StudentRepository } from '../student/student.repository';
 import { HeadlandsAdapter } from './adapters/headlands.adapter';
 import { PillBlockDto } from './dtos/pill-block.dto';
 import { ThreadRequestDto } from './dtos/thread-request.dto';
+import { AchievementService } from '../achievement/achievement.service';
 
 @Injectable()
 export class PillService {
@@ -21,6 +22,7 @@ export class PillService {
     private readonly springPillService: SpringPillService,
     private readonly studentRepository: StudentRepository,
     private readonly headlandsAdapter: HeadlandsAdapter,
+    private readonly achievementService: AchievementService,
   ) {}
 
   public async getIntroduction(authorization: string, student: StudentDto) {
@@ -66,6 +68,10 @@ export class PillService {
 
     if (answerRequest.pillId === introductionID) {
       student = await this.saveIntroductionProgress(student, answerRequest);
+      if (springProgress.completed) {
+        this.studentRepository.addPoints(student.id, 5, introductionID, 'introduction');
+        this.achievementService.updateProgress(student.id, 'introduction');
+      }
     }
 
     const replacedPill = this.replaceFullName(springProgress, student.name + ' ' + student.lastname);

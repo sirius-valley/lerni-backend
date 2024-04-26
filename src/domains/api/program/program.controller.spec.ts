@@ -12,6 +12,7 @@ import { PillModule } from '../pill/pill.module';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
 import { AuthModule } from '../../auth/auth.module';
 import { TriviaModule } from '../trivia/trivia.module';
+import { AchievementModule } from '../achievement/achievement.module';
 
 process.env.JWT_SECRET = 'test_secret_long';
 describe('Program Controller', () => {
@@ -21,6 +22,7 @@ describe('Program Controller', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule, AuthModule, TriviaModule],
+      imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule, AuthModule, AchievementModule, TriviaModule],
       controllers: [ProgramController],
       providers: [ProgramService, ProgramRepository, PrismaService],
     })

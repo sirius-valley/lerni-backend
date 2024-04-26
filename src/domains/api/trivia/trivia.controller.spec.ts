@@ -8,6 +8,7 @@ import { StudentModule } from '../student/student.module';
 import { SpringPillModule } from '../pill-external-api/spring-pill.module';
 import { HeadlandsAdapter } from '../pill/adapters/headlands.adapter';
 import { NotificationModule } from '../notification/notification.module';
+import { AchievementModule } from '../achievement/achievement.module';
 
 process.env.JWT_SECRET = 'test_secret_long';
 describe('TriviaController', () => {
@@ -16,7 +17,7 @@ describe('TriviaController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TriviaController],
-      imports: [ProgramModule, StudentModule, SpringPillModule, NotificationModule],
+      imports: [ProgramModule, StudentModule, SpringPillModule, NotificationModule, AchievementModule, ProgramModule],
       providers: [TriviaService, TriviaRepository, PrismaService, HeadlandsAdapter],
     }).compile();
 
