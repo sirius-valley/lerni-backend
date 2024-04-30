@@ -562,7 +562,7 @@ export class TriviaService {
     if (answer.value === 'left') return TriviaAnswerStatus.LEFT;
     return TriviaAnswerStatus.INCORRECT;
   }
-  
+
   public async delete(triviaId: string) {
     return await this.triviaRepository.delete(triviaId);
   }
