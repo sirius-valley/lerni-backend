@@ -21,7 +21,6 @@ describe('Program Controller', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule, AuthModule, TriviaModule],
       imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule, AuthModule, AchievementModule, TriviaModule],
       controllers: [ProgramController],
       providers: [ProgramService, ProgramRepository, PrismaService],
