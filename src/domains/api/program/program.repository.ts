@@ -691,6 +691,13 @@ export class ProgramRepository {
         questionnaireSubmissions: {
           some: {
             progress: 100,
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
           },
         },
       },
