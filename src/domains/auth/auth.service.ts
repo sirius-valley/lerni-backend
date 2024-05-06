@@ -91,4 +91,39 @@ export class AuthService {
     const authCreated = await this.authRepository.createTemporalAuth(email);
     return authCreated;
   }
+
+  public async temporalCode(email: string) {
+    const user = await this.authRepository.findAuthByEmail(email);
+    if (!user) return HttpStatus.ACCEPTED;
+
+    // const codigo = '';
+
+    // for (let i = 0; i < 6; i++) {
+    //   codigo += Math.floor(Math.random() * 10);
+    // }
+
+    //update code
+
+    //sendEmail
+
+    return HttpStatus.ACCEPTED;
+  }
+
+  public async validateCode(code: string, email: string) {
+    const user = await this.authRepository.findAuthByEmail(email);
+    if (!user) return HttpStatus.ACCEPTED;
+
+    if (code === user.tokenDevice) {
+      return HttpStatus.ACCEPTED;
+    }
+  }
+
+  public async updatePassword(email: string, newPassword: string) {
+    const user = await this.authRepository.findAuthByEmail(email);
+    if (!user) return HttpStatus.ACCEPTED;
+    const hashedPassword = await this.hashPassword(newPassword);
+    const authCreated = await this.authRepository.updateIsActive({ ...user, password: hashedPassword });
+    const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
+    return new JwtDto(jwt);
+  }
 }
