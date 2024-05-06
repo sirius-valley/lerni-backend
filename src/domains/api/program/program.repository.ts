@@ -487,11 +487,13 @@ export class ProgramRepository {
     });
   }
 
-  async createProgramVersion(programId: string, version: number) {
+  async createProgramVersion(programId: string, version: number, startDate?: Date, endDate?: Date) {
     return await this.prisma.programVersion.create({
       data: {
         programId,
         version,
+        startDate,
+        endDate,
       },
     });
   }
@@ -711,6 +713,18 @@ export class ProgramRepository {
                 },
               },
             },
+          },
+        },
+      },
+    });
+  }
+
+  async getStudentEnrroledByProgramVersionId(programVersionId: string) {
+    return await this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
           },
         },
       },

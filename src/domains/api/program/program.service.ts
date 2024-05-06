@@ -31,6 +31,9 @@ import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
 import { AchievementService } from '../achievement/achievement.service';
+import { NotificationService } from '../notification/notification.service';
+// eslint-disable-next-line
+const cron = require('node-cron');
 
 @Injectable()
 export class ProgramService {
@@ -43,6 +46,7 @@ export class ProgramService {
     private readonly authService: AuthService,
     private readonly triviaRepository: TriviaRepository,
     private readonly achievementService: AchievementService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async getProgramById(studentId: string, programId: string) {
@@ -199,6 +203,8 @@ export class ProgramService {
         pills.every((p: any) => p.pillProgress === 100),
       ),
       leaderBoard: leaderBoard,
+      starDate: programVersion.startDate,
+      endDate: programVersion.endDate,
     });
   }
 
@@ -290,8 +296,8 @@ export class ProgramService {
     );
   }
 
-  public async createVersionProgram(programId: string, version: number) {
-    return await this.programRepository.createProgramVersion(programId, version);
+  public async createVersionProgram(programId: string, version: number, startDate?: Date, endDate?: Date) {
+    return await this.programRepository.createProgramVersion(programId, version, startDate, endDate);
   }
 
   public async addQuestionnaireToProgram(programId: string, data: QuestionnaireRequestDto) {
@@ -346,7 +352,7 @@ export class ProgramService {
       newProgram.image,
     );
 
-    const programVersion = await this.createVersionProgram(program.id, 1);
+    const programVersion = await this.createVersionProgram(program.id, 1, newProgram.startDate, newProgram.endDate);
 
     await this.addPillToProgram(newProgram.pill, programVersion.id);
 
@@ -354,6 +360,93 @@ export class ProgramService {
 
     await this.enrollStudents(programVersion.id, newProgram.students);
 
+    if (newProgram.startDate || newProgram.endDate) {
+      if (newProgram.startDate) {
+        cron.schedule(
+          `${new Date(newProgram.startDate).getMinutes()} ${new Date(newProgram.startDate).getHours()} ${new Date(
+            newProgram.startDate,
+          ).getDate()} ${new Date(newProgram.startDate).getMonth() + 1} *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Nuevo Programa disponible',
+                message: `Ahora tenes acceso a ${newProgram.title}! Sigamos aprendiendo!`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+      }
+      if (newProgram.endDate) {
+        const endDate = new Date(newProgram.endDate);
+        const endDateMinus30Minutes = new Date(endDate.getTime() - 30 * 60000);
+        const endDateMinus60Minutes = new Date(endDate.getTime() - 60 * 60000);
+        const endDateMinusOneDay = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
+
+        cron.schedule(
+          `* ${endDateMinus30Minutes.getMinutes()} ${endDateMinus30Minutes.getHours()} ${endDateMinus30Minutes.getDate()} ${
+            endDateMinus30Minutes.getMonth() + 1
+          } *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Se acaba el tiempo!',
+                message: `El programa “${newProgram.title}” terminará en 30 minutos. ¿Qué esperas para completarlo?`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+        cron.schedule(
+          `* ${endDateMinus60Minutes.getMinutes()} ${endDateMinus60Minutes.getHours()} ${endDateMinus60Minutes.getDate()} ${
+            endDateMinus60Minutes.getMonth() + 1
+          } *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Se acaba el tiempo!',
+                message: `El programa “${newProgram.title}” terminará en 1 hora. ¿Qué esperas para completarlo?`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+        cron.schedule(
+          `* ${endDateMinusOneDay.getMinutes()} ${endDateMinusOneDay.getHours()} ${endDateMinusOneDay.getDate()} ${
+            endDateMinusOneDay.getMonth() + 1
+          } *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Se acaba el tiempo!',
+                message: `El programa “${newProgram.title}” terminará en 1 dia. ¿Qué esperas para completarlo?`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+      }
+    }
     if (newProgram.trivia) {
       await this.addTriviaToProgram(programVersion.id, newProgram.trivia);
     }

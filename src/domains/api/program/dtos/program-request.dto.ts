@@ -39,4 +39,12 @@ export class ProgramRequestDto {
 
   @IsInt()
   pointsReward: number;
+
+  @IsString()
+  @IsOptional()
+  startDate: Date;
+
+  @IsString()
+  @IsOptional()
+  endDate: Date;
 }

@@ -47,6 +47,7 @@ export class TriviaService {
   public async createOrAssignTriviaMatch(student: StudentDto, programId: string) {
     // check if student is already enrolled in the program
     const programVersion = await this.programService.getProgramVersion(student.id, programId);
+    if (programVersion.endDate && programVersion.endDate <= new Date()) throw new HttpException('Program finished', HttpStatus.BAD_REQUEST);
     // check if student has already started a trivia match
     const startedTriviaMatch = await this.triviaRepository.getTriviaMatchByStudentIdAndProgramVersionId(student.id, programVersion.id);
     if (startedTriviaMatch) {
