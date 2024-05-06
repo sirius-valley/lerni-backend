@@ -180,4 +180,26 @@ export class PillRepository {
       },
     });
   }
+
+  public async deletePill(pillId: string) {
+    await this.prisma.programVersionPillVersion.deleteMany({
+      where: {
+        pillVersion: {
+          pillId,
+        },
+      },
+    });
+
+    await this.prisma.pillVersion.deleteMany({
+      where: {
+        pillId,
+      },
+    });
+
+    await this.prisma.pill.delete({
+      where: {
+        id: pillId,
+      },
+    });
+  }
 }

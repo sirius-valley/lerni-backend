@@ -22,8 +22,11 @@ import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
+import { PillUpdateRequestDto } from '../pill/dtos/pill-update.dto';
 import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
 import { ProgramVotesDto } from './dtos/program-votes.dto';
+import { TriviaRepository } from '../trivia/trivia.repository';
 import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
@@ -41,6 +44,7 @@ export class ProgramService {
     private readonly studentService: StudentService,
     private readonly studentRepository: StudentRepository,
     private readonly authService: AuthService,
+    private readonly triviaRepository: TriviaRepository,
     private readonly achievementService: AchievementService,
     private readonly notificationService: NotificationService,
   ) {}
@@ -315,16 +319,27 @@ export class ProgramService {
   public async enrollStudents(programId: string, newStudents: string[]) {
     const students = await this.studentService.getStudentsByEmail(newStudents);
 
-    Promise.all(
+    await Promise.all(
       students.map(async (student) => {
         if (student instanceof StudentDto) {
           await this.studentRepository.enrollStudent(student.id, programId);
         } else {
           const temporalStudent = await this.authService.temporalRegister(student.email);
-          await this.studentRepository.enrollStudent(temporalStudent.id, programId);
+          if (!temporalStudent.user?.id) throw new HttpException("Can't enrrol student", HttpStatus.BAD_REQUEST);
+          await this.studentRepository.enrollStudent(temporalStudent.user.id, programId);
         }
       }),
     );
+  }
+
+  public async addTriviaToProgram(programVersionId: string, trivia: any) {
+    const newTrivia = await this.triviaRepository.create(trivia.block, trivia.questionCount);
+    const programVersionTrivia = await this.triviaRepository.createTriviaProgram(
+      programVersionId,
+      newTrivia.id,
+      trivia.order ? trivia.order : 1,
+    );
+    return programVersionTrivia;
   }
 
   public async createProgram(newProgram: ProgramRequestDto) {
@@ -432,6 +447,9 @@ export class ProgramService {
         );
       }
     }
+    if (newProgram.trivia) {
+      await this.addTriviaToProgram(programVersion.id, newProgram.trivia);
+    }
 
     return program;
   }
@@ -489,5 +507,148 @@ export class ProgramService {
       }),
       total,
     };
+  }
+
+  public async update(programVersionId: string, data: ProgramUpdateRequestDto) {
+    //check datos a actualizar
+    const program = await this.programRepository.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    let newProgram;
+    if (
+      !(await this.checkObjs(
+        {
+          name: data.title,
+          description: data.description,
+          hoursToComplete: data.hoursToComplete,
+          pointsReward: data.pointsReward,
+          icon: data.image,
+        },
+        program.program,
+      ))
+    ) {
+      newProgram = await this.programRepository.updateProgram(
+        program.programId,
+        data.title,
+        data.description,
+        data.hoursToComplete,
+        data.pointsReward,
+        data.image,
+      );
+    }
+
+    const checkPills = await this.checkArrayObj(
+      data.pill,
+      program.programVersionPillVersions.map((item) => {
+        return new PillUpdateRequestDto({
+          id: item.pillVersion.pill.id,
+          name: item.pillVersion.pill.name,
+          description: item.pillVersion.pill.description,
+          version: item.pillVersion.version,
+          teacherComment: item.pillVersion.pill.teacherComment,
+          completionTimeMinutes: item.pillVersion.completionTimeMinutes,
+          block: item.pillVersion.block,
+        });
+      }),
+    );
+
+    if (checkPills.create.length > 0) {
+      await this.addPillToProgram(checkPills.create, programVersionId);
+    }
+    if (checkPills.delete.length > 0) {
+      Promise.all(
+        checkPills.delete.map(async (pill) => {
+          await this.pillRepository.deletePill(pill.id);
+        }),
+      );
+    }
+
+    const checkStudentList = await this.checkArrayObj(
+      data.students.map((item) => {
+        return { id: item };
+      }),
+      program.studentPrograms.map((item) => {
+        return { id: item.student.auth.email };
+      }),
+    );
+
+    if (checkStudentList.create.length > 0) {
+      this.enrollStudents(
+        program.id,
+        checkStudentList.create.map((element) => {
+          return element.id;
+        }),
+      );
+    }
+
+    if (checkStudentList.delete.length > 0) {
+      checkStudentList.delete.map(async (student) => {
+        this.programRepository.downStudentProgram(student.id, programVersionId);
+      });
+    }
+
+    const checkTrivia = await this.checkObjs(data.trivia, program.programVersionTrivias[0].trivia);
+
+    if (checkTrivia) {
+      this.triviaRepository.delete(program.programVersionTrivias[0].trivia.id);
+      this.triviaRepository.create(data.trivia, 12);
+    }
+
+    const checkQuestionarie = await this.checkObjs(
+      data.questionnaire,
+      program.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaire,
+    );
+
+    if (checkQuestionarie) {
+      this.questionnaireRepository.delete(program.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaire.id);
+      this.addQuestionnaireToProgram(program.programId, data.questionnaire);
+    }
+    return newProgram;
+  }
+
+  private async checkObjs(newObj: any, oldObj: any) {
+    if (!(newObj && oldObj)) return false;
+    const oldKeys = Object.keys(oldObj);
+
+    const result: string[] = [];
+
+    for (const key of oldKeys) {
+      try {
+        if (newObj[key] !== oldObj[key]) {
+          result.push(key);
+        }
+      } catch {
+        continue;
+      }
+    }
+    return result.length === 0 ? true : false;
+  }
+
+  private async checkArrayObj(newArray: any[], oldArray: any[]) {
+    const result: { value: boolean; update: any[]; create: any[]; delete: any[] } = { value: true, update: [], create: [], delete: [] };
+
+    await Promise.all(
+      oldArray.map(async (item, index) => {
+        const itemToSearch = newArray.findIndex((find) => find.id === item.id);
+        if (itemToSearch === -1) {
+          oldArray.splice(index, 1);
+          result.value = false;
+        } else {
+          if (!(await this.checkObjs(item, newArray[itemToSearch]))) {
+            result.value = false;
+            result.update.push(newArray[index]);
+            newArray.splice(index, 1);
+            oldArray.splice(index, 1);
+          } else {
+            oldArray.splice(index, 1);
+          }
+        }
+      }),
+    );
+
+    result.delete = oldArray;
+
+    result.create = newArray;
+
+    return result;
   }
 }

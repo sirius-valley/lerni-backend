@@ -9,13 +9,14 @@ import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
 import { QuestionnaireRepository } from '../questionnaire/questionnaire.repository';
 import { PillRepository } from '../pill/pill.repository';
 import { AuthModule } from '../../auth/auth.module';
+import { TriviaRepository } from '../trivia/trivia.repository';
 import { AchievementModule } from '../achievement/achievement.module';
 import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   controllers: [ProgramController],
   imports: [StudentModule, PillModule, QuestionnaireModule, AuthModule, AchievementModule, NotificationModule],
-  providers: [PrismaService, ProgramService, ProgramRepository, QuestionnaireRepository, PillRepository],
+  providers: [PrismaService, ProgramService, ProgramRepository, QuestionnaireRepository, PillRepository, TriviaRepository],
   exports: [ProgramService, ProgramRepository],
 })
 export class ProgramModule {}

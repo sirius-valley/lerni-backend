@@ -21,8 +21,13 @@ export class TriviaRepository {
             },
           },
         },
-        NOT: {
-          finishedDateTime: null,
+        finishedDateTime: null,
+      },
+      include: {
+        studentTriviaMatches: {
+          include: {
+            student: true,
+          },
         },
       },
     });
@@ -75,13 +80,14 @@ export class TriviaRepository {
     });
   }
 
-  public async createTriviaMatch(studentId: string, triviaId: string) {
+  public async createTriviaMatch(studentId: string, triviaId: string, date: Date) {
     return this.prisma.triviaMatch.create({
       data: {
         triviaId,
         studentTriviaMatches: {
           create: {
             studentId,
+            completeBefore: new Date(date.getTime() + 72 * 60 * 60 * 1000),
           },
         },
       },
@@ -519,6 +525,39 @@ export class TriviaRepository {
             program: true,
           },
         },
+      },
+    });
+  }
+
+  async create(block: string, questionCount: number) {
+    return await this.prisma.trivia.create({
+      data: {
+        block,
+        questionCount,
+      },
+    });
+  }
+
+  async createTriviaProgram(programVersionId: string, triviaId: string, order: number) {
+    return await this.prisma.programVersionTrivia.create({
+      data: {
+        programVersionId,
+        triviaId,
+        order,
+      },
+    });
+  }
+
+  async delete(id: string) {
+    await this.prisma.programVersionTrivia.deleteMany({
+      where: {
+        triviaId: id,
+      },
+    });
+
+    return await this.prisma.trivia.delete({
+      where: {
+        id,
       },
     });
   }

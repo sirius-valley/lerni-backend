@@ -11,6 +11,7 @@ import { ApiRequest } from '../../../types/api-request.interface';
 import { PillModule } from '../pill/pill.module';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
 import { AuthModule } from '../../auth/auth.module';
+import { TriviaModule } from '../trivia/trivia.module';
 import { AchievementModule } from '../achievement/achievement.module';
 import { NotificationModule } from '../notification/notification.module';
 
@@ -21,7 +22,16 @@ describe('Program Controller', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [StudentModule, SpringPillModule, PillModule, QuestionnaireModule, AuthModule, AchievementModule, NotificationModule],
+      imports: [
+        StudentModule,
+        SpringPillModule,
+        PillModule,
+        QuestionnaireModule,
+        AuthModule,
+        AchievementModule,
+        TriviaModule,
+        NotificationModule,
+      ],
       controllers: [ProgramController],
       providers: [ProgramService, ProgramRepository, PrismaService],
     })
