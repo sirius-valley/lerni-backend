@@ -6,12 +6,11 @@ export class NotificationRepository {
   constructor(private prisma: PrismaService) {}
 
   async searchToken(id: string) {
-    return this.prisma.auth.findUnique({
-      select: {
-        tokenDevice: true,
-      },
+    return this.prisma.auth.findFirst({
       where: {
-        id,
+        user: {
+          id,
+        },
       },
     });
   }
