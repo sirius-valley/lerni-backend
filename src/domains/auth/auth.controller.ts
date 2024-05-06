@@ -32,4 +32,21 @@ export class AuthController {
   async loginAdmin(@Body() adminLoginRequestDTO: LoginRequestDto): Promise<JwtDto> {
     return this.authService.loginAdmin(adminLoginRequestDTO);
   }
+
+  @Post('/forgotPassword')
+  @HttpCode(200)
+  async forgotPassword(@Body() email: string) {
+    return this.authService.temporalCode(email);
+  }
+
+  @Post('/forgotPassword/code')
+  @HttpCode(200)
+  async forgotPasswordCode(@Body() data: { code: string; email: string }) {
+    return this.authService.validateCode(data.code, data.email);
+  }
+
+  @Post('/forgotPassword/newPassword')
+  async forgotPasswordNewPassword(@Body() data: { email: string; newPassword: string }) {
+    return this.authService.updatePassword(data.email, data.newPassword);
+  }
 }
