@@ -5,6 +5,8 @@ import { JwtDto } from './dtos/jwt.dto';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AdminRegisterRequestDto } from './dtos/admin-register-request.dto';
+import { ForgotPasswordRequestDto } from './dtos/forgot-password-request.dto';
+import { PasswordCodeRequestDto } from './dtos/password-code-request.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -35,18 +37,18 @@ export class AuthController {
 
   @Post('/forgotPassword')
   @HttpCode(200)
-  async forgotPassword(@Body() email: string) {
-    return this.authService.temporalCode(email);
+  async forgotPassword(@Body() data: ForgotPasswordRequestDto) {
+    return this.authService.temporalCode(data);
   }
 
   @Post('/forgotPassword/code')
   @HttpCode(200)
-  async forgotPasswordCode(@Body() data: { code: string; email: string }) {
-    return this.authService.validateCode(data.code, data.email);
+  async forgotPasswordCode(@Body() data: PasswordCodeRequestDto) {
+    return this.authService.validateCode(data);
   }
 
   @Post('/forgotPassword/newPassword')
-  async forgotPasswordNewPassword(@Body() data: { email: string; newPassword: string }) {
-    return this.authService.updatePassword(data.email, data.newPassword);
+  async forgotPasswordNewPassword(@Body() data: RegisterRequestDto) {
+    return this.authService.updatePassword(data.email, data.password);
   }
 }

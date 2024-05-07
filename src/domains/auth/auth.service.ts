@@ -8,6 +8,9 @@ import { ConfigService } from '@nestjs/config';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import { MailService } from '../../mail/mail.service';
 import { AdminRegisterRequestDto } from './dtos/admin-register-request.dto';
+import { ForgotPasswordRequestDto } from './dtos/forgot-password-request.dto';
+import { maxResetCodesPerHour, maxResetTokenAttemptsPerCode } from '../../const';
+import { PasswordCodeRequestDto } from './dtos/password-code-request.dto';
 
 @Injectable()
 export class AuthService {
@@ -71,7 +74,13 @@ export class AuthService {
     if (!admin) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
     const isCorrectPassword = await this.comparePassword(adminLoginDto.password, admin?.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-    const jwt = await this.jwtService.signAsync({ sub: admin.id, role: 'admin' }, { secret: this.configService.get<string>('JWT_SECRET') });
+    const jwt = await this.jwtService.signAsync(
+      {
+        sub: admin.id,
+        role: 'admin',
+      },
+      { secret: this.configService.get<string>('JWT_SECRET') },
+    );
     return new JwtDto(jwt);
   }
 
@@ -95,29 +104,50 @@ export class AuthService {
     return authCreated;
   }
 
-  public async temporalCode(email: string) {
-    const user = await this.authRepository.findAuthByEmail(email);
+  public async temporalCode(data: ForgotPasswordRequestDto) {
+    const user = await this.authRepository.findAuthByEmail(data.email);
     if (!user) return HttpStatus.ACCEPTED;
+    const latestCodes = await this.authRepository.getLastHourResetTokens(user.id);
+    if (latestCodes.length > maxResetCodesPerHour) throw new HttpException('Reset password request exceeded', HttpStatus.FORBIDDEN);
 
-    // const codigo = '';
+    const token = this.generateResetCode();
+    const hashedToken = await this.hashPassword(token);
 
-    // for (let i = 0; i < 6; i++) {
-    //   codigo += Math.floor(Math.random() * 10);
-    // }
-
-    //update code
+    //create code
+    await this.authRepository.createResetPasswordToken(hashedToken, user.id);
 
     //sendEmail
+    this.mailService.sendPasswordRecoveryEmail(data.email, token);
 
     return HttpStatus.ACCEPTED;
   }
 
-  public async validateCode(code: string, email: string) {
-    const user = await this.authRepository.findAuthByEmail(email);
-    if (!user) return HttpStatus.ACCEPTED;
+  private generateResetCode() {
+    let code = '';
 
-    if (code === user.tokenDevice) {
+    for (let i = 0; i < 6; i++) {
+      code += Math.floor(Math.random() * 10);
+    }
+    return code;
+  }
+
+  public async validateCode(data: PasswordCodeRequestDto) {
+    const user = await this.authRepository.findAuthByEmail(data.email);
+    if (!user) throw new HttpException('Invaild code', HttpStatus.FORBIDDEN);
+    const latestToken = await this.authRepository.getLatestResetPasswordToken(user.id);
+    if (!latestToken) throw new HttpException('Invalid code', HttpStatus.FORBIDDEN);
+
+    // check if passed attempt maximum
+    if (latestToken.attemptCount >= maxResetTokenAttemptsPerCode)
+      throw new HttpException('Exceeded maximum attempts', HttpStatus.FORBIDDEN);
+
+    if (await this.comparePassword(data.code, latestToken.token)) {
+      await this.authRepository.updateResetPasswordTokenData(latestToken.id, { validatedDate: new Date() });
       return HttpStatus.ACCEPTED;
+    } else {
+      const attemptCount = latestToken.attemptCount;
+      await this.authRepository.updateResetPasswordTokenData(latestToken.id, { attemptCount: attemptCount + 1 });
+      throw new HttpException('Invalid Code', HttpStatus.FORBIDDEN);
     }
   }
 
