@@ -16,6 +16,8 @@ export class ProgramAdminDetailsDto {
   questionnaire: QuestionnaireDetailsWeb[];
   students: StudentDto[];
   trivias: TriviaDetailsWeb[];
+  startDate?: Date | null;
+  endDate?: Date | null;
 
   constructor(programDetailsDto: ProgramAdminDetailsDto) {
     this.id = programDetailsDto.id;
@@ -29,5 +31,7 @@ export class ProgramAdminDetailsDto {
     this.questionnaire = programDetailsDto.questionnaire;
     this.students = programDetailsDto.students;
     this.trivias = programDetailsDto.trivias;
+    this.startDate = programDetailsDto.startDate;
+    this.endDate = programDetailsDto.endDate;
   }
 }

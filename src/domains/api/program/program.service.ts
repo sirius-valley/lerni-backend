@@ -203,7 +203,7 @@ export class ProgramService {
         pills.every((p: any) => p.pillProgress === 100),
       ),
       leaderBoard: leaderBoard,
-      starDate: programVersion.startDate,
+      startDate: programVersion.startDate,
       endDate: programVersion.endDate,
     });
   }
@@ -486,6 +486,8 @@ export class ProgramService {
       teacher: new TeacherDto(program.program.teacher),
       programDescription: program.program.description as string,
       trivias,
+      startDate: program.startDate,
+      endDate: program.endDate,
     });
   }
 
