@@ -118,4 +118,12 @@ export class AuthRepository {
       },
     });
   }
+
+  async deleteResetPasswordTokensByAuthId(authId: string) {
+    return this.prisma.resetPasswordToken.deleteMany({
+      where: {
+        authId,
+      },
+    });
+  }
 }

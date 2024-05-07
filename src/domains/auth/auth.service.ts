@@ -153,10 +153,12 @@ export class AuthService {
 
   public async updatePassword(email: string, newPassword: string) {
     const user = await this.authRepository.findAuthByEmail(email);
-    if (!user) return HttpStatus.ACCEPTED;
+    if (!user) throw new HttpException('Invalid Request', HttpStatus.FORBIDDEN);
+    const lastResetToken = await this.authRepository.getLatestResetPasswordToken(user.id);
+    if (!lastResetToken || !lastResetToken.validatedDate) throw new HttpException('Invalid Request', HttpStatus.FORBIDDEN);
     const hashedPassword = await this.hashPassword(newPassword);
-    const authCreated = await this.authRepository.updateIsActive({ ...user, password: hashedPassword });
-    const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
-    return new JwtDto(jwt);
+    await this.authRepository.updateIsActive({ ...user, password: hashedPassword });
+    await this.authRepository.deleteResetPasswordTokensByAuthId(user.id);
+    return HttpStatus.ACCEPTED;
   }
 }
