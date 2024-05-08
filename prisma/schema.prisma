@@ -18,7 +18,19 @@ model Auth {
   tokenDevice String?
   createdAt   DateTime @default(now())
 
-  user Student?
+  user                Student?
+  resetPasswordTokens ResetPasswordToken[]
+}
+
+model ResetPasswordToken {
+  id            String    @id @default(uuid())
+  token         String
+  attemptCount  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  validatedDate DateTime?
+
+  authId String
+  auth   Auth   @relation(fields: [authId], references: [id])
 }
 
 model Student {

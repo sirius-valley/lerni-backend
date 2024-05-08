@@ -17,4 +17,16 @@ export class MailService {
       template: 'welcome',
     });
   }
+
+  public async sendPasswordRecoveryEmail(email: string, code: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      from: `Lerni Team ${this.configService.get<string>('EMAIL_USER')}`,
+      subject: 'Lerni - Recuperar Contraseña',
+      template: 'password-recovery',
+      context: {
+        recoveryCode: code,
+      },
+    });
+  }
 }

@@ -71,4 +71,59 @@ export class AuthRepository {
       },
     });
   }
+
+  async getLastHourResetTokens(authId: string) {
+    return this.prisma.resetPasswordToken.findMany({
+      where: {
+        authId,
+        createdAt: {
+          // one hour before
+          gte: new Date(new Date().getTime() - 60 * 60 * 1000),
+        },
+      },
+    });
+  }
+
+  async createResetPasswordToken(token: string, authId: string) {
+    return this.prisma.resetPasswordToken.create({
+      data: {
+        authId,
+        token,
+      },
+    });
+  }
+
+  async getLatestResetPasswordToken(authId: string) {
+    return this.prisma.resetPasswordToken.findFirst({
+      where: {
+        authId,
+        createdAt: {
+          //one day before
+          gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async updateResetPasswordTokenData(id: string, data: any) {
+    return this.prisma.resetPasswordToken.update({
+      where: {
+        id,
+      },
+      data: {
+        ...data,
+      },
+    });
+  }
+
+  async deleteResetPasswordTokensByAuthId(authId: string) {
+    return this.prisma.resetPasswordToken.deleteMany({
+      where: {
+        authId,
+      },
+    });
+  }
 }

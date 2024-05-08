@@ -2,6 +2,8 @@ export const introductionID = '7cf767b2-9ac5-4420-8680-a9e000438d94';
 export const necessaryFields = ['name', 'lastname', 'city'];
 export const optionalFields = ['profession', 'career'];
 export const questionnaireAnswerPoints = 5;
+export const maxResetCodesPerHour = 10;
+export const maxResetTokenAttemptsPerCode = 5;
 export const introductionVariables = {
   '0e64b123-5fcb-46db-a2cf-5e39f0b90ed7': 'name',
   '6bc4b333-9e25-4fea-903c-45d0419f89c9': 'lastname',
