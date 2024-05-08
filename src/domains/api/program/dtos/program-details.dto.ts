@@ -16,7 +16,7 @@ export class ProgramDetailsDto {
   pills: SimplePillDto[];
   questionnaire: SimpleQuestionnaireDto[];
   leaderBoard: ProgramLeaderboardDto;
-  starDate?: Date;
+  startDate?: Date;
   endDate?: Date;
 
   constructor(programDetailsDto: ProgramDetailsDto) {
@@ -32,7 +32,7 @@ export class ProgramDetailsDto {
     this.pills = programDetailsDto.pills;
     this.questionnaire = programDetailsDto.questionnaire;
     this.leaderBoard = programDetailsDto.leaderBoard;
-    this.starDate = programDetailsDto.starDate;
+    this.startDate = programDetailsDto.startDate;
     this.endDate = programDetailsDto.endDate;
   }
 }
