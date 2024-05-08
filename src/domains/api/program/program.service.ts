@@ -21,13 +21,19 @@ import { PillRequestDto } from '../pill/dtos/pill-request.dto';
 import { QuestionnaireRequestDto } from '../questionnaire/dtos/questionnaire-request.dto';
 import { ProgramAdminDetailsDto } from './dtos/program-admin-detail.dto';
 import { ProgramStudentsDto } from './dtos/program-students.dto';
+import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
+import { PillUpdateRequestDto } from '../pill/dtos/pill-update.dto';
 import { ProgramListDto, ProgramListResponseDto } from './dtos/program-list.dto';
 import { ProgramVotesDto } from './dtos/program-votes.dto';
+import { TriviaRepository } from '../trivia/trivia.repository';
 import { TriviaDetailsWeb } from '../trivia/dto/trivia-details-web.dto';
 import { PillDetailsWeb } from '../pill/dtos/pill-details-web.dto';
 import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-details-web.dto';
 import { AchievementService } from '../achievement/achievement.service';
 import { ProgramCardDto } from './dtos/program-card.dto';
+import { NotificationService } from '../notification/notification.service';
+// eslint-disable-next-line
+const cron = require('node-cron');
 
 @Injectable()
 export class ProgramService {
@@ -38,7 +44,9 @@ export class ProgramService {
     private readonly studentService: StudentService,
     private readonly studentRepository: StudentRepository,
     private readonly authService: AuthService,
+    private readonly triviaRepository: TriviaRepository,
     private readonly achievementService: AchievementService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async getProgramById(studentId: string, programId: string) {
@@ -202,6 +210,8 @@ export class ProgramService {
         pills.every((p: any) => p.pillProgress === 100),
       ),
       leaderBoard: leaderBoard,
+      starDate: programVersion.startDate,
+      endDate: programVersion.endDate,
     });
   }
 
@@ -293,8 +303,8 @@ export class ProgramService {
     );
   }
 
-  public async createVersionProgram(programId: string, version: number) {
-    return await this.programRepository.createProgramVersion(programId, version);
+  public async createVersionProgram(programId: string, version: number, startDate?: Date, endDate?: Date) {
+    return await this.programRepository.createProgramVersion(programId, version, startDate, endDate);
   }
 
   public async addQuestionnaireToProgram(programId: string, data: QuestionnaireRequestDto) {
@@ -316,16 +326,27 @@ export class ProgramService {
   public async enrollStudents(programId: string, newStudents: string[]) {
     const students = await this.studentService.getStudentsByEmail(newStudents);
 
-    Promise.all(
+    await Promise.all(
       students.map(async (student) => {
         if (student instanceof StudentDto) {
           await this.studentRepository.enrollStudent(student.id, programId);
         } else {
           const temporalStudent = await this.authService.temporalRegister(student.email);
-          await this.studentRepository.enrollStudent(temporalStudent.id, programId);
+          if (!temporalStudent.user?.id) throw new HttpException("Can't enrrol student", HttpStatus.BAD_REQUEST);
+          await this.studentRepository.enrollStudent(temporalStudent.user.id, programId);
         }
       }),
     );
+  }
+
+  public async addTriviaToProgram(programVersionId: string, trivia: any) {
+    const newTrivia = await this.triviaRepository.create(trivia.block, trivia.questionCount);
+    const programVersionTrivia = await this.triviaRepository.createTriviaProgram(
+      programVersionId,
+      newTrivia.id,
+      trivia.order ? trivia.order : 1,
+    );
+    return programVersionTrivia;
   }
 
   public async createProgram(newProgram: ProgramRequestDto) {
@@ -338,13 +359,104 @@ export class ProgramService {
       newProgram.image,
     );
 
-    const programVersion = await this.createVersionProgram(program.id, 1);
+    const programVersion = await this.createVersionProgram(program.id, 1, newProgram.startDate, newProgram.endDate);
 
     await this.addPillToProgram(newProgram.pill, programVersion.id);
 
     await this.addQuestionnaireToProgram(programVersion.id, newProgram.questionnaire);
 
     await this.enrollStudents(programVersion.id, newProgram.students);
+
+    if (newProgram.startDate || newProgram.endDate) {
+      if (newProgram.startDate) {
+        cron.schedule(
+          `${new Date(newProgram.startDate).getMinutes()} ${new Date(newProgram.startDate).getHours()} ${new Date(
+            newProgram.startDate,
+          ).getDate()} ${new Date(newProgram.startDate).getMonth() + 1} *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Nuevo Programa disponible',
+                message: `Ahora tenes acceso a ${newProgram.title}! Sigamos aprendiendo!`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+      }
+      if (newProgram.endDate) {
+        const endDate = new Date(newProgram.endDate);
+        const endDateMinus30Minutes = new Date(endDate.getTime() - 30 * 60000);
+        const endDateMinus60Minutes = new Date(endDate.getTime() - 60 * 60000);
+        const endDateMinusOneDay = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
+
+        cron.schedule(
+          `* ${endDateMinus30Minutes.getMinutes()} ${endDateMinus30Minutes.getHours()} ${endDateMinus30Minutes.getDate()} ${
+            endDateMinus30Minutes.getMonth() + 1
+          } *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Se acaba el tiempo!',
+                message: `El programa “${newProgram.title}” terminará en 30 minutos. ¿Qué esperas para completarlo?`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+        cron.schedule(
+          `* ${endDateMinus60Minutes.getMinutes()} ${endDateMinus60Minutes.getHours()} ${endDateMinus60Minutes.getDate()} ${
+            endDateMinus60Minutes.getMonth() + 1
+          } *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Se acaba el tiempo!',
+                message: `El programa “${newProgram.title}” terminará en 1 hora. ¿Qué esperas para completarlo?`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+        cron.schedule(
+          `* ${endDateMinusOneDay.getMinutes()} ${endDateMinusOneDay.getHours()} ${endDateMinusOneDay.getDate()} ${
+            endDateMinusOneDay.getMonth() + 1
+          } *`,
+          async () => {
+            const students = await this.programRepository.getStudentEnrroledByProgramVersionId(programVersion.id);
+            students.map((student) => {
+              this.notificationService.sendNotification({
+                userId: student.id,
+                title: 'Se acaba el tiempo!',
+                message: `El programa “${newProgram.title}” terminará en 1 dia. ¿Qué esperas para completarlo?`,
+              });
+            });
+          },
+          {
+            scheduled: true,
+            timezone: 'America/Buenos_Aires',
+          },
+        );
+      }
+    }
+    if (newProgram.trivia) {
+      await this.addTriviaToProgram(programVersion.id, newProgram.trivia);
+    }
 
     return program;
   }
@@ -402,5 +514,148 @@ export class ProgramService {
       }),
       total,
     };
+  }
+
+  public async update(programVersionId: string, data: ProgramUpdateRequestDto) {
+    //check datos a actualizar
+    const program = await this.programRepository.getProgramByProgramVersionId(programVersionId);
+    if (!program) throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    let newProgram;
+    if (
+      !(await this.checkObjs(
+        {
+          name: data.title,
+          description: data.description,
+          hoursToComplete: data.hoursToComplete,
+          pointsReward: data.pointsReward,
+          icon: data.image,
+        },
+        program.program,
+      ))
+    ) {
+      newProgram = await this.programRepository.updateProgram(
+        program.programId,
+        data.title,
+        data.description,
+        data.hoursToComplete,
+        data.pointsReward,
+        data.image,
+      );
+    }
+
+    const checkPills = await this.checkArrayObj(
+      data.pill,
+      program.programVersionPillVersions.map((item) => {
+        return new PillUpdateRequestDto({
+          id: item.pillVersion.pill.id,
+          name: item.pillVersion.pill.name,
+          description: item.pillVersion.pill.description,
+          version: item.pillVersion.version,
+          teacherComment: item.pillVersion.pill.teacherComment,
+          completionTimeMinutes: item.pillVersion.completionTimeMinutes,
+          block: item.pillVersion.block,
+        });
+      }),
+    );
+
+    if (checkPills.create.length > 0) {
+      await this.addPillToProgram(checkPills.create, programVersionId);
+    }
+    if (checkPills.delete.length > 0) {
+      Promise.all(
+        checkPills.delete.map(async (pill) => {
+          await this.pillRepository.deletePill(pill.id);
+        }),
+      );
+    }
+
+    const checkStudentList = await this.checkArrayObj(
+      data.students.map((item) => {
+        return { id: item };
+      }),
+      program.studentPrograms.map((item) => {
+        return { id: item.student.auth.email };
+      }),
+    );
+
+    if (checkStudentList.create.length > 0) {
+      this.enrollStudents(
+        program.id,
+        checkStudentList.create.map((element) => {
+          return element.id;
+        }),
+      );
+    }
+
+    if (checkStudentList.delete.length > 0) {
+      checkStudentList.delete.map(async (student) => {
+        this.programRepository.downStudentProgram(student.id, programVersionId);
+      });
+    }
+
+    const checkTrivia = await this.checkObjs(data.trivia, program.programVersionTrivias[0].trivia);
+
+    if (checkTrivia) {
+      this.triviaRepository.delete(program.programVersionTrivias[0].trivia.id);
+      this.triviaRepository.create(data.trivia, 12);
+    }
+
+    const checkQuestionarie = await this.checkObjs(
+      data.questionnaire,
+      program.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaire,
+    );
+
+    if (checkQuestionarie) {
+      this.questionnaireRepository.delete(program.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaire.id);
+      this.addQuestionnaireToProgram(program.programId, data.questionnaire);
+    }
+    return newProgram;
+  }
+
+  private async checkObjs(newObj: any, oldObj: any) {
+    if (!(newObj && oldObj)) return false;
+    const oldKeys = Object.keys(oldObj);
+
+    const result: string[] = [];
+
+    for (const key of oldKeys) {
+      try {
+        if (newObj[key] !== oldObj[key]) {
+          result.push(key);
+        }
+      } catch {
+        continue;
+      }
+    }
+    return result.length === 0 ? true : false;
+  }
+
+  private async checkArrayObj(newArray: any[], oldArray: any[]) {
+    const result: { value: boolean; update: any[]; create: any[]; delete: any[] } = { value: true, update: [], create: [], delete: [] };
+
+    await Promise.all(
+      oldArray.map(async (item, index) => {
+        const itemToSearch = newArray.findIndex((find) => find.id === item.id);
+        if (itemToSearch === -1) {
+          oldArray.splice(index, 1);
+          result.value = false;
+        } else {
+          if (!(await this.checkObjs(item, newArray[itemToSearch]))) {
+            result.value = false;
+            result.update.push(newArray[index]);
+            newArray.splice(index, 1);
+            oldArray.splice(index, 1);
+          } else {
+            oldArray.splice(index, 1);
+          }
+        }
+      }),
+    );
+
+    result.delete = oldArray;
+
+    result.create = newArray;
+
+    return result;
   }
 }

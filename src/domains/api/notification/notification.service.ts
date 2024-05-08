@@ -12,10 +12,10 @@ export class NotificationService {
   }
 
   public async sendNotification(params: NotificationDto) {
-    const token = await this.notificationRepository.searchToken(params.userId);
-    if (!token) return undefined;
+    const user = await this.notificationRepository.searchToken(params.userId);
+    if (!user) return undefined;
 
-    if (!token.tokenDevice) return undefined;
+    if (!user.tokenDevice) return undefined;
 
     const payload = JSON.stringify(
       new InputNotificationDto({ default: 'default', body: params.message, title: params.title, sound: 'default' }),
@@ -23,7 +23,7 @@ export class NotificationService {
 
     const params_sns = {
       Message: payload,
-      TargetArn: token.tokenDevice,
+      TargetArn: user.tokenDevice,
       MessageStructure: 'json',
     };
 
@@ -32,7 +32,7 @@ export class NotificationService {
       const response = await this.client.send(command);
       return response.MessageId;
     } catch (error) {
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      throw new HttpException("Can't send notification", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -51,6 +51,6 @@ export class NotificationService {
     if (!response_sns.EndpointArn) throw new HttpException('AWS ERROR', HttpStatus.BAD_REQUEST);
     const response = this.notificationRepository.updateToken(id, response_sns.EndpointArn);
     if (!response) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    return response;
+    return 'OK';
   }
 }

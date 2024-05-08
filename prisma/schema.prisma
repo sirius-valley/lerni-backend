@@ -122,9 +122,11 @@ model Comment {
 }
 
 model ProgramVersion {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   version   Int
-  createdAt DateTime @default(now())
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
 
   programId String
   program   Program @relation(fields: [programId], references: [id])

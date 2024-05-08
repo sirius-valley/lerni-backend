@@ -213,4 +213,32 @@ export class QuestionnaireRepository {
       },
     });
   }
+
+  public async getProgramVersionByquestionnaireId(questionnaireId: string) {
+    return await this.prisma.programVersion.findFirst({
+      where: {
+        programVersionQuestionnaireVersions: {
+          some: {
+            questionnaireVersion: {
+              questionnaireId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  public async delete(id: string) {
+    await this.prisma.questionnaireVersion.deleteMany({
+      where: {
+        questionnaireId: id,
+      },
+    });
+
+    return await this.prisma.questionnaire.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

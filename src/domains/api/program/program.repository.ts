@@ -610,11 +610,13 @@ export class ProgramRepository {
     });
   }
 
-  async createProgramVersion(programId: string, version: number) {
+  async createProgramVersion(programId: string, version: number, startDate?: Date, endDate?: Date) {
     return await this.prisma.programVersion.create({
       data: {
         programId,
         version,
+        startDate,
+        endDate,
       },
     });
   }
@@ -754,6 +756,34 @@ export class ProgramRepository {
     });
   }
 
+  async updateProgram(id: string, name: string, description: string, hoursToComplete: number, pointsReward: number, icon: string) {
+    return await this.prisma.program.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        description,
+        hoursToComplete,
+        pointsReward,
+        icon,
+      },
+    });
+  }
+
+  async downStudentProgram(email: string, programVersionId: string) {
+    return await this.prisma.studentProgram.deleteMany({
+      where: {
+        student: {
+          auth: {
+            email,
+          },
+        },
+        programVersionId,
+      },
+    });
+  }
+
   async getProgramById(id: string) {
     return this.prisma.program.findUnique({
       where: {
@@ -786,6 +816,13 @@ export class ProgramRepository {
         questionnaireSubmissions: {
           some: {
             progress: 100,
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
           },
         },
       },
@@ -799,6 +836,18 @@ export class ProgramRepository {
                 },
               },
             },
+          },
+        },
+      },
+    });
+  }
+
+  async getStudentEnrroledByProgramVersionId(programVersionId: string) {
+    return await this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
           },
         },
       },
