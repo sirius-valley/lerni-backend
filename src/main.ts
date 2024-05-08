@@ -1,8 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as Sentry from '@sentry/node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { SentryFilter } from './exception/sentry.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +17,15 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   swagger(app);
 
+  Sentry.init({
+    dsn: configService.get<string>('SENTRY_DSN'),
+    integrations: [nodeProfilingIntegration()],
+    tracesSampleRate: 1.0,
+    profilesSampleRate: 1.0,
+  });
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new SentryFilter(httpAdapter));
   await app.listen(configService.get('PORT') ?? 3000);
   console.log(`Environment: ${configService.get<string>('ENVIRONMENT')}`);
 }
