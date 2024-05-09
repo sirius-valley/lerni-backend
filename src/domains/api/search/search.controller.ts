@@ -14,7 +14,7 @@ export class SearchController {
 
   @Get('')
   async search(@Request() req: ApiRequest, @Query() query: any) {
-    const { page, filter, search } = query as Record<string, string>;
-    return await this.searchService.search(req.user, search, filter, Number(page));
+    const { page, search } = query as Record<string, string>;
+    return await this.searchService.search(req.user, search, Number(page));
   }
 }
