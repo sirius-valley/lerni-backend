@@ -12,6 +12,7 @@ export const introductionVariables = {
   '74e1cbe3-7ff8-4b17-8302-fd60b1bbeb85': 'profession',
   '3dc9d90b-5e24-4ccc-9ed8-a21509b50ba6': 'profession',
   '736b1f08-3532-4f27-aa9c-b48075a43b33': 'career',
+  'aa441776-80ba-4feb-a89e-ad19e3abcae4': 'image',
 };
 
 export const introductionTeacher = {

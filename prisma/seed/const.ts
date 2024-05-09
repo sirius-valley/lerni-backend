@@ -21,7 +21,7 @@ export const introductionBlock = `{
     {
       "id": "cf3af498-b8d2-4281-ba5a-57be15d28cdd",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Cuál es tu nombre?</span></p>"
+      "name": "<p><span>¿Cuál es tu nombre?</span></p>"
     },
     {
       "id": "0e64b123-5fcb-46db-a2cf-5e39f0b90ed7",
@@ -35,11 +35,10 @@ export const introductionBlock = `{
         "regex": ".*"
       }
     },
-
     {
       "id": "6bc4b333-9e25-4fea-903c-45d0419f89c8",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Cuál es tu apellido?</span></p>"
+      "name": "<p><span>¿Cuál es tu apellido?</span></p>"
     },
     {
       "id": "6bc4b333-9e25-4fea-903c-45d0419f89c9",
@@ -49,7 +48,7 @@ export const introductionBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "free-text"
-          },
+        },
         "regex": ".*"
       }
     },
@@ -61,7 +60,7 @@ export const introductionBlock = `{
     {
       "id": "67c8021c-89fb-4f16-aaca-d35c828fda49",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Contanos, ¿de dónde sos?</span></p>"
+      "name": "<p><span>Contanos, ¿de dónde sos?</span></p>"
     },
     {
       "id": "70b6b4a9-a50d-4f19-8833-08f1763b9409",
@@ -83,7 +82,7 @@ export const introductionBlock = `{
     {
       "id": "9debd3fe-e1a0-4e0f-b4b9-efd6e320a049",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Y ¿trabajas 💼 o estudias 📚?</span></p>"
+      "name": "<p><span>Y ¿trabajas 💼 o estudias 📚?</span></p>"
     },
     {
       "id": "a45869e8-bc3e-4c3e-b87a-65c6c743cac0",
@@ -104,7 +103,7 @@ export const introductionBlock = `{
     {
       "id": "d0e30634-80e0-4b0e-a7ef-34309dfec3d1",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">¿Qué estudias? 📚</span></p>"
+      "name": "<p><span>¿Qué estudias? 📚</span></p>"
     },
     {
       "id": "bd7b151f-a1f1-406d-898b-f8dfb2f89ec5",
@@ -121,7 +120,7 @@ export const introductionBlock = `{
     {
       "id": "f5f7be10-08d4-4011-9dbb-66ae56715cbc",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">¿De qué trabajas? 💼</span></p>"
+      "name": "<p><span>¿De qué trabajas? 💼</span></p>"
     },
     {
       "id": "3dc9d90b-5e24-4ccc-9ed8-a21509b50ba6",
@@ -165,7 +164,7 @@ export const introductionBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "free-text"
-         },
+        },
         "regex": ".*"
       }
     },
@@ -175,9 +174,40 @@ export const introductionBlock = `{
       "name": "<p>Buenisimo!</p>"
     },
     {
+      "id": "28398077-a208-459c-8a72-873c81894cb5",
+      "type": "ACTION",
+      "name": "<p>Por ultimo elijamos una foto de perfil! 👤</p>"
+    },{
+      "id": "aa441776-80ba-4feb-a89e-ad19e3abcae4",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "carousel",
+          "option_descriptions": [
+            "Elegir",
+            "Elegir",
+            "Elegir",
+            "Elegir",
+            "Elegir",
+            "Elegir"
+          ]
+        },
+        "options": [
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/51777242273.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/26281048736.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/61168468556.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png"
+        ]
+      }
+    },
+    {
       "id": "7ddb432c-c022-4495-bead-7c778f407b2e",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Ahora que nos conocemos, dejame comentarte como va a ser la metodologia!♟️</span></p>"
+      "name": "<p><span>Ahora que nos conocemos, dejame comentarte como va a ser la metodologia!♟️</span></p>"
     },
     {
       "id": "699d0cb2-95ae-46b7-b7e7-a5da1b49a20d",
@@ -187,7 +217,7 @@ export const introductionBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "single-choice"
-         },
+        },
         "options": [
           "Dale!"
         ]
@@ -235,7 +265,7 @@ export const introductionBlock = `{
     {
       "id": "7b5caa8a-7800-4e63-8f93-a44aba4bc169",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Estas listo?!</span></p>"
+      "name": "<p><span>¿Estas listo?!</span></p>"
     },
     {
       "id": "b4355579-f828-48b3-afa7-190d7ff3ab01",
@@ -358,6 +388,14 @@ export const introductionBlock = `{
     },
     {
       "from": "17464d5a-68a5-4871-ab25-e45a8c5f08f0",
+      "to": "28398077-a208-459c-8a72-873c81894cb5"
+    },
+    {
+      "from": "28398077-a208-459c-8a72-873c81894cb5",
+      "to": "aa441776-80ba-4feb-a89e-ad19e3abcae4"
+    },
+    {
+      "from": "aa441776-80ba-4feb-a89e-ad19e3abcae4",
       "to": "7ddb432c-c022-4495-bead-7c778f407b2e"
     },
     {
