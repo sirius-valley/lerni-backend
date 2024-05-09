@@ -21,7 +21,7 @@ export const introductionBlock = `{
     {
       "id": "cf3af498-b8d2-4281-ba5a-57be15d28cdd",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Cuál es tu nombre?</span></p>"
+      "name": "<p><span>¿Cuál es tu nombre?</span></p>"
     },
     {
       "id": "0e64b123-5fcb-46db-a2cf-5e39f0b90ed7",
@@ -35,11 +35,10 @@ export const introductionBlock = `{
         "regex": ".*"
       }
     },
-
     {
       "id": "6bc4b333-9e25-4fea-903c-45d0419f89c8",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Cuál es tu apellido?</span></p>"
+      "name": "<p><span>¿Cuál es tu apellido?</span></p>"
     },
     {
       "id": "6bc4b333-9e25-4fea-903c-45d0419f89c9",
@@ -49,7 +48,7 @@ export const introductionBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "free-text"
-          },
+        },
         "regex": ".*"
       }
     },
@@ -61,7 +60,7 @@ export const introductionBlock = `{
     {
       "id": "67c8021c-89fb-4f16-aaca-d35c828fda49",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Contanos, ¿de dónde sos?</span></p>"
+      "name": "<p><span>Contanos, ¿de dónde sos?</span></p>"
     },
     {
       "id": "70b6b4a9-a50d-4f19-8833-08f1763b9409",
@@ -83,7 +82,7 @@ export const introductionBlock = `{
     {
       "id": "9debd3fe-e1a0-4e0f-b4b9-efd6e320a049",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Y ¿trabajas 💼 o estudias 📚?</span></p>"
+      "name": "<p><span>Y ¿trabajas 💼 o estudias 📚?</span></p>"
     },
     {
       "id": "a45869e8-bc3e-4c3e-b87a-65c6c743cac0",
@@ -104,7 +103,7 @@ export const introductionBlock = `{
     {
       "id": "d0e30634-80e0-4b0e-a7ef-34309dfec3d1",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">¿Qué estudias? 📚</span></p>"
+      "name": "<p><span>¿Qué estudias? 📚</span></p>"
     },
     {
       "id": "bd7b151f-a1f1-406d-898b-f8dfb2f89ec5",
@@ -121,7 +120,7 @@ export const introductionBlock = `{
     {
       "id": "f5f7be10-08d4-4011-9dbb-66ae56715cbc",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245);\\">¿De qué trabajas? 💼</span></p>"
+      "name": "<p><span>¿De qué trabajas? 💼</span></p>"
     },
     {
       "id": "3dc9d90b-5e24-4ccc-9ed8-a21509b50ba6",
@@ -165,7 +164,7 @@ export const introductionBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "free-text"
-         },
+        },
         "regex": ".*"
       }
     },
@@ -175,9 +174,40 @@ export const introductionBlock = `{
       "name": "<p>Buenisimo!</p>"
     },
     {
+      "id": "28398077-a208-459c-8a72-873c81894cb5",
+      "type": "ACTION",
+      "name": "<p>Por ultimo elijamos una foto de perfil! 👤</p>"
+    },{
+      "id": "aa441776-80ba-4feb-a89e-ad19e3abcae4",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "carousel",
+          "option_descriptions": [
+            "Elegir",
+            "Elegir",
+            "Elegir",
+            "Elegir",
+            "Elegir",
+            "Elegir"
+          ]
+        },
+        "options": [
+          "https://media.discordapp.net/attachments/411201278031560708/1237828407623155732/image.png?ex=663d110a&is=663bbf8a&hm=b905787832990b82e0740203126a2e6568bc041425b795b2db1cd5f3d6c78592&=&format=webp&quality=lossless&width=500&height=500",
+          "https://media.discordapp.net/attachments/411201278031560708/1237828436207206460/image.png?ex=663d1110&is=663bbf90&hm=66b66ff0c1eaf3561db3597908312618eaa8c41a5e9f9362a15f55421cad48b5&=&format=webp&quality=lossless&width=500&height=500",
+          "https://media.discordapp.net/attachments/411201278031560708/1237828462425804831/image.png?ex=663d1117&is=663bbf97&hm=6fb073d12dabcf2e76e5a45b44851bf8508f97a0ac1593259aa18e6f4feb8197&=&format=webp&quality=lossless&width=500&height=500",
+          "https://media.discordapp.net/attachments/411201278031560708/1237828485167448095/image.png?ex=663d111c&is=663bbf9c&hm=dce1c855fa149dc9d89c8bb4a6c2776b22ec4f6cc2b9d124bbd52d73f97a6f75&=&format=webp&quality=lossless&width=500&height=500",
+          "https://media.discordapp.net/attachments/411201278031560708/1237828507678281839/image.png?ex=663d1121&is=663bbfa1&hm=bc9dc8e98a0f7f52e0dec228559a53572557f9660aa17ddddadd7373737f36e4&=&format=webp&quality=lossless&width=500&height=500",
+          "https://media.discordapp.net/attachments/411201278031560708/1237828529651974217/image.png?ex=663d1127&is=663bbfa7&hm=1f02cae6e327d6829783cc91454f66625ab72230b814096d097e7ff88d8d72fb&=&format=webp&quality=lossless&width=500&height=500"
+        ]
+      }
+    },
+    {
       "id": "7ddb432c-c022-4495-bead-7c778f407b2e",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">Ahora que nos conocemos, dejame comentarte como va a ser la metodologia!♟️</span></p>"
+      "name": "<p><span>Ahora que nos conocemos, dejame comentarte como va a ser la metodologia!♟️</span></p>"
     },
     {
       "id": "699d0cb2-95ae-46b7-b7e7-a5da1b49a20d",
@@ -187,7 +217,7 @@ export const introductionBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "single-choice"
-         },
+        },
         "options": [
           "Dale!"
         ]
@@ -235,7 +265,7 @@ export const introductionBlock = `{
     {
       "id": "7b5caa8a-7800-4e63-8f93-a44aba4bc169",
       "type": "ACTION",
-      "name": "<p><span style=\\"background-color: rgb(245, 245, 245); color: rgb(0, 0, 0);\\">¿Estas listo?!</span></p>"
+      "name": "<p><span>¿Estas listo?!</span></p>"
     },
     {
       "id": "b4355579-f828-48b3-afa7-190d7ff3ab01",
@@ -358,6 +388,14 @@ export const introductionBlock = `{
     },
     {
       "from": "17464d5a-68a5-4871-ab25-e45a8c5f08f0",
+      "to": "28398077-a208-459c-8a72-873c81894cb5"
+    },
+    {
+      "from": "28398077-a208-459c-8a72-873c81894cb5",
+      "to": "aa441776-80ba-4feb-a89e-ad19e3abcae4"
+    },
+    {
+      "from": "aa441776-80ba-4feb-a89e-ad19e3abcae4",
       "to": "7ddb432c-c022-4495-bead-7c778f407b2e"
     },
     {
