@@ -195,12 +195,12 @@ export const introductionBlock = `{
           ]
         },
         "options": [
-          "https://media.discordapp.net/attachments/411201278031560708/1237828407623155732/image.png?ex=663d110a&is=663bbf8a&hm=b905787832990b82e0740203126a2e6568bc041425b795b2db1cd5f3d6c78592&=&format=webp&quality=lossless&width=500&height=500",
-          "https://media.discordapp.net/attachments/411201278031560708/1237828436207206460/image.png?ex=663d1110&is=663bbf90&hm=66b66ff0c1eaf3561db3597908312618eaa8c41a5e9f9362a15f55421cad48b5&=&format=webp&quality=lossless&width=500&height=500",
-          "https://media.discordapp.net/attachments/411201278031560708/1237828462425804831/image.png?ex=663d1117&is=663bbf97&hm=6fb073d12dabcf2e76e5a45b44851bf8508f97a0ac1593259aa18e6f4feb8197&=&format=webp&quality=lossless&width=500&height=500",
-          "https://media.discordapp.net/attachments/411201278031560708/1237828485167448095/image.png?ex=663d111c&is=663bbf9c&hm=dce1c855fa149dc9d89c8bb4a6c2776b22ec4f6cc2b9d124bbd52d73f97a6f75&=&format=webp&quality=lossless&width=500&height=500",
-          "https://media.discordapp.net/attachments/411201278031560708/1237828507678281839/image.png?ex=663d1121&is=663bbfa1&hm=bc9dc8e98a0f7f52e0dec228559a53572557f9660aa17ddddadd7373737f36e4&=&format=webp&quality=lossless&width=500&height=500",
-          "https://media.discordapp.net/attachments/411201278031560708/1237828529651974217/image.png?ex=663d1127&is=663bbfa7&hm=1f02cae6e327d6829783cc91454f66625ab72230b814096d097e7ff88d8d72fb&=&format=webp&quality=lossless&width=500&height=500"
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/51777242273.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/26281048736.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/61168468556.png",
+          "https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png"
         ]
       }
     },
