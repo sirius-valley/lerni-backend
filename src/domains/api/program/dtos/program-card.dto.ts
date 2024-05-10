@@ -6,12 +6,16 @@ export class ProgramCardDto {
   icon: string;
   teacher: TeacherDto;
   progress: number;
+  locked: boolean;
+  dateUnlocked?: Date;
 
-  constructor(program: any, progress: number) {
+  constructor(program: any, progress: number, locked: boolean, dateUnlocked?: Date) {
     this.id = program.id;
     this.name = program.name;
     this.icon = program.icon;
     this.teacher = new TeacherDto(program.teacher);
     this.progress = progress;
+    this.locked = locked;
+    this.dateUnlocked = dateUnlocked;
   }
 }
