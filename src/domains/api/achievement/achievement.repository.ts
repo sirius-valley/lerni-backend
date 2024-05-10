@@ -84,6 +84,9 @@ export class AchievementRepository {
     return this.prisma.studentAchievementLevel.findMany({
       where: {
         studentId,
+        completedAt: {
+          not: null,
+        },
       },
       orderBy: [
         {

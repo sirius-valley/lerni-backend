@@ -17,19 +17,25 @@ export class AchievementService {
     for (const achievement of achievements) {
       const studentAchievement = await this.achievementRepository.getStudentAchievement(studentId, achievement.id);
       if (!studentAchievement) {
-        await this.achievementRepository.createStudenAchievementLevel(studentId, achievement.id, 1);
+        const createdStudentAchievement = await this.achievementRepository.createStudenAchievementLevel(studentId, achievement.id, 0);
+        await this.checkProgress(achievement, createdStudentAchievement, studentId);
       } else {
-        if (this.calculateProgress(achievement, studentAchievement.progress + 1) < 100) {
-          await this.achievementRepository.updateProgress(studentAchievement.id, studentAchievement.progress + 1);
-        } else if (studentAchievement.completedAt !== null) {
-          await this.achievementRepository.updateCompletedDate(studentAchievement.id, studentAchievement.progress + 1);
-          this.notificationService.sendNotification({
-            userId: studentId,
-            title: 'Conseguiste un logro',
-            message: `Bieeen! Conseguiste el logro ${achievement.achievement.name}! Entra para saber mas`,
-          });
-        }
+        await this.checkProgress(achievement, studentAchievement, studentId);
       }
+    }
+  }
+
+  private async checkProgress(achievement: any, studentAchievement: any, studentId: string) {
+    console.log(achievement);
+    if (this.calculateProgress(achievement, studentAchievement.progress + 1) < 100) {
+      await this.achievementRepository.updateProgress(studentAchievement.id, studentAchievement.progress + 1);
+    } else {
+      await this.achievementRepository.updateCompletedDate(studentAchievement.id, studentAchievement.progress + 1);
+      this.notificationService.sendNotification({
+        userId: studentId,
+        title: 'Conseguiste un logro',
+        message: `Bieeen! Conseguiste el logro ${achievement.achievement.name}! Entra para saber mas`,
+      });
     }
   }
 
