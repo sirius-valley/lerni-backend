@@ -24,23 +24,60 @@ export class SearchRepository {
       }),
     );
 
-    const results = await this.prisma.program.findMany({
+    const results = await this.prisma.studentProgram.findMany({
       where: {
-        name: { contains: search, mode: 'insensitive' },
-        versions: {
-          some: {
-            studentPrograms: {
-              some: {
-                studentId,
-              },
-            },
+        programVersion: {
+          program: {
+            name: { contains: search, mode: 'insensitive' },
           },
         },
       },
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
       include: {
-        teacher: true,
+        programVersion: {
+          include: {
+            program: {
+              include: {
+                teacher: true,
+              },
+            },
+            programVersionPillVersions: {
+              include: {
+                pillVersion: {
+                  include: {
+                    pillSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                    },
+                  },
+                },
+              },
+            },
+            programVersionQuestionnaireVersions: {
+              include: {
+                questionnaireVersion: {
+                  include: {
+                    questionnaireSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
