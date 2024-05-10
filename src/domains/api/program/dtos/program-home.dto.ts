@@ -7,8 +7,8 @@ export class ProgramHomeDto {
   programsNotStarted: SimpleProgramDto[];
 
   constructor(programs: { programsCompleted: any[]; programsInProgress: { program: any; progress: number }[]; programsNotStarted: any[] }) {
-    this.programsCompleted = programs.programsCompleted.map((program) => new ProgramCardDto(program, 100));
-    this.programsInProgress = programs.programsInProgress.map((program) => new ProgramCardDto(program.program, program.progress));
-    this.programsNotStarted = programs.programsNotStarted.map((program) => new ProgramCardDto(program, 0));
+    this.programsCompleted = programs.programsCompleted.map((program) => new ProgramCardDto(program, 100, false));
+    this.programsInProgress = programs.programsInProgress.map((program) => new ProgramCardDto(program.program, program.progress, false));
+    this.programsNotStarted = programs.programsNotStarted.map((program) => new ProgramCardDto(program, 0, false));
   }
 }

@@ -62,7 +62,11 @@ export class ProgramService {
     switch (status.toLowerCase()) {
       case 'not_started': {
         const { data, total } = await this.programRepository.getProgramsNotStartedByStudentId(studentId, options);
-        const programs = data.map((studentprogram) => new ProgramCardDto(studentprogram.programVersion.program, 0));
+        const programs = data.map((studentprogram) => {
+          const dateUnlocked = studentprogram.programVersion.startDate ?? undefined;
+          const locked = dateUnlocked ? dateUnlocked > new Date() : false;
+          return new ProgramCardDto(studentprogram.programVersion.program, 0, locked, dateUnlocked);
+        });
         return { programs, maxPage: Math.ceil(total / (options.limit || 10)) };
       }
       case 'in_progress': {
@@ -72,13 +76,13 @@ export class ProgramService {
             studentProgram.programVersion.programVersionPillVersions,
             studentProgram.programVersion.programVersionQuestionnaireVersions[0],
           );
-          return new ProgramCardDto(studentProgram.programVersion.program, progress);
+          return new ProgramCardDto(studentProgram.programVersion.program, progress, false);
         });
         return { programs, maxPage: Math.ceil(total / (options.limit || 10)) };
       }
       case 'finished': {
         const { data, total } = await this.programRepository.getProgramsCompletedByStudentId(studentId, options);
-        const programs = data.map((studentProgram) => new ProgramCardDto(studentProgram.programVersion.program, 100));
+        const programs = data.map((studentProgram) => new ProgramCardDto(studentProgram.programVersion.program, 100, false));
         return { programs, maxPage: Math.ceil(total / (options.limit || 10)) };
       }
     }
