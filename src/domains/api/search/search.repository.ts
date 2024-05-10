@@ -26,6 +26,7 @@ export class SearchRepository {
 
     const results = await this.prisma.studentProgram.findMany({
       where: {
+        studentId,
         programVersion: {
           program: {
             name: { contains: search, mode: 'insensitive' },
