@@ -12,4 +12,5 @@ export const configuration = () => ({
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   AWS_REGION: process.env.AWS_REGION,
+  SENTRY_DSN: process.env.SENTRY_DSN,
 });

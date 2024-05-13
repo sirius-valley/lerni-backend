@@ -16,6 +16,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_USER=email
 EMAIL_PASSWORD=password
 SPRING_SERVICE_URL=http://spring-service:8080
+SENTRY_DSN=sentry
 
 PORT=3000
 ```
