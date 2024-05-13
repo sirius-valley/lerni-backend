@@ -7,6 +7,8 @@ export class SearchRepository {
   constructor(private prisma: PrismaService) {}
 
   async searchByPrograms(search: string, studentId: string, options: LimitOffsetPagination) {
+    const limit = options.limit ? options.limit : 10;
+    const offset = options.offset ? (options.offset - 1) * limit : 0;
     const total = Number(
       await this.prisma.program.count({
         where: {
@@ -33,8 +35,8 @@ export class SearchRepository {
           },
         },
       },
-      skip: options.offset ? options.offset : 0,
-      take: options.limit ? options.limit : 10,
+      skip: offset,
+      take: limit,
       include: {
         programVersion: {
           include: {
