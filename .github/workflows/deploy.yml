@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-          aws-region: us-east-2
+          aws-region: us-east-1
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -44,7 +44,7 @@ jobs:
 
       - name: Download task definition
         env:
-          TASK_DEFINITION: emback-production
+          TASK_DEFINITION: emback-develop
         run: |
           aws ecs describe-task-definition --task-definition $TASK_DEFINITION --query taskDefinition > task-definition-dev.json
 
@@ -53,7 +53,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition-dev.json
-          container-name: emback-production
+          container-name: emback-develop
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
