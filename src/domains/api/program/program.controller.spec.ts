@@ -16,6 +16,8 @@ import { AchievementModule } from '../achievement/achievement.module';
 import { NotificationModule } from '../notification/notification.module';
 
 process.env.JWT_SECRET = 'test_secret_long';
+process.env.NODE_ENV = 'development';
+process.env.OpenAI_API_KEY = 'openai_token';
 describe('Program Controller', () => {
   let programController: ProgramController;
   let prismaService: DeepMockProxy<PrismaService>;

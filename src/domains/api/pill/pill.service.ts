@@ -14,6 +14,7 @@ import { HeadlandsAdapter } from './adapters/headlands.adapter';
 import { PillBlockDto } from './dtos/pill-block.dto';
 import { ThreadRequestDto } from './dtos/thread-request.dto';
 import { AchievementService } from '../achievement/achievement.service';
+import { OpenAIService } from './openai.client';
 
 @Injectable()
 export class PillService {
@@ -23,6 +24,7 @@ export class PillService {
     private readonly studentRepository: StudentRepository,
     private readonly headlandsAdapter: HeadlandsAdapter,
     private readonly achievementService: AchievementService,
+    private readonly openAIService: OpenAIService,
   ) {}
 
   public async getIntroduction(authorization: string, student: StudentDto) {
@@ -170,11 +172,12 @@ export class PillService {
   private async saveIntroductionProgress(studentDto: StudentDto, answerRequest: AnswerRequestDto) {
     const varName = introductionVariables[answerRequest.questionId];
     if (!varName) return studentDto;
+    const answer = await this.openAIService.retrieveData(this.capitalizeAndTrim(answerRequest.answer), varName);
     Object.keys(studentDto).forEach((key) => {
       if (!studentDto[key] || !Object.values(introductionVariables).includes(studentDto[key])) return studentDto;
       studentDto[key] = this.capitalizeAndTrim(studentDto[key]);
     });
-    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
+    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, varName, answer);
     if (!updatedStudent) throw new HttpException('Error while updating student', HttpStatus.INTERNAL_SERVER_ERROR);
     return updatedStudent;
   }
