@@ -41,7 +41,8 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_REPO: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: emback-develop
           IMAGE_TAG: ${{ github.sha }}
           PORT: 3000
           JWT_SECRET: ${{secrets.JWT_SECRET}}
