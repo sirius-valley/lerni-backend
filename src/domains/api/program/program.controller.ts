@@ -34,6 +34,11 @@ export class ProgramController {
     });
   }
 
+  @Get('totalProgram')
+  async getTotalPrograms() {
+    return await this.programService.getTotalProgramsCount();
+  }
+
   @Get(':id')
   async getProgramById(@Request() req: ApiRequest, @Param('id') id: string) {
     return await this.programService.getProgramById(req.user.id, id);
