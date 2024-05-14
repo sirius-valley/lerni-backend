@@ -1,0 +1,417 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Auth {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  isActive    Boolean  @default(true)
+  tokenDevice String?
+  createdAt   DateTime @default(now())
+
+  user                Student?
+  resetPasswordTokens ResetPasswordToken[]
+}
+
+model ResetPasswordToken {
+  id            String    @id @default(uuid())
+  token         String
+  attemptCount  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  validatedDate DateTime?
+
+  authId String
+  auth   Auth   @relation(fields: [authId], references: [id])
+}
+
+model Student {
+  id         String   @id @default(uuid())
+  name       String?
+  lastname   String?
+  career     String?
+  profession String?
+  city       String?
+  image      String?
+  createdAt  DateTime @default(now())
+
+  authId String @unique
+  auth   Auth   @relation(fields: [authId], references: [id])
+
+  points PointRecord[]
+
+  comments Comment[]
+
+  programs StudentProgram[]
+
+  pillSubmissions PillSubmission[]
+
+  questionnaireSubmissions QuestionnaireSubmission[]
+
+  studentTriviaMatches StudentTriviaMatch[]
+
+  studentAchievementLevels StudentAchievementLevel[]
+}
+
+model Teacher {
+  id          String   @id @default(uuid())
+  name        String
+  lastname    String
+  password    String?
+  email       String?
+  profession  String
+  image       String?
+  description String?
+  createdAt   DateTime @default(now())
+
+  programs Program[]
+}
+
+enum PointEvent {
+  added
+  subtracted
+}
+
+model PointRecord {
+  id String @id @default(uuid())
+
+  amount       Int
+  sourceEntity String
+  entityId     String
+  createdAt    DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+}
+
+model Program {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  hoursToComplete Int
+  pointsReward    Int
+  icon            String
+  createdAt       DateTime @default(now())
+
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+  comments Comment[]
+
+  versions ProgramVersion[]
+}
+
+enum Privacy {
+  public
+  private
+}
+
+enum Vote {
+  up
+  down
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  privacy   Privacy
+  vote      Vote
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+}
+
+model ProgramVersion {
+  id        String    @id @default(uuid())
+  version   Int
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
+
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+
+  studentPrograms StudentProgram[]
+
+  objectives ProgramObjective[]
+
+  programVersionPillVersions ProgramVersionPillVersion[]
+
+  programVersionQuestionnaireVersions ProgramVersionQuestionnaireVersion[]
+
+  programVersionTrivias ProgramVersionTrivia[]
+}
+
+model StudentProgram {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  @@unique([programVersionId, studentId])
+}
+
+model ProgramObjective {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+}
+
+model Pill {
+  id             String        @id @default(uuid())
+  name           String
+  description    String
+  teacherComment String
+  pillVersion    PillVersion[]
+}
+
+model PillVersion {
+  id                    String   @id @default(uuid())
+  version               Int
+  completionTimeMinutes Int
+  block                 String
+  createdAt             DateTime @default(now())
+
+  pillId String
+  pill   Pill   @relation(fields: [pillId], references: [id])
+
+  pillObjectives PillObjective[]
+
+  programVersions ProgramVersionPillVersion[]
+
+  pillSubmissions PillSubmission[]
+}
+
+model PillObjective {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  pillVersionId String
+  pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
+}
+
+model ProgramVersionPillVersion {
+  id        String   @id @default(uuid())
+  order     Int
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  pillVersionId String
+  pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
+}
+
+model PillSubmission {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  progress  Int      @default(0)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  pillVersionId String
+  pillVersion   PillVersion @relation(fields: [pillVersionId], references: [id])
+
+  pillAnswers PillAnswer[]
+}
+
+model PillAnswer {
+  id         String   @id @default(uuid())
+  questionId String
+  value      String
+  createdAt  DateTime @default(now())
+
+  pillSubmissionId String
+  pillSubmission   PillSubmission @relation(fields: [pillSubmissionId], references: [id])
+}
+
+model Questionnaire {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+
+  questions QuestionnaireVersion[]
+}
+
+model QuestionnaireVersion {
+  id                    String   @id @default(uuid())
+  version               Int
+  passsing_score        Int
+  cooldownInMinutes     Int
+  completionTimeMinutes Int
+  block                 String
+  questionCount         Int
+  createdAt             DateTime @default(now())
+
+  questionnaireId String
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
+
+  programVersions ProgramVersionQuestionnaireVersion[]
+
+  questionnaireSubmissions QuestionnaireSubmission[]
+}
+
+model QuestionnaireSubmission {
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now())
+  finishedDateTime DateTime?
+  progress         Int       @default(0)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  questionnaireVersionId String
+  questionnaireVersion   QuestionnaireVersion @relation(fields: [questionnaireVersionId], references: [id])
+
+  questionnaireAnswers QuestionnaireAnswer[]
+}
+
+model QuestionnaireAnswer {
+  id         String   @id @default(uuid())
+  questionId String
+  value      String
+  isCorrect  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  questionnaireSubmissionId String
+  questionnaireSubmission   QuestionnaireSubmission @relation(fields: [questionnaireSubmissionId], references: [id])
+}
+
+model ProgramVersionQuestionnaireVersion {
+  id        String   @id @default(uuid())
+  order     Int
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  questionnaireVersionId String
+  questionnaireVersion   QuestionnaireVersion @relation(fields: [questionnaireVersionId], references: [id])
+}
+
+model Trivia {
+  id            String   @id @default(uuid())
+  block         String
+  questionCount Int      @default(12)
+  pointsReward  Int      @default(24)
+  createdAt     DateTime @default(now())
+
+  programVersions ProgramVersionTrivia[]
+
+  triviaMatches TriviaMatch[]
+}
+
+model ProgramVersionTrivia {
+  id        String   @id @default(uuid())
+  order     Int
+  createdAt DateTime @default(now())
+
+  programVersionId String
+  programVersion   ProgramVersion @relation(fields: [programVersionId], references: [id])
+
+  triviaId String
+  trivia   Trivia @relation(fields: [triviaId], references: [id])
+}
+
+model TriviaMatch {
+  id               String    @id @default(uuid())
+  seed             Int       @default(0)
+  createdAt        DateTime  @default(now())
+  finishedDateTime DateTime?
+
+  triviaId String
+  trivia   Trivia @relation(fields: [triviaId], references: [id])
+
+  studentTriviaMatches StudentTriviaMatch[]
+}
+
+model StudentTriviaMatch {
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now())
+  finishedDateTime DateTime?
+  completeBefore   DateTime?
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  triviaMatchId String
+  triviaMatch   TriviaMatch @relation(fields: [triviaMatchId], references: [id])
+
+  triviaAnswers TriviaAnswer[]
+}
+
+model TriviaAnswer {
+  id         String   @id @default(uuid())
+  questionId String
+  value      String
+  isCorrect  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  studentTriviaMatchId String
+  studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id])
+}
+
+model Achievement {
+  id           String @id @default(uuid())
+  name         String
+  description  String
+  trackedValue String
+
+  achievementLevels AchievementLevel[]
+}
+
+model AchievementLevel {
+  id            String          @id @default(uuid())
+  description   String
+  targetValue   Int
+  pointsAwarded Int
+  tier          AchievementTier
+  icon          String
+
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+
+  studentAchievementLevels StudentAchievementLevel[]
+}
+
+enum AchievementTier {
+  BRONZE
+  SILVER
+  GOLD
+  DIAMOND
+}
+
+model StudentAchievementLevel {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  progress    Int       @default(0)
+  completedAt DateTime?
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  achievementLevelId String
+  achievementLevel   AchievementLevel @relation(fields: [achievementLevelId], references: [id])
+}

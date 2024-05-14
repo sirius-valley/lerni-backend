@@ -1,0 +1,107 @@
+name: Deploy Dockerized App to EC2 (Dev)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+
+  deploy-dev:
+    environment: development
+
+    name: Build Image
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+           npm i
+
+      - name: Lint code
+        run: |
+          npm run lint
+
+      - name: Run tests
+        run: |
+            npm run test
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Build and push Docker image to ECR
+        env:
+          ECR_REPO: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+          PORT: 3000
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+          JWT_SECRET: ${{secrets.JWT_SECRET}}
+          SPRING_SERVICE_URL: ${{secrets.SPRING_SERVICE_URL}}
+          EMAIL_HOST: ${{secrets.EMAIL_HOST}}
+          EMAIL_USER: ${{secrets.EMAIL_USER}}
+          EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+          ENVIRONMENT: development
+        run: |
+          docker build --build-arg PORT="$PORT" --build-arg DATABASE_URL="$DATABASE_URL" --build-arg POSTGRES_USER="$POSTGRES_USER" --build-arg POSTGRES_PASSWORD="$POSTGRES_PASSWORD" --build-arg JWT_SECRET="$JWT_SECRET" --build-arg SPRING_SERVICE_URL="$SPRING_SERVICE_URL" --build-arg EMAIL_HOST="$EMAIL_HOST" --build-arg EMAIL_USER="$EMAIL_USER" --build-arg EMAIL_PASSWORD="$EMAIL_PASSWORD" --build-arg ENVIRONMENT="$ENVIRONMENT" -t $ECR_REPO:$IMAGE_TAG .
+          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
+          docker push $ECR_REPO:$IMAGE_TAG
+          docker push $ECR_REPO:latest
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REPO: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          host: ${{ secrets.EC2_HOST_DNS }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,ECR_REPO,IMAGE_TAG
+          script: |
+            # Stop and remove the existing container
+            CONTAINER_ID=$(sudo docker ps -q --filter "publish=3000")
+            if [ ! -z "$CONTAINER_ID" ]; then
+              sudo docker stop $CONTAINER_ID
+              sudo docker rm $CONTAINER_ID
+            fi
+            
+            # Remove the existing image
+            IMAGE_ID=$(sudo docker images -q $ECR_REPO:$IMAGE_TAG)
+            if [ ! -z "$IMAGE_ID" ]; then
+              sudo docker rmi -f $IMAGE_ID
+            fi
+            
+            NETWORK_EXISTS=$(sudo docker network ls --filter "name=my_network" --quiet)
+            if [ -z "$NETWORK_EXISTS" ]; then
+            sudo docker network create my_network
+            fi
+            
+            # Clean up other containers and images
+            sudo docker image prune -a -f
+            sudo docker container prune --force
+            
+            # Login to ECR and pull the updated image
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REPO:$IMAGE_TAG
+            sudo docker pull $ECR_REPO:$IMAGE_TAG
+            
+            # Run the updated container
+            sudo docker run -d -p 3000:3000 --name=nest-container --network=my_network $ECR_REPO:$IMAGE_TAG

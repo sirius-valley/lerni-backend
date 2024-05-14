@@ -1,0 +1,63 @@
+version: '3.5'
+
+services:
+  db:
+    image: postgres:alpine
+    container_name: db
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    networks:
+      app_network:
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB' ]
+      interval: 1s
+      timeout: 1s
+      retries: 15
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app-lerni
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - JWT_SECRET=${JWT_SECRET}
+      - SPRING_SERVICE_URL=${SPRING_SERVICE_URL}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_USER=${EMAIL_USER}
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    networks:
+      - app_network
+    volumes:
+      - ./src:/app/src
+    command:
+      - sh
+      - -c
+      - |
+        npm run migrate:postgres:deploy && npm run seed:dev && npm run start:dev:no-watch
+
+
+
+volumes:
+  db-data:
+
+networks:
+    app_network:
+      driver: bridge
+      name: app_network
+
