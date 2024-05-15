@@ -868,7 +868,7 @@ export class ProgramRepository {
     return this.prisma.programVersion.count({
       where: {
         endDate: {
-          gte: new Date(),
+          lte: new Date(),
         },
       },
     });
