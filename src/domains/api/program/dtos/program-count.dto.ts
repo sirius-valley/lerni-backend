@@ -1,13 +1,13 @@
 export class ProgramCountDto {
   total: number;
-  finished: number;
+  completed: number;
   inProgress: number;
-  toStart: number;
+  notStarted: number;
 
   constructor(data: ProgramCountDto) {
     this.total = data.total;
-    this.finished = data.finished;
+    this.completed = data.completed;
     this.inProgress = data.inProgress;
-    this.toStart = data.toStart;
+    this.notStarted = data.notStarted;
   }
 }

@@ -668,9 +668,9 @@ export class ProgramService {
 
   async getTotalProgramsCount(): Promise<ProgramCountDto> {
     const total = await this.programRepository.getTotalProgram();
-    const notStartet = await this.programRepository.getToStartProgram();
+    const notStarted = await this.programRepository.getToStartProgram();
     const inProgress = await this.programRepository.getInProgresProgram();
-    const finished = await this.programRepository.getFinishedProgram();
-    return new ProgramCountDto({ total: total, toStart: notStartet, inProgress: inProgress, finished: finished });
+    const completed = await this.programRepository.getFinishedProgram();
+    return new ProgramCountDto({ total, notStarted, inProgress, completed });
   }
 }
