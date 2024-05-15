@@ -10,15 +10,18 @@ export class StudentDetailsDto {
   image?: string;
   hasCompletedIntroduction: boolean;
   points?: number;
+  ranking?: number;
 
   constructor(
     data: StudentDto,
     {
       hasCompletedIntroduction,
       points,
+      ranking,
     }: {
       points: number;
       hasCompletedIntroduction: boolean;
+      ranking: number;
     },
   ) {
     this.id = data.id;
@@ -30,5 +33,6 @@ export class StudentDetailsDto {
     this.image = data.image;
     this.hasCompletedIntroduction = hasCompletedIntroduction;
     this.points = points;
+    this.ranking = ranking;
   }
 }

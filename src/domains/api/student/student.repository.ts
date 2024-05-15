@@ -68,12 +68,21 @@ export class StudentRepository {
   }
 
   async addPoints(studentId: string, amount: number, entityId: string, sourceEntity: string) {
-    return this.prisma.pointRecord.create({
+    return this.prisma.student.update({
+      where: {
+        id: studentId,
+      },
       data: {
-        studentId,
-        amount,
-        entityId,
-        sourceEntity,
+        pointCount: {
+          increment: amount,
+        },
+        points: {
+          create: {
+            amount,
+            entityId,
+            sourceEntity,
+          },
+        },
       },
     });
   }

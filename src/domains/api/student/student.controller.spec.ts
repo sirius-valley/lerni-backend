@@ -45,6 +45,8 @@ describe('StudentController', () => {
       };
 
       prismaService.pointRecord.findMany.mockResolvedValueOnce([]);
+      //mock raw query
+      prismaService.$queryRaw.mockResolvedValueOnce([{ ranking: 0 }]);
 
       // Assert
       await expect(controller.getStudentDetails(req as any)).resolves.toEqual({
@@ -57,6 +59,7 @@ describe('StudentController', () => {
         image: 'profile.jpg',
         hasCompletedIntroduction: true,
         points: 0,
+        ranking: 0,
       });
     });
 
@@ -85,6 +88,7 @@ describe('StudentController', () => {
         image: undefined,
         hasCompletedIntroduction: false,
         points: 0,
+        ranking: 0,
       });
     });
 
@@ -114,6 +118,7 @@ describe('StudentController', () => {
         image: 'profile.jpg',
         hasCompletedIntroduction: false,
         points: 0,
+        ranking: 0,
       });
     });
   });
