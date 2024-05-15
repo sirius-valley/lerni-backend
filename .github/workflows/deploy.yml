@@ -81,4 +81,5 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: lerniback-production
+          cluster: cluster-develop
           wait-for-service-stability: true
