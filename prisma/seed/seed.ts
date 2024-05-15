@@ -651,6 +651,7 @@ async function main() {
       lastname: 'Gonzalez',
       career: 'Oncología',
       city: 'San Isidro',
+      image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png',
       auth: {
         connect: {
           id: authId,
@@ -663,6 +664,7 @@ async function main() {
       lastname: 'Gonzalez',
       career: 'Oncología',
       city: 'San Isidro',
+      image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png',
       auth: {
         connect: {
           id: authId,
@@ -1037,6 +1039,7 @@ async function extraPrograms(n: number = 10) {
         lastname: 'Doe',
         career: 'Computer Science',
         city: 'New York',
+        image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png',
         auth: {
           connect: {
             id: authId1,
@@ -1049,6 +1052,7 @@ async function extraPrograms(n: number = 10) {
         lastname: 'Doe',
         career: 'Computer Science',
         city: 'New York',
+        image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png',
         auth: {
           connect: {
             id: authId1,
