@@ -22,15 +22,13 @@ export class LeaderboardRepository {
     `;
   }
 
-  async getStudentRankingById(studentId: string) {
-    const rawQuery = `
+  async getStudentRankingById(studentId: string): Promise<any> {
+    return this.prismaService.$queryRaw`
         SELECT COUNT(*) + 1 AS ranking
         FROM "Student"
-        WHERE pointCount > (SELECT pointCount
-                            FROM student
+        WHERE "pointCount" > (SELECT "pointCount"
+                            FROM "Student"
                             WHERE id = ${studentId})
     `;
-
-    return this.prismaService.$queryRaw`${rawQuery}`;
   }
 }

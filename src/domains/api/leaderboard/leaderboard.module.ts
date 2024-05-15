@@ -7,5 +7,6 @@ import { LeaderboardRepository } from './leaderboard.repository';
 @Module({
   controllers: [LeaderboardController],
   providers: [LeaderboardService, PrismaService, LeaderboardRepository],
+  exports: [LeaderboardService],
 })
 export class LeaderboardModule {}

@@ -22,6 +22,7 @@ export class LeaderboardService {
   }
 
   public async getStudentRankingById(studentId: string) {
-    return this.leaderboardRepository.getStudentRankingById(studentId);
+    const query = await this.leaderboardRepository.getStudentRankingById(studentId);
+    return query[0].ranking;
   }
 }
