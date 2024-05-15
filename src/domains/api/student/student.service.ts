@@ -42,4 +42,9 @@ export class StudentService {
   public addPoints(studentId: string, amount: number, entityId: string, sourceEntity: string) {
     return this.studentRepository.addPoints(studentId, amount, entityId, sourceEntity);
   }
+
+  public async getRegisteredStudents() {
+    const registeredStudents = await this.studentRepository.getRegisteredStudents();
+    return { registeredStudents };
+  }
 }

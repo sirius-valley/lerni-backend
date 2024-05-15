@@ -77,4 +77,35 @@ export class StudentRepository {
       },
     });
   }
+
+  async getRegisteredStudents() {
+    return this.prisma.student.count({
+      where: {
+        name: {
+          not: null,
+        },
+        lastname: {
+          not: null,
+        },
+        city: {
+          not: null,
+        },
+        image: {
+          not: null,
+        },
+        OR: [
+          {
+            career: {
+              not: null,
+            },
+          },
+          {
+            profession: {
+              not: null,
+            },
+          },
+        ],
+      },
+    });
+  }
 }
