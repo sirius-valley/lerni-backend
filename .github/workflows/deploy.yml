@@ -64,7 +64,7 @@ jobs:
 
       - name: Download task definition
         env:
-          TASK_DEFINITION: lerniback-develop
+          TASK_DEFINITION: lerback-develop
         run: |
           aws ecs describe-task-definition --task-definition $TASK_DEFINITION --query taskDefinition > task-definition-dev.json
 
