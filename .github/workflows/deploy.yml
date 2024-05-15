@@ -42,7 +42,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: emback-develop
+          ECR_REPOSITORY: lerniback-develop
           IMAGE_TAG: ${{ github.sha }}
           PORT: 3000
           JWT_SECRET: ${{secrets.JWT_SECRET}}
@@ -64,7 +64,7 @@ jobs:
 
       - name: Download task definition
         env:
-          TASK_DEFINITION: emback-develop
+          TASK_DEFINITION: lerniback-develop
         run: |
           aws ecs describe-task-definition --task-definition $TASK_DEFINITION --query taskDefinition > task-definition-dev.json
 
@@ -73,12 +73,12 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition-dev.json
-          container-name: emback-develop
+          container-name: lerniback-develop
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: emback-production
+          service: lerniback-production
           wait-for-service-stability: true
