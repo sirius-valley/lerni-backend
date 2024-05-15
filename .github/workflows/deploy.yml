@@ -80,6 +80,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: lerniback-production
+          service: lerniback-develop
           cluster: cluster-develop
           wait-for-service-stability: true
