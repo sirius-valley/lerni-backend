@@ -42,7 +42,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REPOSITORY: lerni-dev-repository
           IMAGE_TAG: ${{ github.sha }}
           PORT: 3000
           JWT_SECRET: ${{secrets.JWT_SECRET}}
