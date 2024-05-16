@@ -28,4 +28,10 @@ export class AchievementController {
   async getRecentStudentAchievementsByStudentId(@Request() req: ApiRequest, @Param('studentId') studentId: string) {
     return this.achievementService.getRecentAchievementsCompletedByStudentId(studentId);
   }
+
+  @Get(':studentId')
+  @HttpCode(200)
+  async getStudentAchievements(@Request() req: ApiRequest, @Param('studentId') studentId: string) {
+    return this.achievementService.getAchievementsByStudentId(studentId);
+  }
 }
