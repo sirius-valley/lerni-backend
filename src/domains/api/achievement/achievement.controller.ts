@@ -1,4 +1,4 @@
-import { Controller, Get, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AchievementService } from './achievement.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
@@ -21,5 +21,11 @@ export class AchievementController {
   @Get('recent')
   async getRecentStudentAchievements(@Request() req: ApiRequest) {
     return this.achievementService.getRecentAchievementsCompletedByStudentId(req.user.id);
+  }
+
+  @Get('recent/:studentId')
+  @HttpCode(200)
+  async getRecentStudentAchievementsByStudentId(@Request() req: ApiRequest, @Param('studentId') studentId: string) {
+    return this.achievementService.getRecentAchievementsCompletedByStudentId(studentId);
   }
 }
