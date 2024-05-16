@@ -779,7 +779,7 @@ export const triviaBlock = `{
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Tomografías computarizadas y radiografías "
+                    "correct_answer": "Tomografías computarizadas y radiografías"
                 },
                 "options": [
                     "Ecografía y resonancia magnética",
