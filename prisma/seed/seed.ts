@@ -1566,12 +1566,12 @@ async function DEMOCapacitacion() {
     },
     create: {
       id: programIDDay1,
-      name: 'Neumonía bacteriana adquirida 1',
-      icon: 'https://lerni-images-2024.s3.amazonaws.com/lung_banner.png',
+      name: 'Capacitación Hospitalaria: Día 1',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-banner.png',
       hoursToComplete: 1,
       pointsReward: 40,
       description:
-        'Descubre los aspectos clave de la neumonía bacteriana adquirida en la comunidad en adultos. Exploraremos agentes patógenos, factores de riesgo, manifestaciones clínicas, diagnóstico, tratamiento y prevención. A través de casos prácticos, obtendrás una comprensión sólida para abordar esta condición de manera informada.',
+        'En esta pildora vas a encontrar todo lo necesario para completar tu primer dia de capacitación! Los temas que vamos a ver son "Cuestiones médico legales asociadas al Ejercicio de la Profesión", "Uso seguro de medicamentos en Farmacia Hospitalaria", "ETC" ',
       teacher: {
         connectOrCreate: {
           where: { id: teacherIdCapacitacion },
