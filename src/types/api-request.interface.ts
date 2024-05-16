@@ -5,6 +5,7 @@ export interface ApiRequest extends Request {
     lastname?: string;
     profession?: string;
     image?: string;
+    pointCount: number;
     authId: string;
   };
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { StudentDto } from './dtos/student.dto';
 import { StudentDetailsDto } from './dtos/student-details.dto';
 import { necessaryFields, optionalFields } from '../../../const';
@@ -15,13 +15,10 @@ export class StudentService {
   public async getStudentDetails(studentDto: StudentDto) {
     if (!studentDto) return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0, ranking: 0 });
 
-    if (!this.checkNecessaryFields(studentDto, necessaryFields))
+    if (!this.checkNecessaryFields(studentDto, necessaryFields) || !this.checkOptionalFields(studentDto, optionalFields))
       return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0, ranking: 0 });
-    if (!this.checkOptionalFields(studentDto, optionalFields))
-      return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0, ranking: 0 });
-    const points = await this.studentRepository.getTotalPoints(studentDto.id);
     const ranking = await this.leaderboardService.getStudentRankingById(studentDto.id);
-    return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: true, points: points, ranking: Number(ranking) });
+    return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: true, points: studentDto.pointCount, ranking: Number(ranking) });
   }
 
   private checkNecessaryFields(studentDto: StudentDto, necessaryFields: string[]) {
@@ -51,5 +48,17 @@ export class StudentService {
   public async getRegisteredStudents() {
     const registeredStudents = await this.studentRepository.getRegisteredStudents();
     return { registeredStudents };
+  }
+
+  public async getStudentProfile(student: StudentDto, studentId?: string) {
+    if (!studentId) return this.getStudentDetails(student);
+    const otherStudent = await this.studentRepository.findStudentByIdSelectStudentDto(studentId);
+    if (!otherStudent) throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+    const ranking = await this.leaderboardService.getStudentRankingById(studentId);
+    return new StudentDetailsDto(otherStudent, {
+      hasCompletedIntroduction: true,
+      points: otherStudent.pointCount,
+      ranking: Number(ranking),
+    });
   }
 }
