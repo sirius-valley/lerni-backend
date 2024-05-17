@@ -15,11 +15,11 @@ export class StudentRepository {
     return student ? new StudentDto(student as StudentDto) : null;
   }
 
-  async updateStudent(studentId: string, field: string, value: string) {
+  async updateStudent(studentId: string, data: Partial<StudentDto>): Promise<StudentDto | null> {
     const student = await this.prisma.student.update({
       where: { id: studentId },
       data: {
-        [field]: value,
+        ...data,
       },
     });
     return student ? new StudentDto(student as StudentDto) : null;

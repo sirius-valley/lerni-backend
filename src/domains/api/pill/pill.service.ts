@@ -177,9 +177,23 @@ export class PillService {
       if (!studentDto[key] || !Object.values(introductionVariables).includes(studentDto[key])) return studentDto;
       studentDto[key] = this.capitalizeAndTrim(studentDto[key]);
     });
-    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, varName, answer);
+    const studentData = this.getStudentUpdatedData(answer, varName);
+    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, studentData);
     if (!updatedStudent) throw new HttpException('Error while updating student', HttpStatus.INTERNAL_SERVER_ERROR);
     return updatedStudent;
+  }
+
+  private getStudentUpdatedData(answer: string, varName: string) {
+    if (varName === 'name') {
+      const separatedName = answer.split(', ');
+      return {
+        name: this.capitalizeAndTrim(separatedName[0]),
+        lastname: this.capitalizeAndTrim(separatedName[1]),
+      };
+    }
+    return {
+      [varName]: answer,
+    };
   }
 
   private capitalizeAndTrim(str) {

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { ChatCompletionTool } from 'openai/resources';
 
-type Field = 'first name' | 'surname' | 'profession';
+type Field = 'name' | 'profession' | 'image';
 
 @Injectable()
 export class OpenAIService {
@@ -14,10 +14,9 @@ export class OpenAIService {
   }
 
   private readonly examples = {
-    'first name': 'Me llamo carlos => Carlos | Me llamo carlos facundo => Carlos Facundo',
-    surname:
-      'Mi apellido es Apellidez => Apellidez | Mi apellido es Apellidez Heredero => Apellidez Heredero | Mi apellido es Apellidez heredero de la fortuna de los Apellidez => Apellidez',
+    name: 'Me llamo carlos apellidez => Carlos, Apellidez | Me llamo carlos facundo apellidez => Carlos Facundo, Apellidez | Soy carlos facundo hernandez carrazco => Carlos Facundo, Hernandez Carrazco | Hola soy fernando rodriguez gonzalez => Fernando, Rodriguez Gonzalez',
     profession: 'Hola, soy un doctor => Doctor | Soy un doctor en medicina => Doctor en medicina | Soy estudiante => Estudiante',
+    image: 'some url => some url | image => image',
   };
 
   private context(field: Field) {
