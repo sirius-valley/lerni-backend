@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { introductionID } from '../../src/const';
 import {
   authId,
-  authId2,
+  authId2, CapacitacionD1Trivia,
   CapacitacionQuestionnaire,
   CuestionesMedicasPill,
   FractureB2Block,
@@ -971,7 +971,7 @@ async function main() {
     },
   });
 
-  await extraPrograms(10);
+  await extraPrograms(0);
   await achievementSeed();
 }
 
@@ -1799,13 +1799,13 @@ async function DEMOCapacitacion() {
       id: triviaIDDay1,
     },
     update: {
-      block: triviaBlock,
+      block: CapacitacionD1Trivia,
       questionCount: 12,
       pointsReward: 24,
     },
     create: {
       id: triviaIDDay1,
-      block: triviaBlock,
+      block: CapacitacionD1Trivia,
       questionCount: 12,
       pointsReward: 24,
     },
