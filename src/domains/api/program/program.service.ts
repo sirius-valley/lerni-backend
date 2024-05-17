@@ -32,6 +32,7 @@ import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-det
 import { AchievementService } from '../achievement/achievement.service';
 import { ProgramCardDto } from './dtos/program-card.dto';
 import { NotificationService } from '../notification/notification.service';
+import { ProgramCountDto } from './dtos/program-count.dto';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -663,5 +664,13 @@ export class ProgramService {
     result.create = newArray;
 
     return result;
+  }
+
+  async getTotalProgramsCount(): Promise<ProgramCountDto> {
+    const total = await this.programRepository.getTotalProgram();
+    const notStarted = await this.programRepository.getToStartProgram();
+    const inProgress = await this.programRepository.getInProgresProgram();
+    const completed = await this.programRepository.getFinishedProgram();
+    return new ProgramCountDto({ total, notStarted, inProgress, completed });
   }
 }

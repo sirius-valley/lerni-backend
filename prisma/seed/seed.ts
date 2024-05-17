@@ -3,6 +3,8 @@ import { introductionID } from '../../src/const';
 import {
   authId,
   authId2,
+  CapacitacionQuestionnaire,
+  CuestionesMedicasPill,
   FractureB2Block,
   FractureB2PillId1,
   FractureB2PillVersionId1,
@@ -23,6 +25,7 @@ import {
   FractureStudentProgramId,
   introductionBlock,
   maleTeacherId,
+  mockPill,
   NICBlock,
   NICPillId1,
   NICPillVersionId1,
@@ -37,11 +40,15 @@ import {
   pillId,
   pillVersionId,
   programId,
+  programIDDay1,
+  programIDDay1Version,
+  programIDDay1VersiontriviaIDDay1,
   programIdNIC,
   programVersionId,
   programVersionPillVersionId,
   programVersionQuestionnaireVersionId,
   programVersionTrivia,
+  programVersionTrivia2,
   questionnaireBlock,
   questionnaireId,
   questionnaireVersionId,
@@ -49,10 +56,13 @@ import {
   studentId2,
   studentProgramId,
   studentTriviaMatchId,
+  studentTriviaMatchId2,
   teacherId,
   triviaBlock,
   triviaId,
+  triviaId2,
   triviaMatchId,
+  triviaMatchId2,
   walterTeacherId,
 } from './const';
 
@@ -617,6 +627,10 @@ async function main() {
     },
   });
 
+  // CAPACITACION
+
+  await DEMOCapacitacion();
+
   // User
   await prisma.auth.upsert({
     where: { id: authId },
@@ -651,6 +665,7 @@ async function main() {
       lastname: 'Gonzalez',
       career: 'Oncología',
       city: 'San Isidro',
+      image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png',
       auth: {
         connect: {
           id: authId,
@@ -663,6 +678,7 @@ async function main() {
       lastname: 'Gonzalez',
       career: 'Oncología',
       city: 'San Isidro',
+      image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png',
       auth: {
         connect: {
           id: authId,
@@ -696,6 +712,7 @@ async function main() {
       },
     },
   });
+
   await prisma.studentProgram.upsert({
     where: { id: studentProgramId },
     update: {
@@ -730,6 +747,18 @@ async function main() {
       id: FractureStudentProgramId,
       studentId: studentId,
       programVersionId: FractureProgramVersionId,
+    },
+  });
+  await prisma.studentProgram.upsert({
+    where: { id: 'programIDDay1Student' },
+    update: {
+      studentId: studentId,
+      programVersionId: programIDDay1Version,
+    },
+    create: {
+      id: 'programIDDay1Student',
+      studentId: studentId,
+      programVersionId: programIDDay1Version,
     },
   });
   // user 2
@@ -767,6 +796,18 @@ async function main() {
       id: FractureStudentProgramId + '1',
       studentId: studentId2,
       programVersionId: FractureProgramVersionId,
+    },
+  });
+  await prisma.studentProgram.upsert({
+    where: { id: 'programIDDay1Student2' },
+    update: {
+      studentId: studentId2,
+      programVersionId: programIDDay1Version,
+    },
+    create: {
+      id: 'programIDDay1Student2',
+      studentId: studentId2,
+      programVersionId: programIDDay1Version,
     },
   });
 
@@ -833,6 +874,25 @@ async function main() {
     },
   });
 
+  ///FRACT
+
+  await prisma.trivia.upsert({
+    where: {
+      id: triviaId2,
+    },
+    update: {
+      block: triviaBlock,
+      questionCount: 12,
+      pointsReward: 24,
+    },
+    create: {
+      id: triviaId2,
+      block: triviaBlock,
+      questionCount: 12,
+      pointsReward: 24,
+    },
+  });
+
   await prisma.programVersionTrivia.upsert({
     where: { id: programVersionTrivia },
     update: {
@@ -848,6 +908,21 @@ async function main() {
     },
   });
 
+  await prisma.programVersionTrivia.upsert({
+    where: { id: programVersionTrivia2 },
+    update: {
+      order: 1,
+      triviaId: triviaId2,
+      programVersionId: FractureProgramVersionId,
+    },
+    create: {
+      id: programVersionTrivia2,
+      order: 1,
+      triviaId: triviaId2,
+      programVersionId: FractureProgramVersionId,
+    },
+  });
+
   await prisma.triviaMatch.upsert({
     where: { id: triviaMatchId },
     update: {
@@ -859,6 +934,17 @@ async function main() {
     },
   });
 
+  //
+  await prisma.triviaMatch.upsert({
+    where: { id: triviaMatchId2 },
+    update: {
+      triviaId: triviaId2,
+    },
+    create: {
+      id: triviaMatchId2,
+      triviaId: triviaId2,
+    },
+  });
   await prisma.studentTriviaMatch.upsert({
     where: { id: studentTriviaMatchId },
     update: {
@@ -872,7 +958,20 @@ async function main() {
     },
   });
 
-  // await extraPrograms(10);
+  await prisma.studentTriviaMatch.upsert({
+    where: { id: studentTriviaMatchId2 },
+    update: {
+      studentId: studentId,
+      triviaMatchId: triviaMatchId2,
+    },
+    create: {
+      id: studentTriviaMatchId2,
+      studentId: studentId,
+      triviaMatchId: triviaMatchId2,
+    },
+  });
+
+  await extraPrograms(10);
   await achievementSeed();
 }
 
@@ -1037,6 +1136,7 @@ async function extraPrograms(n: number = 10) {
         lastname: 'Doe',
         career: 'Computer Science',
         city: 'New York',
+        image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png',
         auth: {
           connect: {
             id: authId1,
@@ -1049,6 +1149,7 @@ async function extraPrograms(n: number = 10) {
         lastname: 'Doe',
         career: 'Computer Science',
         city: 'New York',
+        image: 'Https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png',
         auth: {
           connect: {
             id: authId1,
@@ -1424,6 +1525,304 @@ async function achievementSeed() {
           },
         ],
       },
+    },
+  });
+}
+
+async function DEMOCapacitacion() {
+  //ids
+  const pillID1Day1 = 'pillID1Day1';
+  const pillID1Day1Version = 'pillID1Day1Version';
+  const programIDDay1VersionpillID1Day1Version = 'programIDDay1VersionpillID1Day1Version';
+  const teacherIdCapacitacion = 'teacherCapacitacion1';
+  const questionnaireIDDay1 = 'questionnaireIDDay1';
+  const questionnaireIDDay1Version = 'questionnaireIDDay1Version';
+  const programIDDay1VersionquestionnaireIDDay1 = 'programIDDay1VersionquestionnaireIDDay1';
+  const triviaIDDay1 = 'triviaIDDay1';
+  // entities
+  await prisma.program.upsert({
+    where: { id: programIDDay1 },
+    update: {
+      name: 'Capacitación Hospitalaria: Día 1',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-banner.png',
+      hoursToComplete: 1,
+      pointsReward: 40,
+      description:
+        'En esta pildora vas a encontrar todo lo necesario para completar tu primer dia de capacitación! Los temas que vamos a ver son "Cuestiones médico legales asociadas al Ejercicio de la Profesión", "Uso seguro de medicamentos en Farmacia Hospitalaria", "ETC" ',
+      teacher: {
+        connectOrCreate: {
+          where: { id: teacherIdCapacitacion },
+          create: {
+            id: teacherIdCapacitacion,
+            name: 'Hospital',
+            lastname: 'Austral',
+            email: 'hospitalaustral@mail.com',
+            password: 'password',
+            profession: 'Institucion',
+            image: 'https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/teacher-image.png',
+          },
+        },
+      },
+    },
+    create: {
+      id: programIDDay1,
+      name: 'Capacitación Hospitalaria: Día 1',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-banner.png',
+      hoursToComplete: 1,
+      pointsReward: 40,
+      description:
+        'En esta pildora vas a encontrar todo lo necesario para completar tu primer dia de capacitación! Los temas que vamos a ver son "Cuestiones médico legales asociadas al Ejercicio de la Profesión", "Uso seguro de medicamentos en Farmacia Hospitalaria", "ETC" ',
+      teacher: {
+        connectOrCreate: {
+          where: { id: teacherIdCapacitacion },
+          create: {
+            id: teacherIdCapacitacion,
+            name: 'Hospital',
+            lastname: 'Austral',
+            email: 'hospitalaustral@mail.com',
+            password: 'password',
+            profession: 'Institucion',
+            image: 'https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/teacher-image.png',
+          },
+        },
+      },
+    },
+  });
+
+  await prisma.programVersion.upsert({
+    where: { id: programIDDay1Version },
+    update: {
+      programId: programIDDay1,
+      version: 1,
+    },
+    create: {
+      id: programIDDay1Version,
+      programId: programIDDay1,
+      version: 1,
+    },
+  });
+
+  // Pill 1
+  await prisma.pill.upsert({
+    where: { id: pillID1Day1 },
+    update: {
+      name: 'Cuestiones médico legal',
+      description: '',
+      teacherComment: '',
+    },
+    create: {
+      id: pillID1Day1,
+      name: 'Cuestiones médico legal',
+      description: '',
+      teacherComment: '',
+    },
+  });
+
+  await prisma.pillVersion.upsert({
+    where: { id: pillID1Day1Version },
+    update: {
+      block: CuestionesMedicasPill,
+      version: 1,
+      completionTimeMinutes: 10,
+      pillId: pillID1Day1,
+    },
+    create: {
+      id: pillID1Day1Version,
+      block: CuestionesMedicasPill,
+      version: 1,
+      completionTimeMinutes: 10,
+      pillId: pillID1Day1,
+    },
+  });
+
+  await prisma.programVersionPillVersion.upsert({
+    where: { id: programIDDay1VersionpillID1Day1Version },
+    update: {
+      programVersionId: programIDDay1Version,
+      pillVersionId: pillID1Day1Version,
+      order: 1,
+    },
+    create: {
+      id: programIDDay1VersionpillID1Day1Version,
+      programVersionId: programIDDay1Version,
+      pillVersionId: pillID1Day1Version,
+      order: 1,
+    },
+  });
+
+  // Pill 2
+  await prisma.pill.upsert({
+    where: { id: pillID1Day1 + '2' },
+    update: {
+      name: 'Laboratorio',
+      description: '',
+      teacherComment: '',
+    },
+    create: {
+      id: pillID1Day1 + '2',
+      name: 'Laboratorio',
+      description: '',
+      teacherComment: '',
+    },
+  });
+
+  await prisma.pillVersion.upsert({
+    where: { id: pillID1Day1Version + '2' },
+    update: {
+      block: mockPill,
+      version: 1,
+      completionTimeMinutes: 10,
+      pillId: pillID1Day1 + '2',
+    },
+    create: {
+      id: pillID1Day1Version + '2',
+      block: mockPill,
+      version: 1,
+      completionTimeMinutes: 10,
+      pillId: pillID1Day1 + '2',
+    },
+  });
+
+  await prisma.programVersionPillVersion.upsert({
+    where: { id: programIDDay1VersionpillID1Day1Version + '2' },
+    update: {
+      programVersionId: programIDDay1Version,
+      pillVersionId: pillID1Day1Version + '2',
+      order: 2,
+    },
+    create: {
+      id: programIDDay1VersionpillID1Day1Version + '2',
+      programVersionId: programIDDay1Version,
+      pillVersionId: pillID1Day1Version + '2',
+      order: 2,
+    },
+  });
+
+  // Pill 3
+  await prisma.pill.upsert({
+    where: { id: pillID1Day1 + '3' },
+    update: {
+      name: 'Conocimientos básicos de farmacia',
+      description: '',
+      teacherComment: '',
+    },
+    create: {
+      id: pillID1Day1 + '3',
+      name: 'Conocimientos básicos de farmacia',
+      description: '',
+      teacherComment: '',
+    },
+  });
+
+  await prisma.pillVersion.upsert({
+    where: { id: pillID1Day1Version + '3' },
+    update: {
+      block: mockPill,
+      version: 1,
+      completionTimeMinutes: 10,
+      pillId: pillID1Day1 + '3',
+    },
+    create: {
+      id: pillID1Day1Version + '3',
+      block: mockPill,
+      version: 1,
+      completionTimeMinutes: 10,
+      pillId: pillID1Day1 + '3',
+    },
+  });
+
+  await prisma.programVersionPillVersion.upsert({
+    where: { id: programIDDay1VersionpillID1Day1Version + '3' },
+    update: {
+      programVersionId: programIDDay1Version,
+      pillVersionId: pillID1Day1Version + '3',
+      order: 3,
+    },
+    create: {
+      id: programIDDay1VersionpillID1Day1Version + '3',
+      programVersionId: programIDDay1Version,
+      pillVersionId: pillID1Day1Version + '3',
+      order: 3,
+    },
+  });
+
+  /// Pill Mock
+
+  await prisma.questionnaire.upsert({
+    where: { id: questionnaireIDDay1 },
+    update: {
+      name: 'Cuestionario',
+      description: 'Cuestionario del programa sobre Capacitacion dia 1',
+    },
+    create: {
+      id: questionnaireIDDay1,
+      name: 'Cuestionario',
+      description: 'Cuestionario del programa sobre Capacitacion dia 1',
+    },
+  });
+
+  await prisma.questionnaireVersion.upsert({
+    where: { id: questionnaireIDDay1Version },
+    update: {
+      questionnaireId: questionnaireIDDay1,
+      version: 1,
+    },
+    create: {
+      id: questionnaireIDDay1Version,
+      questionnaireId: questionnaireIDDay1,
+      completionTimeMinutes: 8,
+      cooldownInMinutes: 10,
+      block: CapacitacionQuestionnaire,
+      questionCount: 10,
+      passsing_score: 50,
+      version: 1,
+    },
+  });
+
+  await prisma.programVersionQuestionnaireVersion.upsert({
+    where: { id: programIDDay1VersionquestionnaireIDDay1 },
+    update: {
+      programVersionId: programIDDay1Version,
+      questionnaireVersionId: questionnaireIDDay1Version,
+      order: 1,
+    },
+    create: {
+      id: programIDDay1VersionquestionnaireIDDay1,
+      programVersionId: programIDDay1Version,
+      questionnaireVersionId: questionnaireIDDay1Version,
+      order: 1,
+    },
+  });
+
+  await prisma.trivia.upsert({
+    where: {
+      id: triviaIDDay1,
+    },
+    update: {
+      block: triviaBlock,
+      questionCount: 12,
+      pointsReward: 24,
+    },
+    create: {
+      id: triviaIDDay1,
+      block: triviaBlock,
+      questionCount: 12,
+      pointsReward: 24,
+    },
+  });
+
+  await prisma.programVersionTrivia.upsert({
+    where: { id: programIDDay1VersiontriviaIDDay1 },
+    update: {
+      order: 1,
+      triviaId: triviaIDDay1,
+      programVersionId: programIDDay1Version,
+    },
+    create: {
+      id: programIDDay1VersiontriviaIDDay1,
+      order: 1,
+      triviaId: triviaIDDay1,
+      programVersionId: programIDDay1Version,
     },
   });
 }

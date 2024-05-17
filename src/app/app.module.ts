@@ -13,6 +13,7 @@ import { ProfessorModule } from 'src/domains/api/professor/professor.module';
 import { TriviaModule } from '../domains/api/trivia/trivia.module';
 import { NotificationModule } from 'src/domains/api/notification/notification.module';
 import { AchievementModule } from '../domains/api/achievement/achievement.module';
+import { LeaderboardModule } from '../domains/api/leaderboard/leaderboard.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AchievementModule } from '../domains/api/achievement/achievement.module
     TriviaModule,
     NotificationModule,
     AchievementModule,
+    LeaderboardModule,
   ],
   controllers: [AuthController, StudentController],
   providers: [],

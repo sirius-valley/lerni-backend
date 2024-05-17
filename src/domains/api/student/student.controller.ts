@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { StudentService } from './student.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
@@ -22,5 +22,11 @@ export class StudentController {
   @Post('check')
   async checkStudent(@Body() data: CheckStudent) {
     return await this.studentService.getStudentsByEmail(data.emails);
+  }
+
+  @Get('registered')
+  @HttpCode(200)
+  async getRegisteredStudents() {
+    return this.studentService.getRegisteredStudents();
   }
 }

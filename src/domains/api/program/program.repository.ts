@@ -853,4 +853,41 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getToStartProgram() {
+    return this.prisma.programVersion.count({
+      where: {
+        startDate: {
+          gte: new Date(),
+        },
+      },
+    });
+  }
+
+  async getFinishedProgram() {
+    return this.prisma.programVersion.count({
+      where: {
+        endDate: {
+          lte: new Date(),
+        },
+      },
+    });
+  }
+
+  async getTotalProgram() {
+    return this.prisma.programVersion.count({});
+  }
+
+  async getInProgresProgram() {
+    return this.prisma.programVersion.count({
+      where: {
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(),
+        },
+      },
+    });
+  }
 }

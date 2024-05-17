@@ -685,19 +685,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2900",
             "type": "QUESTION",
-            "name": "Pregunta 0",
+            "name": "¿Cuál es la tasa actual de fractura femoral periprotésica (FFP) después de un reemplazo total de cadera (RTC) y se espera un aumento?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 1 Verdadera"
+                    "correct_answer": "3.5"
                 },
                 "options": [
-                    "Opcion 1 Verdadera",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
+                    "1.5",
+                    "2.5",
+                    "3.5",
+                    "4.5",
                     "timeout",
                     "left"
                 ]
@@ -706,19 +706,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2911",
             "type": "QUESTION",
-            "name": "Pregunta 1",
+            "name": "¿Cuáles son algunos de los factores de riesgo asociados con la fractura femoral periprotésica (FFP) según el contenido?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 2 Verdadera"
+                    "correct_answer": "Edad y género"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Verdadera",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
+                    "Historia familiar y tabaquismo",
+                    "Edad y género",
+                    "Altura y peso",
+                    "Tipo de sangre y dieta",
                     "timeout",
                     "left"
                 ]
@@ -727,19 +727,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2922",
             "type": "QUESTION",
-            "name": "Pregunta 2",
+            "name": "¿Qué tipo de fractura de vástagos sin cemento ocurre con mayor frecuencia en los primeros seis meses después de un reemplazo total de cadera (RTC)?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 3 Verdadera"
+                    "correct_answer": "Fracturas en el primer tercio proximal"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 Verdadera",
-                    "Opcion 4 Falsa",
+                    "Fracturas en espiral",
+                    "Fracturas transversales",
+                    "Fracturas en el primer tercio proximal",
+                    "Fracturas conminutas",
                     "timeout",
                     "left"
                 ]
@@ -748,19 +748,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2933",
             "type": "QUESTION",
-            "name": "Pregunta 3",
+            "name": "¿Qué herramientas se consideran esenciales en la evaluación clínica para el diagnóstico de la fractura femoral periprotésica (FFP) según el contenido proporcionado?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 4 Verdadera"
+                    "correct_answer": "Tomografías computarizadas y radiografías"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Verdadera",
+                    "Ecografía y resonancia magnética",
+                    "Tomografías computarizadas y radiografías",
+                    "Electrocardiograma y análisis de sangre",
+                    "Pruebas de esfuerzo y análisis de orina",
                     "timeout",
                     "left"
                 ]
@@ -769,19 +769,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2944",
             "type": "QUESTION",
-            "name": "Pregunta 4",
+            "name": "¿Cuál es una opción de tratamiento para las fracturas no desplazadas?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 1 Verdadera"
+                    "correct_answer": "Reposo en cama con tracción"
                 },
                 "options": [
-                    "Opcion 1 Verdadera",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
+                    "Reposo en cama con tracción",
+                    "Cirugía de revisión",
+                    "Injertos óseos por impacto",
+                    "Placas bloqueantes",
                     "timeout",
                     "left"
                 ]
@@ -790,19 +790,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2955",
             "type": "QUESTION",
-            "name": "Pregunta 5",
+            "name": "¿Qué puede ser considerado para las fracturas tipo B1?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 2 Verdadera"
+                    "correct_answer": "Soporte de peso protegido"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Verdadera",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
+                    "Soporte de peso protegido",
+                    "Clavado intramedular retrógrado",
+                    "Cirugía de revisión",
+                    "Placas bloqueantes",
                     "timeout",
                     "left"
                 ]
@@ -811,19 +811,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2966",
             "type": "QUESTION",
-            "name": "Pregunta 6",
+            "name": "¿Cuál es una opción para restaurar el stock óseo en fracturas tipo B3?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 3 Verdadera"
+                    "correct_answer": "Inserción de un compuesto aloinjerto-protésico"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 Verdadera",
-                    "Opcion 4 Falsa",
+                    "Cirugía de revisión",
+                    "Injertos óseos por impacto",
+                    "Reposo en cama con tracción",
+                    "Inserción de un compuesto aloinjerto-protésico",
                     "timeout",
                     "left"
                 ]
@@ -832,19 +832,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2977",
             "type": "QUESTION",
-            "name": "Pregunta 7",
+            "name": "¿Qué tipo de fracturas ocurren entre una prótesis total de cadera y una prótesis total de rodilla?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 4 Verdadera"
+                    "correct_answer": "Fracturas tipo D"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Verdadera",
+                    "Fracturas tipo A",
+                    "Fracturas tipo B2",
+                    "Fracturas tipo B3",
+                    "Fracturas tipo D",
                     "timeout",
                     "left"
                 ]
@@ -853,19 +853,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2988",
             "type": "QUESTION",
-            "name": "Pregunta 8",
+            "name": "¿Cuál es uno de los factores de riesgo asociados con el hundimiento del tallo en fracturas periprotésicas de cadera?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 1 Verdadera"
+                    "correct_answer": "Edad avanzada"
                 },
                 "options": [
-                    "Opcion 1 Verdadera",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
+                    "Edad avanzada",
+                    "Género masculino",
+                    "Clasificación de la fractura",
+                    "Índice de masa corporal bajo",
                     "timeout",
                     "left"
                 ]
@@ -874,19 +874,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e2999",
             "type": "QUESTION",
-            "name": "Pregunta 9",
+            "name": "¿Qué porcentaje de casos experimentó hundimiento del tallo en las fracturas periprotésicas de cadera analizadas?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 2 Verdadera"
+                    "correct_answer": "13"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Verdadera",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
+                    "5",
+                    "10",
+                    "13",
+                    "18",
                     "timeout",
                     "left"
                 ]
@@ -895,19 +895,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e291010",
             "type": "QUESTION",
-            "name": "Pregunta 10",
+            "name": "¿Cuál de los siguientes no fue identificado como un factor significativo para el hundimiento del tallo en las fracturas periprotésicas de cadera?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 3 Verdadera"
+                    "correct_answer": "Género del paciente"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 Verdadera",
-                    "Opcion 4 Falsa",
+                    "Tipo de fractura Dorr C",
+                    "Género del paciente",
+                    "Uso de aloinjerto de refuerzo",
+                    "Edad del paciente",
                     "timeout",
                     "left"
                 ]
@@ -916,19 +916,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e291111",
             "type": "QUESTION",
-            "name": "Pregunta 11",
+            "name": "¿Qué se observó en relación con la supervivencia de las prótesis en los pacientes analizados?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 4 Verdadera"
+                    "correct_answer": "La mayoría mantuvo sus implantes sin necesidad de revisión a los 5 años"
                 },
                 "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Verdadera",
+                    "La mayoría requirió revisión a los 2 años",
+                    "La mayoría mantuvo sus implantes sin necesidad de revisión a los 5 años",
+                    "Todos los pacientes necesitaron revisión a los 1 año",
+                    "No se observaron diferencias significativas en la supervivencia de las prótesis",
                     "timeout",
                     "left"
                 ]
@@ -937,166 +937,19 @@ export const triviaBlock = `{
         {
             "id": "3fa64704-3377-4238-8b22-e64c06772e291212",
             "type": "QUESTION",
-            "name": "Pregunta 12",
+            "name": "¿Cuál es uno de los resultados asociados que se evaluaron en relación con el hundimiento del tallo en las fracturas periprotésicas de cadera?",
             "question_type": "SINGLECHOICE",
             "metadata": {
                 "metadata": {
                     "lerni_question_type": "single-choice",
                     "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 1 Verdadera"
+                    "correct_answer": "Necesidad de cirugía de revisión"
                 },
                 "options": [
-                    "Opcion 1 Verdadera",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291313",
-            "type": "QUESTION",
-            "name": "Pregunta 13",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 2 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Verdadera",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291414",
-            "type": "QUESTION",
-            "name": "Pregunta 14",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 3 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 Verdadera",
-                    "Opcion 4 Falsa",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291515",
-            "type": "QUESTION",
-            "name": "Pregunta 15",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 4 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Verdadera",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291616",
-            "type": "QUESTION",
-            "name": "Pregunta 16",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 1 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Verdadera",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291717",
-            "type": "QUESTION",
-            "name": "Pregunta 17",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 2 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Verdadera",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Falsa",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291818",
-            "type": "QUESTION",
-            "name": "Pregunta 18",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 3 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 Verdadera",
-                    "Opcion 4 Falsa",
-                    "timeout",
-                    "left"
-                ]
-            }
-        },
-        {
-            "id": "3fa64704-3377-4238-8b22-e64c06772e291919",
-            "type": "QUESTION",
-            "name": "Pregunta 19",
-            "question_type": "SINGLECHOICE",
-            "metadata": {
-                "metadata": {
-                    "lerni_question_type": "single-choice",
-                    "seconds_to_answer": 30,
-                    "correct_answer": "Opcion 4 Verdadera"
-                },
-                "options": [
-                    "Opcion 1 Falsa",
-                    "Opcion 2 Falsa",
-                    "Opcion 3 falsa",
-                    "Opcion 4 Verdadera",
+                    "Pérdida de sensibilidad en la extremidad",
+                    "Necesidad de cirugía de revisión",
+                    "Aumento de la movilidad articular",
+                    "Reducción del dolor postoperatorio",
                     "timeout",
                     "left"
                 ]
@@ -1120,9 +973,13 @@ export const questionnaireId = 'questionnaireId';
 export const questionnaireVersionId = 'questionnaireVersionId';
 export const programVersionQuestionnaireVersionId = 'programVersionQuestionnaireVersionId';
 export const triviaId = 'triviaId';
+export const triviaId2 = 'triviaId2';
 export const programVersionTrivia = 'programVersionTrivia';
+export const programVersionTrivia2 = 'programVersionTrivia2';
 export const triviaMatchId = 'triviaMatchId';
+export const triviaMatchId2 = 'triviaMatchId2';
 export const studentTriviaMatchId = 'studentTriviaMatchId';
+export const studentTriviaMatchId2 = 'studentTriviaMatchId2';
 
 // Male's program
 export const NICBlock = `{
@@ -5375,3 +5232,1773 @@ export const FractureQuestionnaireVersionId = '2966283c-b94b-49d8-9cb0-960ade8dc
 
 export const FractureProgramVersionQuestionnaireVersionId = 'eb4154d4-8d1e-4ddc-ac81-4f9158e51546';
 export const FractureStudentProgramId = 'ff93a045-393c-4abd-877c-41f5f852a82b';
+
+// Capacitacion dia 1
+export const programIDDay1 = 'programIDDay1';
+export const programIDDay1Version = 'programIDDay1Version';
+export const programIDDay1VersiontriviaIDDay1 = 'programIDDay1VersiontriviaIDDay1';
+export const CuestionesMedicasPill = `
+{
+  "id": "",
+  "type": "DYNAMIC",
+  "initial": "63801ebc-6e27-416e-b2e7-c714b8b41043",
+  "elements": [
+    {
+      "id": "63801ebc-6e27-416e-b2e7-c714b8b41043",
+      "type": "ACTION",
+      "name": "<p>¡Bienvenidos al primer dia de capacitación!☀️</p>"
+    },
+    {
+      "id": "c52586bd-f7a3-45e8-90d6-9f2776e894eb",
+      "type": "ACTION",
+      "name": "<p>Mi nombre es 👩🏻🥼 Dra. Maria Cecilia Pollola y hoy vamos a hablar sobre Cuestiones médico 🏛️legales asociadas al Ejercicio de la Profesión!</p>"
+    },
+    {
+      "id": "36f147b4-e65c-42cd-8f62-6a9a68461b88",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-1.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "96248256-0d12-40ca-91db-cad7d76cfd4a",
+      "type": "ACTION",
+      "name": "<p>¿Estás listo?</p>"
+    },
+    {
+      "id": "8bf1144e-37c0-4f4a-b88a-873ed05ae3f1",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "Vamos! 🙌🏻"
+        ]
+      }
+    },
+    {
+      "id": "1671ab63-1a91-44c4-9d0e-56cdc8becde9",
+      "type": "ACTION",
+      "name": "<p>En esta oportunidad vamos a hablar sobre 3 ejes:</p>"
+    },
+    {
+      "id": "c81017aa-bdac-4b11-9090-5eb326d341e0",
+      "type": "ACTION",
+      "name": "<p>1️⃣ Responsabilidad civil profesional</p>"
+    },
+    {
+      "id": "0d67c90f-0a86-4fe4-b3be-3d9220d5af22",
+      "type": "ACTION",
+      "name": "<p>2️⃣ Consentimiento informado</p>"
+    },
+    {
+      "id": "c54315d2-43da-4cc4-8961-d54f42d02909",
+      "type": "ACTION",
+      "name": "<p>3️⃣ Derechos del paciente</p>"
+    },
+    {
+      "id": "a5284465-2fa1-4912-aeff-204bfd3bcfa4",
+      "type": "ACTION",
+      "name": "<p>Vamos por el primer tema del dia!</p>"
+    },
+    {
+      "id": "6de59267-9bbe-4929-a94f-dc42d8023950",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "b851aaa2-cad9-4f51-a20e-e92863782ea6",
+      "type": "ACTION",
+      "name": "<p>La responsabilidad civil profesional es un tema fundamental.</p>"
+    },
+    {
+      "id": "20030d60-130f-474e-9b33-304b280fd78c",
+      "type": "ACTION",
+      "name": "<p>En especial para todos aquellos que ejercen una 🛠️profesión en la que sus acciones pueden tener un 💥impacto directo en la vida y el bienestar de otras personas.</p>"
+    },{
+      "id": "b8df0cee-4883-4308-a505-dcf1e0c4509d",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "4575f6c0-cf63-4b30-9d3b-c768afd00f6e",
+      "type": "ACTION",
+      "name": "<p>La responsabilidad civil profesional abarca dos aspectos principales: </p>"
+    },
+    {
+      "id": "1ada7f5e-c3fc-46d4-a919-2455aa7dd36b",
+      "type": "ACTION",
+      "name": "<p>La función 🛡️ preventiva️</p>"
+    },
+    {
+      "id": "f38c914c-7e0e-410a-aeea-d5993044c947",
+      "type": "ACTION",
+      "name": "<p>Y el concepto de 🧳 resarcimiento del daño causado.</p>"
+    },
+    {
+      "id": "b24a09d3-2d06-4bae-aaf7-9c986be17972",
+      "type": "ACTION",
+      "name": "<p>Comencemos por 🔭 explorar la función preventiva!</p>"
+    },{
+      "id": "39493bd9-783c-4548-ad86-116bbbccc68e",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "36f147b4-e65c-42cd-8as62-6a9a68461b88",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-3.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "062967a6-5f45-48ce-a247-ebd3db8a44f0",
+      "type": "ACTION",
+      "name": "<p>En primer lugar, tenemos el deber de 🛡️ prevención.</p>"
+    },
+    {
+      "id": "a679db3e-580a-4df0-b00f-b6def859f10a",
+      "type": "ACTION",
+      "name": "<p>Esto implica la obligación de evitar 🛑 daños injustificados y no agravarlos si ya han ocurrido.</p>"
+    },
+    {
+      "id": "1e3f1932-7d17-4f0d-b187-ac65bc81005f",
+      "type": "ACTION",
+      "name": "<p>Es importante entender que este deber ❌ no se limita a evitar daños</p>"
+    },
+    {
+      "id": "79e2a6d8-37a6-452b-b8ab-839e3d9e9ad4",
+      "type": "ACTION",
+      "name": "<p>Sino también a no empeorar una 🤕 situación si esta ya se ha presentado.</p>"
+    },{
+      "id": "d569f814-9919-4ce8-aa56-3cf51d212fb5",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "36f147b4-l2d4-42cd-8as62-6a9a68461b88",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-4.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "e017be49-2d17-4b10-a8ff-222a34e51167",
+      "type": "ACTION",
+      "name": "<p>Luego, encontramos el deber de preparación,</p>"
+    },
+    {
+      "id": "450f4cd2-b54e-4627-93ec-1bd8d5618979",
+      "type": "ACTION",
+      "name": "<p>Este se refiere a la capacidad de 🔮 anticipar y 📉 mitigar los daños potenciales.</p>"
+    },
+    {
+      "id": "5dad89c9-4b0f-4bb5-86a1-15737054c731",
+      "type": "ACTION",
+      "name": "<p>Esto implica una 📖 comprensión integral del daño, ligado estrechamente a la relación causal con el hecho que lo produjo.</p>"
+    },{
+      "id": "0c827ac7-d93a-4f7f-a94e-3188dc1b5535",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "36f147b4-j3o2-42cd-8as62-6a9a68461b88",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-5.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "ced77bac-86e4-40d1-96a0-4cdfcb0dc526",
+      "type": "ACTION",
+      "name": "<p>La atribución de la responsabilidad es otro aspecto crucial.</p>"
+    },
+    {
+      "id": "7e8644b4-1e19-4b27-8b9f-bfe2a4a0afd8",
+      "type": "ACTION",
+      "name": "<p>Esto se refiere a determinar quién es responsable en caso de que se produzca un 🤕 daño.</p>"
+    },
+    {
+      "id": "cf8089cb-e074-477a-8cd8-cb76453c69ed",
+      "type": "ACTION",
+      "name": "<p>Esta atribución se basa en la omisión de la diligencia debida, teniendo en cuenta la naturaleza de la obligación</p>"
+    },
+    {
+      "id": "ebd046c5-9b58-4221-9481-958728cd21e3",
+      "type": "ACTION",
+      "name": "<p>Y las circunstancias específicas de las 👤 personas,⌛️ el tiempo y 📍el lugar.</p>"
+    },{
+      "id": "29a9b795-3e14-4269-b279-93bb495a1d39",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "67819546-ba57-4b74-8452-5dd591c5cc17",
+      "type": "ACTION",
+      "name": "<p>Ahora, pasemos a uno de los términos más importantes relacionados con la responsabilidad civil 🩺 profesional:</p>"
+    },
+    {
+      "id": "66a26648-7f78-42cf-91c9-cccd50062c40",
+      "type": "ACTION",
+      "name": "<p>La 💀 mala praxis.</p>"
+    },
+    {
+      "id": "a2e0e20b-833d-4047-a4c4-7d986457dea4",
+      "type": "ACTION",
+      "name": "<p>Este concepto está estrechamente asociado con el accionar médico y se subdivide en tres aspectos principales: 🟥 Imprudencia, 🟧 Negligencia y la 🟨 impericia</p>"
+    },{
+      "id": "758e364c-5680-48a1-971f-9075e401f8b7",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "¿Qué son cada una?"
+        ]
+      }
+    },
+    {
+      "id": "7ce63246-d986-40a9-9c94-cb6ec716da57",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-8.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "15de6076-1da3-46fa-a323-8cda449d2c8a",
+      "type": "ACTION",
+      "name": "<p>La 🟥 imprudencia se refiere a la falta de precaución para evitar un riesgo o actuar de manera precipitada.</p>"
+    },
+    {
+      "id": "cfb76bfc-7777-430a-95c1-d7aae038842c",
+      "type": "ACTION",
+      "name": "<p>La 🟧 negligencia, por otro lado, es lo opuesto al sentido del deber; es decir, no cumplir con las obligaciones profesionales establecidas.</p>"
+    },
+    {
+      "id": "9f720f7c-71c7-40b3-a505-5b6b940998ab",
+      "type": "ACTION",
+      "name": "<p>Finalmente, la 🟨 impericia implica actuar con falta de conocimientos o habilidades necesarias para realizar adecuadamente una tarea.</p>"
+    },{
+      "id": "f1217113-e315-4f08-af6c-fbcfcb71113c",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "7ce63246-d986-40a9-0c38-hb6ec716dr57",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-2.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "7158b998-43ef-426a-ba9b-8035f56a9e11",
+      "type": "ACTION",
+      "name": "<p>Es importante tener en cuenta que la responsabilidad civil profesional no es un concepto estático.</p>"
+    },
+    {
+      "id": "fd8be245-ebc7-4adb-8277-259522372b49",
+      "type": "ACTION",
+      "name": "<p>Existen ⏱️ plazos y 📋 condiciones que regulan su aplicación.</p>"
+    },
+    {
+      "id": "75b8d1ed-933a-4e13-a518-bd7da9be1230",
+      "type": "ACTION",
+      "name": "<p>Por ejemplo, el período de prescripción es de 3️⃣ años, contados desde el acto médico o desde que el daño es ostensible.</p>"
+    },
+    {
+      "id": "dcd76b80-1ba7-4cc9-a1fc-1c1e141d4854",
+      "type": "ACTION",
+      "name": "<p>Además, para ejercer una profesión de manera 🏛️ legal, se requiere un 📜 título habilitante y la 🏢 matriculación en el colegio correspondiente, así como la contratación de un seguro de responsabilidad civil.</p>"
+    },{
+      "id": "f4584b9c-ca39-4926-b209-de06fabcd997",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "Genial! ¿Que sigue?"
+        ]
+      }
+    },
+    {
+      "id": "3ee4e1f9-661d-4edf-abdf-d01b556890f3",
+      "type": "ACTION",
+      "name": "<p>Ahora hablaremos de 👨🏻<strong>Consentimiento informado</strong> y la importancia de la 📃 <strong>Historia clinica<strong> en el ambito de la salud.</p>"
+    },
+    {
+      "id": "d369cc6a-0e98-4d16-9f22-30d2d3fd2f31",
+      "type": "ACTION",
+      "name": "<p>Pero primero es esencial entender los principios fundamentales y las responsabilidades involucradas.</p>"
+    },
+    {
+      "id": "84b377d0-10f9-4291-af4f-2878a3ab9d93",
+      "type": "ACTION",
+      "name": "<p>¿Estás listo? 🚀</p>"
+    },{
+      "id": "87103561-1587-40f3-b500-06024e758e69",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "¡Vamos! 🙌🏻"
+        ]
+      }
+    },
+    {
+      "id": "c837e938-86d4-42cd-964e-3f2a84179676",
+      "type": "ACTION",
+      "name": "<p>El Consentimiento Informado es una <strong>declaración de voluntad</strong> emitida por el paciente.</p>"
+    },
+    {
+      "id": "fd97c33a-eae9-4f07-99d5-aae151cd8133",
+      "type": "ACTION",
+      "name": "<p>Esta se hace despues de recibir información detallada sobre su 🩻 estado de salud, 📋 tratamientos necesarios, 📉 posibles evoluciones, 🛑 riesgos y ⚠️ complicaciones.</p>"
+    },{
+      "id": "a26c0816-bde0-45ee-8409-4ff0c4dcfede",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "¿Cuándo es crucial el consentimiento?"
+        ]
+      }
+    },
+    {
+      "id": "459e58f3-09b8-4406-8aee-3e3c78be6a5b",
+      "type": "ACTION",
+      "name": "<p>Este proceso es 🚨 crucial en situaciones como internaciones, intervenciones quirúrgicas, </p>"
+    },
+    {
+      "id": "20d2fbe4-0d1e-40ca-b002-a6f701e682a9",
+      "type": "ACTION",
+      "name": "<p>procedimientos diagnósticos y terapéuticos invasivos.</p>"
+    },
+    {
+      "id": "77544884-421e-4924-a9b4-6ddcd42d2b6f",
+      "type": "ACTION",
+      "name": "<p>Así como en procedimientos con ☠️ riesgos determinados.</p>"
+    },{
+      "id": "a8307818-8d4a-4c89-a6af-2c41c5fc920c",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "¿Hay excepciones?"
+        ]
+      }
+    },
+    {
+      "id": "3589fd32-f0e1-4f11-b7a0-e3f30c353126",
+      "type": "ACTION",
+      "name": "<p>Exactamente! ✅</p>"
+    },
+    {
+      "id": "5a19eace-5e65-4492-a6a5-98de50d1c8f0",
+      "type": "ACTION",
+      "name": "<p>Existen excepciones en casos de grave peligro para la salud pública o 🚨 emergencias que pongan en riesgo la vida del 👨🏻👩🏻 paciente y no permitan obtener el consentimiento.</p>"
+    },{
+      "id": "e281830a-186a-4df4-904c-22764a9424cf",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "¿Qué información debe incluir el Consentimiento Informado?"
+        ]
+      }
+    },
+    {
+      "id": "7ce63246-dN16-47h9-0c38-hb6ec716dr57",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-6.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "f3f7d1cd-ee7d-4e8b-ac5c-ee96800f6a18",
+      "type": "ACTION",
+      "name": "<p>La información proporcionada durante el 📋 Consentimiento Informado debe incluir detalles sobre:</p>"
+    },
+    {
+      "id": "d8677256-629d-4008-a5dd-94fc348a3fb5",
+      "type": "ACTION",
+      "name": "<p>Procedimiento propuesto, los beneficios esperados, los riesgos y efectos adversos previsibles, así como alternativas disponibles y sus respectivas implicaciones.</p>"
+    },
+    {
+      "id": "056bc10b-f15e-41ba-9f59-0bd0f59a42ef",
+      "type": "ACTION",
+      "name": "<p>La ✒️ firma del paciente y del médico es un paso crucial en este proceso, al igual que la posibilidad de 🗑️ revocar el consentimiento.</p>"
+    },{
+      "id": "6e336b8a-2062-4479-af15-ae13a3b47980",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "Esta bien.. Ahora ¿Que es la Historia Clínica?"
+        ]
+      }
+    },
+    {
+      "id": "71627a6a-dd6b-4b3d-ba30-c2306f3ed07a",
+      "type": "ACTION",
+      "name": "<p>La Historia Clínica es un documento obligatorio y completo que registra todas las actuaciones realizadas al 👨🏻👩🏻 paciente por profesionales de la salud.</p>"
+    },
+    {
+      "id": "9115e815-4148-4c7b-ba28-c3f97a73967d",
+      "type": "ACTION",
+      "name": "<p>Este registro ⌛️ cronológico debe contener datos como la fecha de atención, información del paciente y del profesional interviniente. </p>"
+    },
+    {
+      "id": "666cddb8-9c2b-4d20-bcd2-fb6e70543129",
+      "type": "ACTION",
+      "name": "<p>Ademas un registro claro y preciso de los actos médicos realizados y los antecedentes del paciente.</p>"
+    },{
+      "id": "6d832ff6-a8d7-418e-ba13-cc8ef8a1eaae\\n",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "¿Cuales son los principios fundamentales de la Historia Clínica?"
+        ]
+      }
+    },
+    {
+      "id": "7ce63246-AK31-47h9-0c38-hb6ec73hdr57",
+      "type": "ACTION",
+      "name": "https://lerni-images-2024.s3.amazonaws.com/DEMO-capacitacion1/image-7.png",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "image"
+        }
+      }
+    },
+    {
+      "id": "d0dc567b-b8aa-4a72-864c-c929f2f1bb95",
+      "type": "ACTION",
+      "name": "<p>La 🔍 confidencialidad de la información contenida en la <strong>Historia Clínica</strong> es un principio fundamental.</p>"
+    },
+    {
+      "id": "4652a8c9-1c42-49dd-b4d0-a59084127ba7",
+      "type": "ACTION",
+      "name": "<p>Solo puede ser divulgada en caso de necesidad para la 👨🏻🚨 atención del paciente y debe ser accesible únicamente por 🪪 personal autorizado.</p>"
+    },
+    {
+      "id": "0eb302d5-fb46-4426-b645-7c1facb8e405",
+      "type": "ACTION",
+      "name": "<p>Es crucial 📋 documentar de manera objetiva toda la atención y mantener la integridad y ✅ autenticidad de los datos.</p>"
+    },
+    {
+      "id": "77635da1-8146-4a9d-8ab2-c7094ad0dc6d",
+      "type": "ACTION",
+      "name": "<p>La confidencialidad de la información contenida en la <strong>Historia Clínica</strong> es un principio fundamental.</p>"
+    },{
+      "id": "26c65cc0-186f-45c0-a563-8073e59bc397",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "aec061ed-77e2-4425-8d8e-d141063b178b",
+      "type": "ACTION",
+      "name": "<p>El acceso a la Historia Clínica debe estar protegido por 🔐 claves de identificación personal.</p>"
+    },
+    {
+      "id": "0360c3f2-7235-47b2-b7e5-d9ea882d05a0",
+      "type": "ACTION",
+      "name": "<p>Cerrar sesiones de acceso y mantener la confidencialidad es primordial, especialmente en situaciones legales como demandas.</p>"
+    },{
+      "id": "c34b0b64-0d77-44c3-95ae-27422fe3a3ee",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "db94d5d1-caf2-4acf-a8f6-f2f8a1d46cca",
+      "type": "ACTION",
+      "name": "<p>Ahora hablemos de los 🏛️👨🏻 derechos de los pacientes!</p>"
+    },
+    {
+      "id": "7345ad6c-e5ea-4b5f-aa8a-dfcac666b7f6",
+      "type": "ACTION",
+      "name": "<p>Son un pilar fundamental en la relación 👨🏻🥼 médico-paciente y garantizan un trato digno, respetuoso y humano.</p>"
+    },
+    {
+      "id": "249e651d-c182-42fe-8736-4013da8fa851",
+      "type": "ACTION",
+      "name": "<p>A continuación, detallaremos estos derechos para asegurar que los pacientes estén 📰 informados y ⬆️💪🏻 empoderados en su atención médica</p>"
+    },
+    {
+      "id": "39d5d3b1-7c79-48e4-b96e-983eb45365f8",
+      "type": "ACTION",
+      "name": "<p>¿Estás listo?</p>"
+    },{
+      "id": "8aaf81e8-61f1-48d3-8151-a5d88fa4219b",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "c3af6602-9f39-49b9-b13e-fd80d0079446",
+      "type": "ACTION",
+      "name": "<p>1️⃣ Derecho a recibir atención médica oportuna y competente</p>"
+    },
+    {
+      "id": "00b52b81-72f9-45d8-94b7-977b186e8d87",
+      "type": "ACTION",
+      "name": "<p>Todo paciente tiene derecho a recibir atención médica adecuada de acuerdo con los avances científicos y éticos, así como a la filosofía institucional del centro de salud.</p>"
+    },{
+      "id": "230a11b0-e8ab-4a2f-ba95-9aafb6bed947",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "88624ba6-b7f0-45cf-8c88-b191a038c91a",
+      "type": "ACTION",
+      "name": "<p>2️⃣ Derecho a la intimidad y privacidad</p>"
+    },
+    {
+      "id": "92ec6092-878a-449d-a23a-a0e13d160ff6",
+      "type": "ACTION",
+      "name": "<p>Se debe respetar la intimidad personal y la privacidad del paciente, permitiéndole expresar y comunicar sus preferencias en este sentido.</p>"
+    },{
+      "id": "fdabaed0-36d4-4985-a1b0-633a96fdae23",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "ca125c6e-e679-4643-acc9-0e5110c3942b",
+      "type": "ACTION",
+      "name": "<p>3️⃣ Derecho a un trato digno y humano</p>"
+    },
+    {
+      "id": "81bc0d69-2ac3-4635-8621-f73380ffaaf6",
+      "type": "ACTION",
+      "name": "<p>Todos los pacientes tienen derecho a recibir un trato digno y humano, independientemente de su edad, sexo, religión, valores y creencias.</p>"
+    },{
+      "id": "09b76136-6f6c-4855-a6e3-ca9b3919a8ad",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "ef5958a6-b311-42ab-ab37-2a49df2b7a54",
+      "type": "ACTION",
+      "name": "<p>4️⃣ Derecho a la confidencialidad de los datos médicos</p>"
+    },
+    {
+      "id": "5da414fd-8599-4e6e-a3a2-cd52d0f54316",
+      "type": "ACTION",
+      "name": "<p>Los datos relativos a la salud del paciente deben mantenerse en estricta confidencialidad y no ser revelados a terceros sin su autorización, salvo excepciones contempladas por la ley.</p>"
+    },{
+      "id": "83fe3a0e-1b65-40ae-b296-98b52da15f28",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "b305a2aa-8e35-4247-bf0e-2707516fea86",
+      "type": "ACTION",
+      "name": "<p>5️⃣ Derecho a negarse a recibir información y participar en decisiones médicas</p>"
+    },
+    {
+      "id": "7a2c0309-aca7-4fe4-9882-653e53a9e8b4",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a negarse a recibir información y a no participar en la toma de decisiones médicas, pudiendo designar a otra persona para ejercer estos derechos en su nombre.</p>"
+    },{
+      "id": "612b93e3-3906-40f2-9580-8f5c0f54648c",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "513ca660-2cbe-432b-8588-fc9d14f2b33f",
+      "type": "ACTION",
+      "name": "<p>6️⃣ Derecho a anticipar decisiones sobre cuidados o tratamientos</p>"
+    },
+    {
+      "id": "c0864fba-7222-41d7-9632-5bfa37d3f3d4",
+      "type": "ACTION",
+      "name": "<p>El paciente puede anticipar decisiones sobre cuidados o tratamientos mediante un documento legal en caso de que no pueda expresar su voluntad en el futuro.</p>"
+    },{
+      "id": "981abad3-a4a4-4a1c-a95c-e80c17c709ec",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "2f8879c9-4ebd-4474-98f3-aafbeddedab1",
+      "type": "ACTION",
+      "name": "<p>7️⃣ Derecho a solicitar y conocer los datos de su historia clínica</p>"
+    },
+    {
+      "id": "0d879c58-8a99-4748-abf6-24820eb3c9ad",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a solicitar y conocer los datos de su historia clínica.</p>"
+    },{
+      "id": "307f8f14-73d4-4b57-a013-4389436154cd",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "f3f33e3f-4ba0-40bc-9a28-816ce4c8a2ae",
+      "type": "ACTION",
+      "name": "<p>8️⃣ Derecho a una segunda opinión médica</p>"
+    },
+    {
+      "id": "7ee20d2b-9973-42d8-b686-9df2dd1546bd",
+      "type": "ACTION",
+      "name": "<p>El paciente puede solicitar una segunda opinión médica sin temor a que esto afecte la calidad de atención en la institución.</p>"
+    },{
+      "id": "99f0f587-ca1a-404a-a8cd-b2ddfbdc0133",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "f16651c5-79dc-449a-9cd2-a2576291d690",
+      "type": "ACTION",
+      "name": "<p>9️⃣ Derecho a decidir participar en proyectos de investigación</p>"
+    },
+    {
+      "id": "8a99b966-c56f-49f5-a0d0-af4bc73a7fa0",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a decidir libremente si participa o no en proyectos de investigación médica, sin que esto afecte la calidad de atención que recibe.</p>"
+    },{
+      "id": "68578d12-43c1-4b11-9195-1edadd2348f6",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "9a111574-a7ce-4fd6-bea6-042bddcdcd01",
+      "type": "ACTION",
+      "name": "<p>1️⃣0️⃣ Derecho a decidir participar en actividades de docencia</p>"
+    },
+    {
+      "id": "081283c9-d67f-4ae0-bab2-6039d3ef48df",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a decidir libremente si participa o no en actividades de docencia dirigidas a estudiantes de medicina.</p>"
+    },{
+      "id": "820fe28e-666b-45e6-a14c-42380193da10",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "92c87faa-82db-47ab-83f3-6b28e04b829d",
+      "type": "ACTION",
+      "name": "<p>1️⃣1️⃣ Derecho a recibir atención espiritual y religiosa</p>"
+    },
+    {
+      "id": "a1b00f5f-4c74-4096-81ef-28c78c2c2bed",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a recibir atención espiritual y religiosa de acuerdo con sus valores y creencias.</p>"
+    },{
+      "id": "36e0f50a-7cd2-4555-b70e-af57592332bd",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "5c727a6b-fd61-43aa-bb11-312fab9dbb6f",
+      "type": "ACTION",
+      "name": "<p>1️⃣2️⃣ Derecho a transmitir reclamos o sugerencias</p>"
+    },
+    {
+      "id": "958c9e2d-bb9c-45c7-8d8d-833f1133711d",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a transmitir cualquier reclamo o sugerencia al Servicio de Atención al Paciente y a recibir una respuesta.</p>"
+    },{
+      "id": "b03ecf35-5265-4e51-a113-4563eecece61",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "47f97e07-9eea-4197-af7a-393d6261e776",
+      "type": "ACTION",
+      "name": "<p>1️⃣4️⃣ Derecho a ser protegido de agresiones y violencia</p>"
+    },
+    {
+      "id": "f176fe76-d2b6-46a0-bd3f-5fa57e1d56c1",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a ser protegido de cualquier forma de agresión física, violencia o abuso.</p>"
+    },{
+      "id": "c302d820-e3e7-46c7-919c-f7917a22295a",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "361ef05a-329f-414f-8864-a8134ac812ba",
+      "type": "ACTION",
+      "name": "<p>1️⃣5️⃣ Derecho a recibir tratamiento para el control del dolor</p>"
+    },
+    {
+      "id": "03dae053-3a10-4751-ae84-1841822735d9",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a recibir tratamientos para controlar el dolor y a participar en las decisiones relacionadas con estos tratamientos.</p>"
+    },{
+      "id": "3ede1102-d397-4b70-be7b-c42cfe71b655",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "8e5701a0-910b-42b3-8250-15044167fa9f",
+      "type": "ACTION",
+      "name": "<p>1️⃣6️⃣ Derecho a ser identificado por su nombre</p>"
+    },
+    {
+      "id": "460772f3-e352-4060-83e8-afbd8262f2dd",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a ser llamado por su nombre y a conocer los nombres de todas las personas involucradas en su cuidado dentro del hospital.</p>"
+    },{
+      "id": "95e6cec8-24ff-4926-aad5-484ec2a250d3",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "."
+        ]
+      }
+    },
+    {
+      "id": "d1c6a852-6236-46aa-961c-4dac6c1dcf1a",
+      "type": "ACTION",
+      "name": "<p>1️⃣7️⃣ Derecho a no ser sometido a restricciones físicas innecesarias</p>"
+    },
+    {
+      "id": "39e17678-61db-4c14-891d-0dfc3bd9a499",
+      "type": "ACTION",
+      "name": "<p>El paciente tiene derecho a que no se le apliquen restricciones físicas que no sean médicamente necesarias.</p>"
+    }
+  ],
+  "relations":[
+    {
+      "from": "63801ebc-6e27-416e-b2e7-c714b8b41043",
+      "to": "c52586bd-f7a3-45e8-90d6-9f2776e894eb"
+    },
+    {
+      "from": "c52586bd-f7a3-45e8-90d6-9f2776e894eb",
+      "to": "36f147b4-e65c-42cd-8f62-6a9a68461b88"
+    },
+    {
+      "from": "36f147b4-e65c-42cd-8f62-6a9a68461b88",
+      "to": "96248256-0d12-40ca-91db-cad7d76cfd4a"
+    },
+    {
+      "from": "96248256-0d12-40ca-91db-cad7d76cfd4a",
+      "to": "8bf1144e-37c0-4f4a-b88a-873ed05ae3f1"
+    },
+    {
+      "from": "8bf1144e-37c0-4f4a-b88a-873ed05ae3f1",
+      "to": "1671ab63-1a91-44c4-9d0e-56cdc8becde9"
+    },
+    {
+      "from": "1671ab63-1a91-44c4-9d0e-56cdc8becde9",
+      "to": "c81017aa-bdac-4b11-9090-5eb326d341e0"
+    },
+    {
+      "from": "c81017aa-bdac-4b11-9090-5eb326d341e0",
+      "to": "0d67c90f-0a86-4fe4-b3be-3d9220d5af22"
+    },
+    {
+      "from": "0d67c90f-0a86-4fe4-b3be-3d9220d5af22",
+      "to": "c54315d2-43da-4cc4-8961-d54f42d02909"
+    },
+    {
+      "from": "c54315d2-43da-4cc4-8961-d54f42d02909",
+      "to": "a5284465-2fa1-4912-aeff-204bfd3bcfa4"
+    },
+    {
+      "from": "a5284465-2fa1-4912-aeff-204bfd3bcfa4",
+      "to": "6de59267-9bbe-4929-a94f-dc42d8023950"
+    },
+    {
+      "from": "6de59267-9bbe-4929-a94f-dc42d8023950",
+      "to": "b851aaa2-cad9-4f51-a20e-e92863782ea6"
+    },
+    {
+      "from": "b851aaa2-cad9-4f51-a20e-e92863782ea6",
+      "to": "20030d60-130f-474e-9b33-304b280fd78c"
+    },
+    {
+      "from": "20030d60-130f-474e-9b33-304b280fd78c",
+      "to": "b8df0cee-4883-4308-a505-dcf1e0c4509d"
+    },
+    {
+      "from": "b8df0cee-4883-4308-a505-dcf1e0c4509d",
+      "to": "4575f6c0-cf63-4b30-9d3b-c768afd00f6e"
+    },
+    {
+      "from": "4575f6c0-cf63-4b30-9d3b-c768afd00f6e",
+      "to": "1ada7f5e-c3fc-46d4-a919-2455aa7dd36b"
+    },
+    {
+      "from": "1ada7f5e-c3fc-46d4-a919-2455aa7dd36b",
+      "to": "f38c914c-7e0e-410a-aeea-d5993044c947"
+    },
+    {
+      "from": "f38c914c-7e0e-410a-aeea-d5993044c947",
+      "to": "b24a09d3-2d06-4bae-aaf7-9c986be17972"
+    },
+    {
+      "from": "b24a09d3-2d06-4bae-aaf7-9c986be17972",
+      "to": "39493bd9-783c-4548-ad86-116bbbccc68e"
+    },
+    {
+      "from": "39493bd9-783c-4548-ad86-116bbbccc68e",
+      "to": "36f147b4-e65c-42cd-8as62-6a9a68461b88"
+    },
+    {
+      "from": "36f147b4-e65c-42cd-8as62-6a9a68461b88",
+      "to": "062967a6-5f45-48ce-a247-ebd3db8a44f0"
+    },
+    {
+      "from": "062967a6-5f45-48ce-a247-ebd3db8a44f0",
+      "to": "a679db3e-580a-4df0-b00f-b6def859f10a"
+    },
+    {
+      "from": "a679db3e-580a-4df0-b00f-b6def859f10a",
+      "to": "1e3f1932-7d17-4f0d-b187-ac65bc81005f"
+    },
+    {
+      "from": "1e3f1932-7d17-4f0d-b187-ac65bc81005f",
+      "to": "79e2a6d8-37a6-452b-b8ab-839e3d9e9ad4"
+    },
+    {
+      "from": "79e2a6d8-37a6-452b-b8ab-839e3d9e9ad4",
+      "to": "d569f814-9919-4ce8-aa56-3cf51d212fb5"
+    },
+    {
+      "from": "d569f814-9919-4ce8-aa56-3cf51d212fb5",
+      "to": "36f147b4-l2d4-42cd-8as62-6a9a68461b88"
+    },
+    {
+      "from": "36f147b4-l2d4-42cd-8as62-6a9a68461b88",
+      "to": "e017be49-2d17-4b10-a8ff-222a34e51167"
+    },
+    {
+      "from": "e017be49-2d17-4b10-a8ff-222a34e51167",
+      "to": "450f4cd2-b54e-4627-93ec-1bd8d5618979"
+    },
+    {
+      "from": "450f4cd2-b54e-4627-93ec-1bd8d5618979",
+      "to": "5dad89c9-4b0f-4bb5-86a1-15737054c731"
+    },
+    {
+      "from": "5dad89c9-4b0f-4bb5-86a1-15737054c731",
+      "to": "0c827ac7-d93a-4f7f-a94e-3188dc1b5535"
+    },
+    {
+      "from": "0c827ac7-d93a-4f7f-a94e-3188dc1b5535",
+      "to": "36f147b4-j3o2-42cd-8as62-6a9a68461b88"
+    },
+    {
+      "from": "36f147b4-j3o2-42cd-8as62-6a9a68461b88",
+      "to": "ced77bac-86e4-40d1-96a0-4cdfcb0dc526"
+    },
+    {
+      "from": "ced77bac-86e4-40d1-96a0-4cdfcb0dc526",
+      "to": "7e8644b4-1e19-4b27-8b9f-bfe2a4a0afd8"
+    },
+    {
+      "from": "7e8644b4-1e19-4b27-8b9f-bfe2a4a0afd8",
+      "to": "cf8089cb-e074-477a-8cd8-cb76453c69ed"
+    },
+    {
+      "from": "cf8089cb-e074-477a-8cd8-cb76453c69ed",
+      "to": "ebd046c5-9b58-4221-9481-958728cd21e3"
+    },
+    {
+      "from": "ebd046c5-9b58-4221-9481-958728cd21e3",
+      "to": "29a9b795-3e14-4269-b279-93bb495a1d39"
+    },
+    {
+      "from": "29a9b795-3e14-4269-b279-93bb495a1d39",
+      "to": "67819546-ba57-4b74-8452-5dd591c5cc17"
+    },
+    {
+      "from": "67819546-ba57-4b74-8452-5dd591c5cc17",
+      "to": "66a26648-7f78-42cf-91c9-cccd50062c40"
+    },
+    {
+      "from": "66a26648-7f78-42cf-91c9-cccd50062c40",
+      "to": "a2e0e20b-833d-4047-a4c4-7d986457dea4"
+    },
+    {
+      "from": "a2e0e20b-833d-4047-a4c4-7d986457dea4",
+      "to": "758e364c-5680-48a1-971f-9075e401f8b7"
+    },
+    {
+      "from": "758e364c-5680-48a1-971f-9075e401f8b7",
+      "to": "7ce63246-d986-40a9-9c94-cb6ec716da57"
+    },
+    {
+      "from": "7ce63246-d986-40a9-9c94-cb6ec716da57",
+      "to": "15de6076-1da3-46fa-a323-8cda449d2c8a"
+    },
+    {
+      "from": "15de6076-1da3-46fa-a323-8cda449d2c8a",
+      "to": "cfb76bfc-7777-430a-95c1-d7aae038842c"
+    },
+    {
+      "from": "cfb76bfc-7777-430a-95c1-d7aae038842c",
+      "to": "9f720f7c-71c7-40b3-a505-5b6b940998ab"
+    },
+    {
+      "from": "9f720f7c-71c7-40b3-a505-5b6b940998ab",
+      "to": "f1217113-e315-4f08-af6c-fbcfcb71113c"
+    },
+    {
+      "from": "f1217113-e315-4f08-af6c-fbcfcb71113c",
+      "to": "7ce63246-d986-40a9-0c38-hb6ec716dr57"
+    },
+    {
+      "from": "7ce63246-d986-40a9-0c38-hb6ec716dr57",
+      "to": "7158b998-43ef-426a-ba9b-8035f56a9e11"
+    },
+    {
+      "from": "7158b998-43ef-426a-ba9b-8035f56a9e11",
+      "to": "fd8be245-ebc7-4adb-8277-259522372b49"
+    },
+    {
+      "from": "fd8be245-ebc7-4adb-8277-259522372b49",
+      "to": "75b8d1ed-933a-4e13-a518-bd7da9be1230"
+    },
+    {
+      "from": "75b8d1ed-933a-4e13-a518-bd7da9be1230",
+      "to": "dcd76b80-1ba7-4cc9-a1fc-1c1e141d4854"
+    },
+    {
+      "from": "dcd76b80-1ba7-4cc9-a1fc-1c1e141d4854",
+      "to": "f4584b9c-ca39-4926-b209-de06fabcd997"
+    },
+    {
+      "from": "f4584b9c-ca39-4926-b209-de06fabcd997",
+      "to": "3ee4e1f9-661d-4edf-abdf-d01b556890f3"
+    },
+    {
+      "from": "3ee4e1f9-661d-4edf-abdf-d01b556890f3",
+      "to": "d369cc6a-0e98-4d16-9f22-30d2d3fd2f31"
+    },
+    {
+      "from": "d369cc6a-0e98-4d16-9f22-30d2d3fd2f31",
+      "to": "84b377d0-10f9-4291-af4f-2878a3ab9d93"
+    },
+    {
+      "from": "84b377d0-10f9-4291-af4f-2878a3ab9d93",
+      "to": "87103561-1587-40f3-b500-06024e758e69"
+    },
+    {
+      "from": "87103561-1587-40f3-b500-06024e758e69",
+      "to": "c837e938-86d4-42cd-964e-3f2a84179676"
+    },
+    {
+      "from": "c837e938-86d4-42cd-964e-3f2a84179676",
+      "to": "fd97c33a-eae9-4f07-99d5-aae151cd8133"
+    },
+    {
+      "from": "fd97c33a-eae9-4f07-99d5-aae151cd8133",
+      "to": "a26c0816-bde0-45ee-8409-4ff0c4dcfede"
+    },
+    {
+      "from": "a26c0816-bde0-45ee-8409-4ff0c4dcfede",
+      "to": "459e58f3-09b8-4406-8aee-3e3c78be6a5b"
+    },
+    {
+      "from": "459e58f3-09b8-4406-8aee-3e3c78be6a5b",
+      "to": "20d2fbe4-0d1e-40ca-b002-a6f701e682a9"
+    },
+    {
+      "from": "20d2fbe4-0d1e-40ca-b002-a6f701e682a9",
+      "to": "77544884-421e-4924-a9b4-6ddcd42d2b6f"
+    },
+    {
+      "from": "77544884-421e-4924-a9b4-6ddcd42d2b6f",
+      "to": "a8307818-8d4a-4c89-a6af-2c41c5fc920c"
+    },
+    {
+      "from": "a8307818-8d4a-4c89-a6af-2c41c5fc920c",
+      "to": "3589fd32-f0e1-4f11-b7a0-e3f30c353126"
+    },
+    {
+      "from": "3589fd32-f0e1-4f11-b7a0-e3f30c353126",
+      "to": "5a19eace-5e65-4492-a6a5-98de50d1c8f0"
+    },
+    {
+      "from": "5a19eace-5e65-4492-a6a5-98de50d1c8f0",
+      "to": "e281830a-186a-4df4-904c-22764a9424cf"
+    },
+    {
+      "from": "e281830a-186a-4df4-904c-22764a9424cf",
+      "to": "7ce63246-dN16-47h9-0c38-hb6ec716dr57"
+    },
+    {
+      "from": "7ce63246-dN16-47h9-0c38-hb6ec716dr57",
+      "to": "f3f7d1cd-ee7d-4e8b-ac5c-ee96800f6a18"
+    },
+    {
+      "from": "f3f7d1cd-ee7d-4e8b-ac5c-ee96800f6a18",
+      "to": "d8677256-629d-4008-a5dd-94fc348a3fb5"
+    },
+    {
+      "from": "d8677256-629d-4008-a5dd-94fc348a3fb5",
+      "to": "056bc10b-f15e-41ba-9f59-0bd0f59a42ef"
+    },
+    {
+      "from": "056bc10b-f15e-41ba-9f59-0bd0f59a42ef",
+      "to": "6e336b8a-2062-4479-af15-ae13a3b47980"
+    },
+    {
+      "from": "6e336b8a-2062-4479-af15-ae13a3b47980",
+      "to": "71627a6a-dd6b-4b3d-ba30-c2306f3ed07a"
+    },
+    {
+      "from": "71627a6a-dd6b-4b3d-ba30-c2306f3ed07a",
+      "to": "9115e815-4148-4c7b-ba28-c3f97a73967d"
+    },
+    {
+      "from": "9115e815-4148-4c7b-ba28-c3f97a73967d",
+      "to": "666cddb8-9c2b-4d20-bcd2-fb6e70543129"
+    },
+    {
+      "from": "666cddb8-9c2b-4d20-bcd2-fb6e70543129",
+      "to": "6d832ff6-a8d7-418e-ba13-cc8ef8a1eaae\\n"
+    },
+    {
+      "from": "6d832ff6-a8d7-418e-ba13-cc8ef8a1eaae\\n",
+      "to": "7ce63246-AK31-47h9-0c38-hb6ec73hdr57"
+    },
+    {
+      "from": "7ce63246-AK31-47h9-0c38-hb6ec73hdr57",
+      "to": "d0dc567b-b8aa-4a72-864c-c929f2f1bb95"
+    },
+    {
+      "from": "d0dc567b-b8aa-4a72-864c-c929f2f1bb95",
+      "to": "4652a8c9-1c42-49dd-b4d0-a59084127ba7"
+    },
+    {
+      "from": "4652a8c9-1c42-49dd-b4d0-a59084127ba7",
+      "to": "0eb302d5-fb46-4426-b645-7c1facb8e405"
+    },
+    {
+      "from": "0eb302d5-fb46-4426-b645-7c1facb8e405",
+      "to": "77635da1-8146-4a9d-8ab2-c7094ad0dc6d"
+    },
+    {
+      "from": "77635da1-8146-4a9d-8ab2-c7094ad0dc6d",
+      "to": "26c65cc0-186f-45c0-a563-8073e59bc397"
+    },
+    {
+      "from": "26c65cc0-186f-45c0-a563-8073e59bc397",
+      "to": "aec061ed-77e2-4425-8d8e-d141063b178b"
+    },
+    {
+      "from": "aec061ed-77e2-4425-8d8e-d141063b178b",
+      "to": "0360c3f2-7235-47b2-b7e5-d9ea882d05a0"
+    },
+    {
+      "from": "0360c3f2-7235-47b2-b7e5-d9ea882d05a0",
+      "to": "c34b0b64-0d77-44c3-95ae-27422fe3a3ee"
+    },
+    {
+      "from": "c34b0b64-0d77-44c3-95ae-27422fe3a3ee",
+      "to": "db94d5d1-caf2-4acf-a8f6-f2f8a1d46cca"
+    },
+    {
+      "from": "db94d5d1-caf2-4acf-a8f6-f2f8a1d46cca",
+      "to": "7345ad6c-e5ea-4b5f-aa8a-dfcac666b7f6"
+    },
+    {
+      "from": "7345ad6c-e5ea-4b5f-aa8a-dfcac666b7f6",
+      "to": "249e651d-c182-42fe-8736-4013da8fa851"
+    },
+    {
+      "from": "249e651d-c182-42fe-8736-4013da8fa851",
+      "to": "39d5d3b1-7c79-48e4-b96e-983eb45365f8"
+    },
+    {
+      "from": "39d5d3b1-7c79-48e4-b96e-983eb45365f8",
+      "to": "8aaf81e8-61f1-48d3-8151-a5d88fa4219b"
+    },
+    {
+      "from": "8aaf81e8-61f1-48d3-8151-a5d88fa4219b",
+      "to": "c3af6602-9f39-49b9-b13e-fd80d0079446"
+    },
+    {
+      "from": "c3af6602-9f39-49b9-b13e-fd80d0079446",
+      "to": "00b52b81-72f9-45d8-94b7-977b186e8d87"
+    },
+    {
+      "from": "00b52b81-72f9-45d8-94b7-977b186e8d87",
+      "to": "230a11b0-e8ab-4a2f-ba95-9aafb6bed947"
+    },
+    {
+      "from": "230a11b0-e8ab-4a2f-ba95-9aafb6bed947",
+      "to": "88624ba6-b7f0-45cf-8c88-b191a038c91a"
+    },
+    {
+      "from": "88624ba6-b7f0-45cf-8c88-b191a038c91a",
+      "to": "92ec6092-878a-449d-a23a-a0e13d160ff6"
+    },
+    {
+      "from": "92ec6092-878a-449d-a23a-a0e13d160ff6",
+      "to": "fdabaed0-36d4-4985-a1b0-633a96fdae23"
+    },
+    {
+      "from": "fdabaed0-36d4-4985-a1b0-633a96fdae23",
+      "to": "ca125c6e-e679-4643-acc9-0e5110c3942b"
+    },
+    {
+      "from": "ca125c6e-e679-4643-acc9-0e5110c3942b",
+      "to": "81bc0d69-2ac3-4635-8621-f73380ffaaf6"
+    },
+    {
+      "from": "81bc0d69-2ac3-4635-8621-f73380ffaaf6",
+      "to": "09b76136-6f6c-4855-a6e3-ca9b3919a8ad"
+    },
+    {
+      "from": "09b76136-6f6c-4855-a6e3-ca9b3919a8ad",
+      "to": "ef5958a6-b311-42ab-ab37-2a49df2b7a54"
+    },
+    {
+      "from": "ef5958a6-b311-42ab-ab37-2a49df2b7a54",
+      "to": "5da414fd-8599-4e6e-a3a2-cd52d0f54316"
+    },
+    {
+      "from": "5da414fd-8599-4e6e-a3a2-cd52d0f54316",
+      "to": "83fe3a0e-1b65-40ae-b296-98b52da15f28"
+    },
+    {
+      "from": "83fe3a0e-1b65-40ae-b296-98b52da15f28",
+      "to": "b305a2aa-8e35-4247-bf0e-2707516fea86"
+    },
+    {
+      "from": "b305a2aa-8e35-4247-bf0e-2707516fea86",
+      "to": "7a2c0309-aca7-4fe4-9882-653e53a9e8b4"
+    },
+    {
+      "from": "7a2c0309-aca7-4fe4-9882-653e53a9e8b4",
+      "to": "612b93e3-3906-40f2-9580-8f5c0f54648c"
+    },
+    {
+      "from": "612b93e3-3906-40f2-9580-8f5c0f54648c",
+      "to": "513ca660-2cbe-432b-8588-fc9d14f2b33f"
+    },
+    {
+      "from": "513ca660-2cbe-432b-8588-fc9d14f2b33f",
+      "to": "c0864fba-7222-41d7-9632-5bfa37d3f3d4"
+    },
+    {
+      "from": "c0864fba-7222-41d7-9632-5bfa37d3f3d4",
+      "to": "981abad3-a4a4-4a1c-a95c-e80c17c709ec"
+    },
+    {
+      "from": "981abad3-a4a4-4a1c-a95c-e80c17c709ec",
+      "to": "2f8879c9-4ebd-4474-98f3-aafbeddedab1"
+    },
+    {
+      "from": "2f8879c9-4ebd-4474-98f3-aafbeddedab1",
+      "to": "0d879c58-8a99-4748-abf6-24820eb3c9ad"
+    },
+    {
+      "from": "0d879c58-8a99-4748-abf6-24820eb3c9ad",
+      "to": "307f8f14-73d4-4b57-a013-4389436154cd"
+    },
+    {
+      "from": "307f8f14-73d4-4b57-a013-4389436154cd",
+      "to": "f3f33e3f-4ba0-40bc-9a28-816ce4c8a2ae"
+    },
+    {
+      "from": "f3f33e3f-4ba0-40bc-9a28-816ce4c8a2ae",
+      "to": "7ee20d2b-9973-42d8-b686-9df2dd1546bd"
+    },
+    {
+      "from": "7ee20d2b-9973-42d8-b686-9df2dd1546bd",
+      "to": "99f0f587-ca1a-404a-a8cd-b2ddfbdc0133"
+    },
+    {
+      "from": "99f0f587-ca1a-404a-a8cd-b2ddfbdc0133",
+      "to": "f16651c5-79dc-449a-9cd2-a2576291d690"
+    },
+    {
+      "from": "f16651c5-79dc-449a-9cd2-a2576291d690",
+      "to": "8a99b966-c56f-49f5-a0d0-af4bc73a7fa0"
+    },
+    {
+      "from": "8a99b966-c56f-49f5-a0d0-af4bc73a7fa0",
+      "to": "68578d12-43c1-4b11-9195-1edadd2348f6"
+    },
+    {
+      "from": "68578d12-43c1-4b11-9195-1edadd2348f6",
+      "to": "9a111574-a7ce-4fd6-bea6-042bddcdcd01"
+    },
+    {
+      "from": "9a111574-a7ce-4fd6-bea6-042bddcdcd01",
+      "to": "081283c9-d67f-4ae0-bab2-6039d3ef48df"
+    },
+    {
+      "from": "081283c9-d67f-4ae0-bab2-6039d3ef48df",
+      "to": "820fe28e-666b-45e6-a14c-42380193da10"
+    },
+    {
+      "from": "820fe28e-666b-45e6-a14c-42380193da10",
+      "to": "92c87faa-82db-47ab-83f3-6b28e04b829d"
+    },
+    {
+      "from": "92c87faa-82db-47ab-83f3-6b28e04b829d",
+      "to": "a1b00f5f-4c74-4096-81ef-28c78c2c2bed"
+    },
+    {
+      "from": "a1b00f5f-4c74-4096-81ef-28c78c2c2bed",
+      "to": "36e0f50a-7cd2-4555-b70e-af57592332bd"
+    },
+    {
+      "from": "36e0f50a-7cd2-4555-b70e-af57592332bd",
+      "to": "5c727a6b-fd61-43aa-bb11-312fab9dbb6f"
+    },
+    {
+      "from": "5c727a6b-fd61-43aa-bb11-312fab9dbb6f",
+      "to": "958c9e2d-bb9c-45c7-8d8d-833f1133711d"
+    },
+    {
+      "from": "958c9e2d-bb9c-45c7-8d8d-833f1133711d",
+      "to": "b03ecf35-5265-4e51-a113-4563eecece61"
+    },
+    {
+      "from": "b03ecf35-5265-4e51-a113-4563eecece61",
+      "to": "47f97e07-9eea-4197-af7a-393d6261e776"
+    },
+    {
+      "from": "47f97e07-9eea-4197-af7a-393d6261e776",
+      "to": "f176fe76-d2b6-46a0-bd3f-5fa57e1d56c1"
+    },
+    {
+      "from": "f176fe76-d2b6-46a0-bd3f-5fa57e1d56c1",
+      "to": "c302d820-e3e7-46c7-919c-f7917a22295a"
+    },
+    {
+      "from": "c302d820-e3e7-46c7-919c-f7917a22295a",
+      "to": "361ef05a-329f-414f-8864-a8134ac812ba"
+    },
+    {
+      "from": "361ef05a-329f-414f-8864-a8134ac812ba",
+      "to": "03dae053-3a10-4751-ae84-1841822735d9"
+    },
+    {
+      "from": "03dae053-3a10-4751-ae84-1841822735d9",
+      "to": "3ede1102-d397-4b70-be7b-c42cfe71b655"
+    },
+    {
+      "from": "3ede1102-d397-4b70-be7b-c42cfe71b655",
+      "to": "8e5701a0-910b-42b3-8250-15044167fa9f"
+    },
+    {
+      "from": "8e5701a0-910b-42b3-8250-15044167fa9f",
+      "to": "460772f3-e352-4060-83e8-afbd8262f2dd"
+    },
+    {
+      "from": "460772f3-e352-4060-83e8-afbd8262f2dd",
+      "to": "95e6cec8-24ff-4926-aad5-484ec2a250d3"
+    },
+    {
+      "from": "95e6cec8-24ff-4926-aad5-484ec2a250d3",
+      "to": "d1c6a852-6236-46aa-961c-4dac6c1dcf1a"
+    },
+    {
+      "from": "d1c6a852-6236-46aa-961c-4dac6c1dcf1a",
+      "to": "39e17678-61db-4c14-891d-0dfc3bd9a499"
+    }
+  ]
+}
+`
+
+export const CapacitacionQuestionnaire = `{
+  "id": "",
+  "type": "DYNAMIC",
+  "initial": "38f55a5e-6f56-4903-8d44-d10ee2fd4fe1",
+  "elements": [
+    {
+      "id": "38f55a5e-6f56-4903-8d44-d10ee2fd4fe1",
+      "type": "ACTION",
+      "name": "<p>¿Qué implica la función preventiva de la responsabilidad civil profesional?</p>"
+    },
+    {
+      "id": "9b2c9c91-1972-4e6a-9d04-2d0b70dd2775",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice",
+          "correct_answer": "Evitar daños injustificados"
+        },
+        "options": [
+          "Evitar daños injustificados",
+          "Agravar los daños ya ocurridos",
+          "No tomar precauciones para evitar riesgos",
+          "Actuar con falta de conocimientos"
+        ]
+      }
+    },
+    {
+      "id": "81a34838-08d5-464f-b656-fefb57a4205d",
+      "type": "ACTION",
+      "name": "<p>¿Qué implica la atribución de responsabilidad en el contexto de la responsabilidad civil profesional?</p>"
+    },
+    {
+      "id": "2f7fc30f-aa4a-49e5-9ed2-d74832e2bfab",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice",
+          "correct_answer": "Omisión de la diligencia debida"
+        },
+        "options": [
+          "Actuar en forma precipitada",
+          "Evitar daños injustificados",
+          "Omisión de la diligencia debida",
+          "No tomar precauciones para evitar riesgos"
+        ]
+      }
+    },
+    {
+      "id": "279cdd0a-4f27-462d-a31f-3450de7dd4a3",
+      "type": "ACTION",
+      "name": "<p>¿Cuál es la duración típica de la prescripción en casos de responsabilidad médica?</p>"
+    },
+    {
+      "id": "28ad76e8-bb3b-4a3c-b1b1-d5d5452ac9d1",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice",
+          "correct_answer": "3 años"
+        },
+        "options": [
+          "1 año",
+          "3 años",
+          "5 años",
+          "10 años"
+        ]
+      }
+    },
+    {
+      "id": "a5d0c224-5425-42e4-8a5d-80079e527a0d",
+      "type": "ACTION",
+      "name": "<p>¿Qué se requiere para que un paciente otorgue un consentimiento informado válido?</p>"
+    },
+    {
+      "id": "48b85b1d-c51c-426b-a78e-1e0b9f5e16ff",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice",
+          "correct_answer": "Información clara y precisa"
+        },
+        "options": [
+          "Información clara y precisa",
+          "Acción médica imprudente",
+          "Negligencia en el deber de preparación",
+          "Acceso restringido a la historia clínica"
+        ]
+      }
+    },
+    {
+      "id": "a22ebc12-8813-4e8d-8e36-5dd3d74c1ad9",
+      "type": "ACTION",
+      "name": "<p>¿Qué información debe contener la historia clínica de un paciente?</p>"
+    },
+    {
+      "id": "b9a62458-c7aa-4669-817b-f0ff2d68a0b3",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice",
+          "correct_answer": "Registro de procedimientos realizados"
+        },
+        "options": [
+          "Estado de salud del médico",
+          "Registro de procedimientos realizados",
+          "Datos personales del profesional",
+          "Beneficios esperados del tratamiento"
+        ]
+      }
+    },
+    {
+      "id": "7f1691b4-1443-4a97-8639-6d05be2bc06d",
+      "type": "ACTION",
+      "name": "<p>¿Qué debe hacer un paciente para solicitar una segunda opinión médica?</p>"
+    },
+    {
+      "id": "51bf5fb1-23af-47f2-ae0f-2a37e48ae9c3",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice",
+          "correct_answer": "Solicitar una interconsulta"
+        },
+        "options": [
+          "Solicitar una interconsulta",
+          "Revocar el consentimiento informado",
+          "Divulgar su historia clínica",
+          "Designar a un representante legal"
+        ]
+      }
+    }
+  ],
+  "relations": [
+    {
+      "from": "38f55a5e-6f56-4903-8d44-d10ee2fd4fe1",
+      "to": "9b2c9c91-1972-4e6a-9d04-2d0b70dd2775"
+    },
+    {
+      "from": "9b2c9c91-1972-4e6a-9d04-2d0b70dd2775",
+      "to": "81a34838-08d5-464f-b656-fefb57a4205d"
+    },
+    {
+      "from": "81a34838-08d5-464f-b656-fefb57a4205d",
+      "to": "2f7fc30f-aa4a-49e5-9ed2-d74832e2bfab"
+    },
+    {
+      "from": "2f7fc30f-aa4a-49e5-9ed2-d74832e2bfab",
+      "to": "279cdd0a-4f27-462d-a31f-3450de7dd4a3"
+    },
+    {
+      "from": "279cdd0a-4f27-462d-a31f-3450de7dd4a3",
+      "to": "28ad76e8-bb3b-4a3c-b1b1-d5d5452ac9d1"
+    },
+    {
+      "from": "28ad76e8-bb3b-4a3c-b1b1-d5d5452ac9d1",
+      "to": "a5d0c224-5425-42e4-8a5d-80079e527a0d"
+    },
+    {
+      "from": "a5d0c224-5425-42e4-8a5d-80079e527a0d",
+      "to": "48b85b1d-c51c-426b-a78e-1e0b9f5e16ff"
+    },
+    {
+      "from": "48b85b1d-c51c-426b-a78e-1e0b9f5e16ff",
+      "to": "a22ebc12-8813-4e8d-8e36-5dd3d74c1ad9"
+    },
+    {
+      "from": "a22ebc12-8813-4e8d-8e36-5dd3d74c1ad9",
+      "to": "b9a62458-c7aa-4669-817b-f0ff2d68a0b3"
+    },
+    {
+      "from": "b9a62458-c7aa-4669-817b-f0ff2d68a0b3",
+      "to": "7f1691b4-1443-4a97-8639-6d05be2bc06d"
+    },
+    {
+      "from": "7f1691b4-1443-4a97-8639-6d05be2bc06d",
+      "to": "51bf5fb1-23af-47f2-ae0f-2a37e48ae9c3"
+    }
+  ]
+}`
+
+export const mockPill = `
+{
+  "id": "",
+  "type": "DYNAMIC",
+  "initial": "38f55a5e-6f56-4903-8d44-d10ee2fd4fe1",
+  "elements": [
+    {
+      "id": "38f55a5e-6f56-4903-8d44-d10ee2fd4fe1",
+      "type": "ACTION",
+      "name": "<p>¿Qué implica la función preventiva de la responsabilidad civil profesional?</p>"
+    },
+    {
+      "id": "9b2c9c91-1972-4e6a-9d04-2d0b70dd2775",
+      "type": "QUESTION",
+      "name": "",
+      "question_type": "SINGLECHOICE",
+      "metadata": {
+        "metadata": {
+          "lerni_question_type": "single-choice"
+        },
+        "options": [
+          "Evitar daños injustificados",
+          "Agravar los daños ya ocurridos",
+          "No tomar precauciones para evitar riesgos",
+          "Actuar con falta de conocimientos"
+        ]
+      }
+    }
+  ],
+  "relations": [
+    {
+      "from": "38f55a5e-6f56-4903-8d44-d10ee2fd4fe1",
+      "to": "9b2c9c91-1972-4e6a-9d04-2d0b70dd2775"
+    }
+  ]
+}`

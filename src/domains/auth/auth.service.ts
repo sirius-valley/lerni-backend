@@ -25,7 +25,7 @@ export class AuthService {
     const auth = await this.authRepository.findAuthByEmail(registerDTO.email);
     if (auth) {
       if (auth.isActive) {
-        throw new HttpException('Email already in use', HttpStatus.CONFLICT);
+        throw new HttpException('Este email ya ha sido registrado', HttpStatus.CONFLICT);
       } else {
         const hashedPassword = await this.hashPassword(registerDTO.password);
         const authCreated = await this.authRepository.updateIsActive({ ...registerDTO, password: hashedPassword });
@@ -47,16 +47,16 @@ export class AuthService {
 
   public async login(loginDTO: LoginRequestDto): Promise<JwtDto> {
     const auth = await this.authRepository.findAuthByEmail(loginDTO.email);
-    if (!auth) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
+    if (!auth) throw new HttpException('Email no registrado', HttpStatus.NOT_FOUND);
     const isCorrectPassword = await this.comparePassword(loginDTO.password, auth.password);
-    if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    if (!isCorrectPassword) throw new HttpException('Email o contraseña incorrecta', HttpStatus.UNAUTHORIZED);
     const jwt = await this.jwtService.signAsync({ sub: auth.id }, { secret: this.configService.get<string>('JWT_SECRET') });
     return new JwtDto(jwt);
   }
 
   public async registerAdmin(adminRegisterDto: AdminRegisterRequestDto) {
     const admin = await this.authRepository.findTeacherByEmail(adminRegisterDto.email);
-    if (admin) throw new HttpException('Email already in use', HttpStatus.CONFLICT);
+    if (admin) throw new HttpException('Este email ya ha sido registrado', HttpStatus.CONFLICT);
     const hashedPassword = await this.hashPassword(adminRegisterDto.password);
     const adminCreated = await this.authRepository.createTeacher({
       ...adminRegisterDto,
@@ -71,9 +71,9 @@ export class AuthService {
 
   public async loginAdmin(adminLoginDto: LoginRequestDto) {
     const admin = await this.authRepository.findTeacherByEmail(adminLoginDto.email);
-    if (!admin) throw new HttpException('User with provided email not found', HttpStatus.NOT_FOUND);
+    if (!admin) throw new HttpException('Email no registrado', HttpStatus.NOT_FOUND);
     const isCorrectPassword = await this.comparePassword(adminLoginDto.password, admin?.password);
-    if (!isCorrectPassword) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    if (!isCorrectPassword) throw new HttpException('Email o contraseña incorrecta', HttpStatus.UNAUTHORIZED);
     const jwt = await this.jwtService.signAsync(
       {
         sub: admin.id,
@@ -133,13 +133,13 @@ export class AuthService {
 
   public async validateCode(data: PasswordCodeRequestDto) {
     const user = await this.authRepository.findAuthByEmail(data.email);
-    if (!user) throw new HttpException('Invaild code', HttpStatus.FORBIDDEN);
+    if (!user) throw new HttpException('Código inválido', HttpStatus.FORBIDDEN);
     const latestToken = await this.authRepository.getLatestResetPasswordToken(user.id);
-    if (!latestToken) throw new HttpException('Invalid code', HttpStatus.FORBIDDEN);
+    if (!latestToken) throw new HttpException('Código inválido', HttpStatus.FORBIDDEN);
 
     // check if passed attempt maximum
     if (latestToken.attemptCount >= maxResetTokenAttemptsPerCode)
-      throw new HttpException('Exceeded maximum attempts', HttpStatus.FORBIDDEN);
+      throw new HttpException('Cantidad máxima de intentos excedida', HttpStatus.FORBIDDEN);
 
     if (await this.comparePassword(data.code, latestToken.token)) {
       await this.authRepository.updateResetPasswordTokenData(latestToken.id, { validatedDate: new Date() });
@@ -147,15 +147,15 @@ export class AuthService {
     } else {
       const attemptCount = latestToken.attemptCount;
       await this.authRepository.updateResetPasswordTokenData(latestToken.id, { attemptCount: attemptCount + 1 });
-      throw new HttpException('Invalid Code', HttpStatus.FORBIDDEN);
+      throw new HttpException('Código invalido', HttpStatus.FORBIDDEN);
     }
   }
 
   public async updatePassword(email: string, newPassword: string) {
     const user = await this.authRepository.findAuthByEmail(email);
-    if (!user) throw new HttpException('Invalid Request', HttpStatus.FORBIDDEN);
+    if (!user) throw new HttpException('Solicitud inválida', HttpStatus.FORBIDDEN);
     const lastResetToken = await this.authRepository.getLatestResetPasswordToken(user.id);
-    if (!lastResetToken || !lastResetToken.validatedDate) throw new HttpException('Invalid Request', HttpStatus.FORBIDDEN);
+    if (!lastResetToken || !lastResetToken.validatedDate) throw new HttpException('Solicitud inválida', HttpStatus.FORBIDDEN);
     const hashedPassword = await this.hashPassword(newPassword);
     await this.authRepository.updateIsActive({ ...user, password: hashedPassword });
     await this.authRepository.deleteResetPasswordTokensByAuthId(user.id);
