@@ -1331,12 +1331,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId1' },
     update: {
-      description: 'El camino del apredizaje! Has llegado al final del programa con éxito. ¡Eres un verdadero campeón!',
+      description: 'El camino del apredizaje! Llegaste al final del programa con éxito. ¡Sos un verdadero campeón!',
     },
     create: {
       id: 'achievementId1',
       name: 'Completar Programa',
-      description: 'El camino del apredizaje! Has llegado al final del programa con éxito. ¡Eres un verdadero campeón!',
+      description: 'El camino del apredizaje! Llegaste al final del programa con éxito. ¡Sos un verdadero campeón!',
       trackedValue: 'program',
       achievementLevels: {
         create: [
@@ -1382,12 +1382,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId2' },
     update: {
-      description: 'Un eruditor gladiador! Tu mente rápida y tus conocimientos variados te han llevado a la victoria!',
+      description: 'Un eruditor gladiador! Tu mente rápida y tus conocimientos variados te llevaron a la victoria!',
     },
     create: {
       id: 'achievementId2',
       name: 'Ganar Trivia',
-      description: 'Un eruditor gladiador! Tu mente rápida y tus conocimientos variados te han llevado a la victoria!',
+      description: 'Un eruditor gladiador! Tu mente rápida y tus conocimientos variados te llevaron a la victoria!',
       trackedValue: 'trivia',
       achievementLevels: {
         create: [
@@ -1432,12 +1432,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId3' },
     update: {
-      description: 'Tu opinión es importante! Gracias a tu feedback, has facilitado el crecimiento y la mejora continua. ¡Eres esencial para el progreso!',
+      description: 'Tu opinión es importante! Gracias a tu feedback, facilitaste el crecimiento y la mejora continua. ¡Sos esencial para el progreso!',
     },
     create: {
       id: 'achievementId3',
       name: 'Dejar Feedback',
-      description: 'Tu opinión es importante! Gracias a tu feedback, has facilitado el crecimiento y la mejora continua. ¡Eres esencial para el progreso!',
+      description: 'Tu opinión es importante! Gracias a tu feedback, facilitaste el crecimiento y la mejora continua. ¡Sos esencial para el progreso!',
       trackedValue: 'feedback',
       achievementLevels: {
         create: [
@@ -1482,12 +1482,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId4' },
     update: {
-      description: 'La crème de la crème! Tu esfuerzo y dedicación te han llevado a un merecido lugar en el podio. ¡Eres un verdadero campeón!',
+      description: 'La crème de la crème! Tu esfuerzo y dedicación te llevaron a un merecido lugar en el podio. ¡Sos un verdadero campeón!',
     },
     create: {
       id: 'achievementId4',
       name: 'Leaderboard',
-      description: 'La crème de la crème! Tu esfuerzo y dedicación te han llevado a un merecido lugar en el podio. ¡Eres un verdadero campeón!',
+      description: 'La crème de la crème! Tu esfuerzo y dedicación te llevaron a un merecido lugar en el podio. ¡Sos un verdadero campeón!',
       trackedValue: 'leaderboard',
       achievementLevels: {
         create: [
