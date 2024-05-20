@@ -1331,12 +1331,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId1' },
     update: {
-      description: 'El camino del apredizaje! Terminaste [N] programa!',
+      description: 'El camino del apredizaje! Has llegado al final del programa con éxito. ¡Eres un verdadero campeón!',
     },
     create: {
       id: 'achievementId1',
       name: 'Completar Programa',
-      description: 'El camino del apredizaje! Terminaste [N] programa!',
+      description: 'El camino del apredizaje! Has llegado al final del programa con éxito. ¡Eres un verdadero campeón!',
       trackedValue: 'program',
       achievementLevels: {
         create: [
@@ -1382,12 +1382,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId2' },
     update: {
-      description: 'Un eruditor gladiador! Ganaste [N] trivias!',
+      description: 'Un eruditor gladiador! Tu mente rápida y tus conocimientos variados te han llevado a la victoria!',
     },
     create: {
       id: 'achievementId2',
       name: 'Ganar Trivia',
-      description: 'Un eruditor gladiador! Ganaste [N] trivias!',
+      description: 'Un eruditor gladiador! Tu mente rápida y tus conocimientos variados te han llevado a la victoria!',
       trackedValue: 'trivia',
       achievementLevels: {
         create: [
@@ -1432,12 +1432,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId3' },
     update: {
-      description: 'Tu opinión es importante! Nos diste tu feedback [N] veces!',
+      description: 'Tu opinión es importante! Gracias a tu feedback, has facilitado el crecimiento y la mejora continua. ¡Eres esencial para el progreso!',
     },
     create: {
       id: 'achievementId3',
       name: 'Dejar Feedback',
-      description: 'Tu opinión es importante! Nos diste tu feedback [N] veces!',
+      description: 'Tu opinión es importante! Gracias a tu feedback, has facilitado el crecimiento y la mejora continua. ¡Eres esencial para el progreso!',
       trackedValue: 'feedback',
       achievementLevels: {
         create: [
@@ -1482,12 +1482,12 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId4' },
     update: {
-      description: 'La crème de la crème! Terminaste en el podio [N] veces!',
+      description: 'La crème de la crème! Tu esfuerzo y dedicación te han llevado a un merecido lugar en el podio. ¡Eres un verdadero campeón!',
     },
     create: {
       id: 'achievementId4',
       name: 'Leaderboard',
-      description: 'La crème de la crème! Terminaste en el podio [N] veces!',
+      description: 'La crème de la crème! Tu esfuerzo y dedicación te han llevado a un merecido lugar en el podio. ¡Eres un verdadero campeón!',
       trackedValue: 'leaderboard',
       achievementLevels: {
         create: [
@@ -1497,7 +1497,7 @@ async function achievementSeed() {
             targetValue: 1,
             description: '1 vez en el podio',
             pointsAwarded: 10,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-bronze-leaderboard.png',
           },
           {
             id: 'achievementLevelId14',
@@ -1505,7 +1505,7 @@ async function achievementSeed() {
             targetValue: 5,
             description: '5 veces en el podio',
             pointsAwarded: 20,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-silver-leaderboard.png',
           },
           {
             id: 'achievementLevelId15',
@@ -1513,15 +1513,7 @@ async function achievementSeed() {
             targetValue: 25,
             description: '25 veces en el podio',
             pointsAwarded: 30,
-            icon: 'icon',
-          },
-          {
-            id: 'achievementLevelId16',
-            tier: 'DIAMOND',
-            targetValue: 50,
-            description: '50 veces en el podio',
-            pointsAwarded: 40,
-            icon: 'icon',
+            icon: 'https://lerni-images-2024.s3.amazonaws.com/achievement/logro-gold-leaderboard.png',
           },
         ],
       },

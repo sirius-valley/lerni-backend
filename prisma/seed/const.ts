@@ -7001,6 +7001,8 @@ export const CapacitacionD1Trivia = `{
         "type": "QUESTION",
         "name": "¿Qué es el deber de preparación en el ejercicio de una profesión?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7014,12 +7016,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "0dc5bf23-46ef-4f49-a8c0-835c8f2214c1",
         "type": "QUESTION",
         "name": "¿Qué concepto está asociado con la mala praxis médica?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7033,6 +7038,7 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "074ae9b0-27c6-4e64-bd14-f7a2daebc88f",
@@ -7045,7 +7051,6 @@ export const CapacitacionD1Trivia = `{
             "seconds_to_answer": 30,
             "correct_answer": "Historia clínica"
             }
-        },
         "options": [
             "Consentimiento informado",
             "Historia clínica",
@@ -7054,12 +7059,16 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+                },
+
     },
     {
         "id": "7d19624e-3dd7-43c3-a23c-46e2b209f28b",
         "type": "QUESTION",
         "name": "¿Cuál es una excepción para obtener el consentimiento informado de un paciente?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7073,12 +7082,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "1015d2db-ef76-44f1-bd9f-7c44195f3b15",
         "type": "QUESTION",
         "name": "¿Qué derechos tiene un paciente en relación con su atención médica?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7092,12 +7104,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "c671e53e-9958-4a93-98c8-88c8c87b1c98",
         "type": "QUESTION",
         "name": "¿En qué casos un paciente puede negarse a recibir información y decisiones médicas?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7111,12 +7126,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "8b8cb35f-b3cc-4c46-9cd8-6b56686e1963",
         "type":"QUESTION",
         "name": "¿Qué derechos tiene un paciente en relación con la información de su historia clínica?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7130,12 +7148,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
      {
         "id": "37ae9c7e-0a49-4d41-bd34-3d3bf0d23d41",
         "type": "QUESTION",
         "name": "¿Quién es responsable de la integridad y autenticidad de la historia clínica?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7149,12 +7170,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "2fe3dbad-cccf-4c4b-8f2b-fa0dd897eb56",
         "type": "QUESTION",
         "name": "¿Qué es necesario para acceder a la historia clínica de un paciente?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7168,12 +7192,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "3a61b279-676b-4b3b-b73a-732dce77d6d3",
         "type": "QUESTION",
         "name": "¿Qué derechos tiene un paciente en relación con los tratamientos para controlar el dolor?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7187,12 +7214,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "0f368dd2-45f1-4c26-95f2-55e09eefb0e8",
         "type": "QUESTION",
         "name": "¿Qué debe hacer un paciente si quiere designar a alguien para tomar decisiones en su nombre?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7206,12 +7236,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "d2367d6d-5ff6-4e86-aae7-8109d8597f25",
         "type": "QUESTION",
         "name": "¿Qué se requiere para que un paciente pueda participar en actividades de docencia médica?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7225,12 +7258,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "cc5dfb46-6fd8-41d0-8d4f-09a6cd9cf5a7",
         "type": "QUESTION",
         "name": "¿Qué debe hacer un paciente si tiene un reclamo o sugerencia sobre su atención?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7244,12 +7280,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "9b59fbec-b8f6-49cb-a79b-3e4edf2f748d",
         "type": "QUESTION",
         "name": "¿Qué debe hacer un paciente si quiere recibir atención espiritual y religiosa?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7263,11 +7302,14 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },{
         "id": "c1a91b9d-2e2b-419d-81f0-14a6ac154a7b",
         "type": "QUESTION",
         "name": "¿Qué derechos tiene un paciente en relación con su privacidad y dignidad?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7281,12 +7323,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "d7a1d16d-67c5-4386-9db1-9ad49e7137f5",
         "type": "QUESTION",
         "name": "¿Qué debe hacer un paciente si cree que ha sido objeto de agresión física o abuso?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7300,12 +7345,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "af20f2d9-8a60-4985-9df6-9dc5c1bf6b43",
         "type": "QUESTION",
         "name": "¿Qué se debe evitar en la atención médica de un paciente?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7319,12 +7367,15 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     },
     {
         "id": "34f9b37e-b76f-4e8b-a124-671dd8d8e476",
         "type": "QUESTION",
         "name": "¿Qué derechos tiene un paciente en relación con la información de su historia clínica?",
         "question_type": "SINGLECHOICE",
+                "metadata": {
+
         "metadata": {
             "lerni_question_type": "single-choice",
             "seconds_to_answer": 30,
@@ -7338,6 +7389,7 @@ export const CapacitacionD1Trivia = `{
             "timeout",
             "left"
         ]
+        }
     }
     ]
     }`;
