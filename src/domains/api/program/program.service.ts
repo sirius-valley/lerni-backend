@@ -33,6 +33,8 @@ import { AchievementService } from '../achievement/achievement.service';
 import { ProgramCardDto } from './dtos/program-card.dto';
 import { NotificationService } from '../notification/notification.service';
 import { ProgramCountDto } from './dtos/program-count.dto';
+import { StudentStatusDto } from '../student/dtos/student-status.dto';
+import { PillStatusDto } from '../pill/dtos/pill-status.dto';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -672,5 +674,27 @@ export class ProgramService {
     const inProgress = await this.programRepository.getInProgresProgram();
     const completed = await this.programRepository.getFinishedProgram();
     return new ProgramCountDto({ total, notStarted, inProgress, completed });
+  }
+
+  async getStudentStatus(programVersionId: string): Promise<StudentStatusDto[]> {
+    const students = await this.programRepository.getStudentStatus(programVersionId);
+    console.log(students);
+    const result = students.map((student) =>
+      student.pillSubmissions.filter((item) => item.pillVersion.programVersions[0].programVersionId !== programVersionId),
+    );
+    console.log(result);
+    return students.map(
+      (item) =>
+        new StudentStatusDto({
+          id: item.id,
+          name: item.name,
+          lastname: item.lastname,
+          image: item.image,
+          pills: item?.pillSubmissions.map(
+            (item, index) => new PillStatusDto(item.pillVersion.pill, item.pillVersion, index, item.progress),
+          ),
+          questionnaires: [],
+        }),
+    );
   }
 }

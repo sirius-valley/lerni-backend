@@ -890,4 +890,51 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getStudentStatus(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+        // pillSubmissions: {
+        //   some: {
+        //     pillVersion: {
+        //       programVersions: {
+        //         some: {
+        //           programVersionId,
+        //         },
+        //       },
+        //     },
+        //   },
+        // },
+        // questionnaireSubmissions: {
+        //   some: {
+        //     questionnaireVersion: {
+        //       programVersions: {
+        //         some: {
+        //           programVersionId,
+        //         },
+        //       },
+        //     },
+        //   },
+        // },
+      },
+      include: {
+        pillSubmissions: {
+          include: {
+            pillVersion: {
+              include: {
+                pill: true,
+                programVersions: true,
+              },
+            },
+          },
+        },
+        questionnaireSubmissions: true,
+      },
+    });
+  }
 }
