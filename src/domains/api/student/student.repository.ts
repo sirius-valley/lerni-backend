@@ -54,6 +54,15 @@ export class StudentRepository {
     return student ? new SimpleStudentDto(student as SimpleStudentDto) : null;
   }
 
+  async findStudentByIdSelectStudentDto(id: string): Promise<StudentDto | null> {
+    const student = await this.prisma.student.findUnique({
+      where: {
+        id,
+      },
+    });
+    return student ? new StudentDto(student as StudentDto) : null;
+  }
+
   async enrollStudent(studentId: string, programVersionId: string) {
     try {
       return await this.prisma.studentProgram.create({

@@ -41,6 +41,7 @@ describe('StudentController', () => {
           profession: 'Student',
           city: 'London',
           image: 'profile.jpg',
+          pointCount: 0,
         },
       };
 
