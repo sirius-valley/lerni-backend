@@ -25,11 +25,11 @@ export class StudentService {
   }
 
   private checkNecessaryFields(studentDto: StudentDto, necessaryFields: string[]) {
-    return necessaryFields.every((field) => studentDto[field]);
+    return necessaryFields.every((field) => studentDto[field] !== null);
   }
 
   private checkOptionalFields(studentDto: StudentDto, optionalFields: string[]) {
-    return optionalFields.some((field) => studentDto[field]);
+    return optionalFields.some((field) => studentDto[field] !== null);
   }
 
   public async getStudentsByEmail(emails: string[]) {

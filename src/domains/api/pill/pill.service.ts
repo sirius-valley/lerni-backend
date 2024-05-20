@@ -172,15 +172,20 @@ export class PillService {
   private async saveIntroductionProgress(studentDto: StudentDto, answerRequest: AnswerRequestDto) {
     const varName = introductionVariables[answerRequest.questionId];
     if (!varName) return studentDto;
-    const answer = await this.openAIService.retrieveData(this.capitalizeAndTrim(answerRequest.answer), varName);
     Object.keys(studentDto).forEach((key) => {
       if (!studentDto[key] || !Object.values(introductionVariables).includes(studentDto[key])) return studentDto;
       studentDto[key] = this.capitalizeAndTrim(studentDto[key]);
     });
+    const answer = await this.retrieveData(answerRequest.answer, varName);
     const studentData = this.getStudentUpdatedData(answer, varName);
     const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, studentData);
     if (!updatedStudent) throw new HttpException('Error while updating student', HttpStatus.INTERNAL_SERVER_ERROR);
     return updatedStudent;
+  }
+
+  private retrieveData(answer, varName) {
+    if (varName === 'image') return answer.trim();
+    return this.openAIService.retrieveData(this.capitalizeAndTrim(answer), varName);
   }
 
   private getStudentUpdatedData(answer: string, varName: string) {
