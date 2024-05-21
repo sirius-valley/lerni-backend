@@ -6797,7 +6797,7 @@ export const CuestionesMedicasPill = `
     }
   ]
 }
-`
+`;
 
 export const CapacitacionQuestionnaire = `{
   "id": "",
@@ -6989,410 +6989,393 @@ export const CapacitacionQuestionnaire = `{
       "to": "51bf5fb1-23af-47f2-ae0f-2a37e48ae9c3"
     }
   ]
-}`
+}`;
 
 export const CapacitacionD1Trivia = `{
-    "id": "",
-    "type": "RANDOM",
-    "seed": 0,
-    "elements": [
-        {
-        "id": "c4b94a24-3f26-4b0d-a854-17268f92a5e6",
-        "type": "QUESTION",
-        "name": "¿Qué es el deber de preparación en el ejercicio de una profesión?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Integral del daño ligado a la relación causal"
-        },
-        "options": [
-            "Evitar daños injustificados",
-            "Actuar con falta de conocimientos",
-            "Integral del daño ligado a la relación causal",
-            "No tomar precauciones para evitar riesgos",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "0dc5bf23-46ef-4f49-a8c0-835c8f2214c1",
-        "type": "QUESTION",
-        "name": "¿Qué concepto está asociado con la mala praxis médica?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Imprudencia"
-        },
-        "options": [
-            "Imprudencia",
-            "Deber de preparación",
-            "Consentimiento informado",
-            "Título habilitante",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "074ae9b0-27c6-4e64-bd14-f7a2daebc88f",
-        "type": "QUESTION",
-        "name": "¿Qué documento es único, obligatorio y completo en el registro de la atención médica?",
-        "question_type": "SINGLECHOICE",
-        "metadata": {
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Historia clínica"
-            }
-        "options": [
-            "Consentimiento informado",
-            "Historia clínica",
-            "Título habilitante",
-            "Seguro de responsabilidad civil",
-            "timeout",
-            "left"
-        ]
-                },
-
-    },
-    {
-        "id": "7d19624e-3dd7-43c3-a23c-46e2b209f28b",
-        "type": "QUESTION",
-        "name": "¿Cuál es una excepción para obtener el consentimiento informado de un paciente?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Grave peligro para la salud pública"
-        },
-        "options": [
-            "Grave peligro para la salud pública",
-            "Acción médica negligente",
-            "Acceso restringido a la historia clínica",
-            "Acción médica imprudente",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "1015d2db-ef76-44f1-bd9f-7c44195f3b15",
-        "type": "QUESTION",
-        "name": "¿Qué derechos tiene un paciente en relación con su atención médica?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Derecho a la confidencialidad"
-        },
-        "options": [
-            "Derecho a la negligencia médica",
-            "Derecho a la confidencialidad",
-            "Derecho a la revelación de datos",
-            "Derecho a la mala praxis",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "c671e53e-9958-4a93-98c8-88c8c87b1c98",
-        "type": "QUESTION",
-        "name": "¿En qué casos un paciente puede negarse a recibir información y decisiones médicas?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "En situaciones de emergencia"
-        },
-        "options": [
-            "En situaciones de emergencia",
-            "Si hay acceso restringido a la historia clínica",
-            "Si hay negligencia médica",
-            "Si hay imprudencia médica",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "8b8cb35f-b3cc-4c46-9cd8-6b56686e1963",
-        "type":"QUESTION",
-        "name": "¿Qué derechos tiene un paciente en relación con la información de su historia clínica?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Derecho a la confidencialidad"
-        },
-        "options": [
-            "Derecho a la revocación del consentimiento",
-            "Derecho a la confidencialidad",
-            "Derecho a la negligencia médica",
-            "Derecho a la impericia",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-     {
-        "id": "37ae9c7e-0a49-4d41-bd34-3d3bf0d23d41",
-        "type": "QUESTION",
-        "name": "¿Quién es responsable de la integridad y autenticidad de la historia clínica?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "El profesional interviniente"
-        },
-        "options": [
-            "El paciente",
-            "El profesional interviniente",
-            "El Colegio correspondiente",
-            "El seguro de responsabilidad civil",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "2fe3dbad-cccf-4c4b-8f2b-fa0dd897eb56",
-        "type": "QUESTION",
-        "name": "¿Qué es necesario para acceder a la historia clínica de un paciente?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Clave de identificación"
-        },
-        "options": [
-            "Conocimiento público de los datos",
-            "Autorización del Colegio correspondiente",
-            "Clave de identificación",
-            "Título habilitante del profesional",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "3a61b279-676b-4b3b-b73a-732dce77d6d3",
-        "type": "QUESTION",
-        "name": "¿Qué derechos tiene un paciente en relación con los tratamientos para controlar el dolor?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Derecho a recibir tratamientos adecuados"
-        },
-        "options": [
-            "Derecho a la negligencia médica",
-            "Derecho a la revocación del consentimiento",
-            "Derecho a la confidencialidad",
-            "Derecho a recibir tratamientos adecuados",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "0f368dd2-45f1-4c26-95f2-55e09eefb0e8",
-        "type": "QUESTION",
-        "name": "¿Qué debe hacer un paciente si quiere designar a alguien para tomar decisiones en su nombre?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Designar a una persona para transferirle los derechos"
-        },
-        "options": [
-            "Solicitar una interconsulta",
-            "Designar a una persona para transferirle los derechos",
-            "Solicitar una segunda opinión médica",
-            "Revocar el consentimiento informado",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "d2367d6d-5ff6-4e86-aae7-8109d8597f25",
-        "type": "QUESTION",
-        "name": "¿Qué se requiere para que un paciente pueda participar en actividades de docencia médica?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Derecho a decidir libremente"
-        },
-        "options": [
-            "Consentimiento informado",
-            "Título habilitante del profesional",
-            "Acceso restringido a la historia clínica",
-            "Derecho a decidir libremente",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "cc5dfb46-6fd8-41d0-8d4f-09a6cd9cf5a7",
-        "type": "QUESTION",
-        "name": "¿Qué debe hacer un paciente si tiene un reclamo o sugerencia sobre su atención?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Transmitirlo al Servicio de Atención al Paciente"
-        },
-        "options": [
-            "Solicitar una interconsulta",
-            "Divulgar su historia clínica",
-            "Transmitirlo al Servicio de Atención al Paciente",
-            "Revocar el consentimiento informado",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "9b59fbec-b8f6-49cb-a79b-3e4edf2f748d",
-        "type": "QUESTION",
-        "name": "¿Qué debe hacer un paciente si quiere recibir atención espiritual y religiosa?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Solicitarlo al Servicio correspondiente"
-        },
-        "options": [
-            "Divulgar su historia clínica",
-            "Solicitar una segunda opinión médica",
-            "Solicitar una interconsulta",
-            "Solicitarlo al Servicio correspondiente",
-            "timeout",
-            "left"
-        ]
-        }
-    },{
-        "id": "c1a91b9d-2e2b-419d-81f0-14a6ac154a7b",
-        "type": "QUESTION",
-        "name": "¿Qué derechos tiene un paciente en relación con su privacidad y dignidad?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Derecho a ser llamado por su nombre"
-        },
-        "options": [
-            "Derecho a la revelación de datos",
-            "Derecho a ser llamado por su nombre",
-            "Derecho a la negligencia médica",
-            "Derecho a la restricción física",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "d7a1d16d-67c5-4386-9db1-9ad49e7137f5",
-        "type": "QUESTION",
-        "name": "¿Qué debe hacer un paciente si cree que ha sido objeto de agresión física o abuso?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Transmitirlo al Servicio de Atención al Paciente"
-        },
-        "options": [
-            "Revocar el consentimiento informado",
-            "Solicitar una interconsulta",
-            "Transmitirlo al Servicio de Atención al Paciente",
-            "Divulgar su historia clínica",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "af20f2d9-8a60-4985-9df6-9dc5c1bf6b43",
-        "type": "QUESTION",
-        "name": "¿Qué se debe evitar en la atención médica de un paciente?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Acción médica imprudente"
-        },
-        "options": [
-            "Negligencia en el deber de preparación",
-            "Acción médica imprudente",
-            "Acceso restringido a la historia clínica",
-            "Revocación del consentimiento informado",
-            "timeout",
-            "left"
-        ]
-        }
-    },
-    {
-        "id": "34f9b37e-b76f-4e8b-a124-671dd8d8e476",
-        "type": "QUESTION",
-        "name": "¿Qué derechos tiene un paciente en relación con la información de su historia clínica?",
-        "question_type": "SINGLECHOICE",
-                "metadata": {
-
-        "metadata": {
-            "lerni_question_type": "single-choice",
-            "seconds_to_answer": 30,
-            "correct_answer": "Derecho a la confidencialidad"
-        },
-        "options": [
-            "Derecho a la revocación del consentimiento",
-            "Derecho a la confidencialidad",
-            "Derecho a la negligencia médica",
-            "Derecho a la impericia",
-            "timeout",
-            "left"
-        ]
-        }
-    }
-    ]
-    }`;
+   "id":"",
+   "type":"RANDOM",
+   "seed":0,
+   "elements":[
+      {
+         "id":"c4b94a24-3f26-4b0d-a854-17268f92a5e6",
+         "type":"QUESTION",
+         "name":"¿Qué es el deber de preparación en el ejercicio de una profesión?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Integral del daño ligado a la relación causal"
+            },
+            "options":[
+               "Evitar daños injustificados",
+               "Actuar con falta de conocimientos",
+               "Integral del daño ligado a la relación causal",
+               "No tomar precauciones para evitar riesgos",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"0dc5bf23-46ef-4f49-a8c0-835c8f2214c1",
+         "type":"QUESTION",
+         "name":"¿Qué concepto está asociado con la mala praxis médica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Imprudencia"
+            },
+            "options":[
+               "Imprudencia",
+               "Deber de preparación",
+               "Consentimiento informado",
+               "Título habilitante",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"074ae9b0-27c6-4e64-bd14-f7a2daebc88f",
+         "type":"QUESTION",
+         "name":"¿Qué documento es único, obligatorio y completo en el registro de la atención médica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Historia clínica"
+            },
+            "options":[
+               "Consentimiento informado",
+               "Historia clínica",
+               "Título habilitante",
+               "Seguro de responsabilidad civil",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"7d19624e-3dd7-43c3-a23c-46e2b209f28b",
+         "type":"QUESTION",
+         "name":"¿Cuál es una excepción para obtener el consentimiento informado de un paciente?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Grave peligro para la salud pública"
+            },
+            "options":[
+               "Grave peligro para la salud pública",
+               "Acción médica negligente",
+               "Acceso restringido a la historia clínica",
+               "Acción médica imprudente",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"1015d2db-ef76-44f1-bd9f-7c44195f3b15",
+         "type":"QUESTION",
+         "name":"¿Qué derechos tiene un paciente en relación con su atención médica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Derecho a la confidencialidad"
+            },
+            "options":[
+               "Derecho a la negligencia médica",
+               "Derecho a la confidencialidad",
+               "Derecho a la revelación de datos",
+               "Derecho a la mala praxis",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"c671e53e-9958-4a93-98c8-88c8c87b1c98",
+         "type":"QUESTION",
+         "name":"¿En qué casos un paciente puede negarse a recibir información y decisiones médicas?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"En situaciones de emergencia"
+            },
+            "options":[
+               "En situaciones de emergencia",
+               "Si hay acceso restringido a la historia clínica",
+               "Si hay negligencia médica",
+               "Si hay imprudencia médica",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"8b8cb35f-b3cc-4c46-9cd8-6b56686e1963",
+         "type":"QUESTION",
+         "name":"¿Qué derechos tiene un paciente en relación con la información de su historia clínica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metatada":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Derecho a la confidencialidad"
+            },
+            "options":[
+               "Derecho a la revocación del consentimiento",
+               "Derecho a la confidencialidad",
+               "Derecho a la negligencia médica",
+               "Derecho a la impericia",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"37ae9c7e-0a49-4d41-bd34-3d3bf0d23d41",
+         "type":"QUESTION",
+         "name":"¿Quién es responsable de la integridad y autenticidad de la historia clínica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"El profesional interviniente"
+            },
+            "options":[
+               "El paciente",
+               "El profesional interviniente",
+               "El Colegio correspondiente",
+               "El seguro de responsabilidad civil",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"2fe3dbad-cccf-4c4b-8f2b-fa0dd897eb56",
+         "type":"QUESTION",
+         "name":"¿Qué es necesario para acceder a la historia clínica de un paciente?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Clave de identificación"
+            },
+            "options":[
+               "Conocimiento público de los datos",
+               "Autorización del Colegio correspondiente",
+               "Clave de identificación",
+               "Título habilitante del profesional",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"3a61b279-676b-4b3b-b73a-732dce77d6d3",
+         "type":"QUESTION",
+         "name":"¿Qué derechos tiene un paciente en relación con los tratamientos para controlar el dolor?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Derecho a recibir tratamientos adecuados"
+            },
+            "options":[
+               "Derecho a la negligencia médica",
+               "Derecho a la revocación del consentimiento",
+               "Derecho a la confidencialidad",
+               "Derecho a recibir tratamientos adecuados",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"0f368dd2-45f1-4c26-95f2-55e09eefb0e8",
+         "type":"QUESTION",
+         "name":"¿Qué debe hacer un paciente si quiere designar a alguien para tomar decisiones en su nombre?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Designar a una persona para transferirle los derechos"
+            },
+            "options":[
+               "Solicitar una interconsulta",
+               "Designar a una persona para transferirle los derechos",
+               "Solicitar una segunda opinión médica",
+               "Revocar el consentimiento informado",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"d2367d6d-5ff6-4e86-aae7-8109d8597f25",
+         "type":"QUESTION",
+         "name":"¿Qué se requiere para que un paciente pueda participar en actividades de docencia médica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Derecho a decidir libremente"
+            },
+            "options":[
+               "Consentimiento informado",
+               "Título habilitante del profesional",
+               "Acceso restringido a la historia clínica",
+               "Derecho a decidir libremente",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"cc5dfb46-6fd8-41d0-8d4f-09a6cd9cf5a7",
+         "type":"QUESTION",
+         "name":"¿Qué debe hacer un paciente si tiene un reclamo o sugerencia sobre su atención?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Transmitirlo al Servicio de Atención al Paciente"
+            },
+            "options":[
+               "Solicitar una interconsulta",
+               "Divulgar su historia clínica",
+               "Transmitirlo al Servicio de Atención al Paciente",
+               "Revocar el consentimiento informado",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"9b59fbec-b8f6-49cb-a79b-3e4edf2f748d",
+         "type":"QUESTION",
+         "name":"¿Qué debe hacer un paciente si quiere recibir atención espiritual y religiosa?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Solicitarlo al Servicio correspondiente"
+            },
+            "options":[
+               "Divulgar su historia clínica",
+               "Solicitar una segunda opinión médica",
+               "Solicitar una interconsulta",
+               "Solicitarlo al Servicio correspondiente",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"c1a91b9d-2e2b-419d-81f0-14a6ac154a7b",
+         "type":"QUESTION",
+         "name":"¿Qué derechos tiene un paciente en relación con su privacidad y dignidad?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Derecho a ser llamado por su nombre"
+            },
+            "options":[
+               "Derecho a la revelación de datos",
+               "Derecho a ser llamado por su nombre",
+               "Derecho a la negligencia médica",
+               "Derecho a la restricción física",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"d7a1d16d-67c5-4386-9db1-9ad49e7137f5",
+         "type":"QUESTION",
+         "name":"¿Qué debe hacer un paciente si cree que ha sido objeto de agresión física o abuso?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Transmitirlo al Servicio de Atención al Paciente"
+            },
+            "options":[
+               "Revocar el consentimiento informado",
+               "Solicitar una interconsulta",
+               "Transmitirlo al Servicio de Atención al Paciente",
+               "Divulgar su historia clínica",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"af20f2d9-8a60-4985-9df6-9dc5c1bf6b43",
+         "type":"QUESTION",
+         "name":"¿Qué se debe evitar en la atención médica de un paciente?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Acción médica imprudente"
+            },
+            "options":[
+               "Negligencia en el deber de preparación",
+               "Acción médica imprudente",
+               "Acceso restringido a la historia clínica",
+               "Revocación del consentimiento informado",
+               "timeout",
+               "left"
+            ]
+         }
+      },
+      {
+         "id":"34f9b37e-b76f-4e8b-a124-671dd8d8e476",
+         "type":"QUESTION",
+         "name":"¿Qué derechos tiene un paciente en relación con la información de su historia clínica?",
+         "question_type":"SINGLECHOICE",
+         "metadata":{
+            "metadata":{
+               "lerni_question_type":"single-choice",
+               "seconds_to_answer":30,
+               "correct_answer":"Derecho a la confidencialidad"
+            },
+            "options":[
+               "Derecho a la revocación del consentimiento",
+               "Derecho a la confidencialidad",
+               "Derecho a la negligencia médica",
+               "Derecho a la impericia",
+               "timeout",
+               "left"
+            ]
+         }
+      }
+   ]
+}`;
 
 export const mockPill = `
 {
@@ -7429,4 +7412,4 @@ export const mockPill = `
       "to": "9b2c9c91-1972-4e6a-9d04-2d0b70dd2775"
     }
   ]
-}`
+}`;
