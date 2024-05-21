@@ -571,7 +571,14 @@ export class ProgramRepository {
   async getPageableLeaderBoardByQuestionnaireId(questionnaireId: string, options: LimitOffsetPagination) {
     const limit = options.limit || 10;
     const offset = options.offset || 0;
-    return this.prisma.$queryRaw`
+
+    const count = await this.prisma.pointRecord.count({
+      where: {
+        sourceEntity: 'questionnaire',
+        entityId: questionnaireId,
+      },
+    });
+    const leaderboard = await this.prisma.$queryRaw`
         SELECT *,
                "PointRecord".id as "pointId",
                ROW_NUMBER()        OVER (ORDER BY amount DESC) AS pos
@@ -583,6 +590,7 @@ export class ProgramRepository {
             LIMIT ${limit}
         OFFSET ${offset * limit};
     `;
+    return { leaderboard, count };
   }
 
   async getProgramByProgramVersion(programVersionId: string) {
