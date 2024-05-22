@@ -57,7 +57,7 @@ import {
   studentProgramId,
   studentTriviaMatchId,
   studentTriviaMatchId2,
-  teacherId,
+  teacherId, testTriviaBlock,
   triviaBlock,
   triviaId,
   triviaId2,
@@ -864,13 +864,13 @@ async function main() {
       id: triviaId,
     },
     update: {
-      block: triviaBlock,
+      block: testTriviaBlock,
       questionCount: 12,
       pointsReward: 24,
     },
     create: {
       id: triviaId,
-      block: triviaBlock,
+      block: testTriviaBlock,
       questionCount: 12,
       pointsReward: 24,
     },
@@ -973,7 +973,7 @@ async function main() {
     },
   });
 
-  await extraPrograms(0);
+  await extraPrograms(10);
   await achievementSeed();
 }
 
@@ -1236,13 +1236,13 @@ async function extraPrograms(n: number = 10) {
         id: triviaId1,
       },
       update: {
-        block: triviaBlock,
+        block: testTriviaBlock,
         questionCount: 12,
         pointsReward: 24,
       },
       create: {
         id: triviaId1,
-        block: triviaBlock,
+        block: testTriviaBlock,
         questionCount: 12,
         pointsReward: 24,
       },
