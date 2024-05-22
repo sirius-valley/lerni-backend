@@ -693,6 +693,7 @@ async function main() {
       lastname: 'Ramirez',
       career: 'Urología',
       city: 'San Martín',
+      image: 'https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png',
       auth: {
         connect: {
           id: authId2,
@@ -705,6 +706,7 @@ async function main() {
       lastname: 'Ramirez',
       career: 'Urología',
       city: 'San Martín',
+      image: 'https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png',
       auth: {
         connect: {
           id: authId2,
