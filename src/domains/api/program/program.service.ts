@@ -149,11 +149,17 @@ export class ProgramService {
   public async getLeaderBoard(studentId: string, programId: string, options: LimitOffsetPagination) {
     const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithQuestionnaire(studentId, programId);
     if (!studentProgram) throw new HttpException('Program not found', 404);
-    const leaderboard: any = await this.programRepository.getPageableLeaderBoardByQuestionnaireId(
-      studentProgram.programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
-      options,
-    );
-    return this.formatLeaderBoard(leaderboard);
+    const { leaderboard, count }: { leaderboard: any; count: number } =
+      await this.programRepository.getPageableLeaderBoardByQuestionnaireId(
+        studentProgram.programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
+        options,
+      );
+    const formattedLeaderboard = this.formatLeaderBoard(leaderboard);
+    return {
+      leaderboard: formattedLeaderboard,
+      currentPage: options.offset ? options.offset : 1,
+      maxPage: Math.ceil(count / (options.limit || 10)),
+    };
   }
 
   private async calculateLeaderBoard(studentId: string, questionnaireId: string) {
