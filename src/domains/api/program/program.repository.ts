@@ -899,31 +899,18 @@ export class ProgramRepository {
             programVersionId,
           },
         },
-        // pillSubmissions: {
-        //   some: {
-        //     pillVersion: {
-        //       programVersions: {
-        //         some: {
-        //           programVersionId,
-        //         },
-        //       },
-        //     },
-        //   },
-        // },
-        // questionnaireSubmissions: {
-        //   some: {
-        //     questionnaireVersion: {
-        //       programVersions: {
-        //         some: {
-        //           programVersionId,
-        //         },
-        //       },
-        //     },
-        //   },
-        // },
       },
       include: {
         pillSubmissions: {
+          where: {
+            pillVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
           include: {
             pillVersion: {
               include: {
@@ -933,7 +920,55 @@ export class ProgramRepository {
             },
           },
         },
-        questionnaireSubmissions: true,
+        questionnaireSubmissions: {
+          where: {
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getPillsByProgramVersionId(programVersionId: string) {
+    return this.prisma.pill.findMany({
+      where: {
+        pillVersion: {
+          some: {
+            programVersions: {
+              some: {
+                programVersionId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        pillVersion: true,
+      },
+    });
+  }
+
+  async getquestionnarieByProgramVersionId(programVersionId: string) {
+    return this.prisma.questionnaire.findMany({
+      where: {
+        questions: {
+          some: {
+            programVersions: {
+              some: {
+                programVersionId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        questions: true,
       },
     });
   }

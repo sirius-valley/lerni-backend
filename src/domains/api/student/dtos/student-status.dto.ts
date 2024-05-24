@@ -1,5 +1,5 @@
 import { PillStatusDto } from '../../pill/dtos/pill-status.dto';
-import { QuestionnaireAnswerDto } from '../../questionnaire/dtos/questionnaire-answer.dto';
+import { QuestionnaireProgressDto } from '../../questionnaire/dtos/questionnaire-progress.dto';
 
 export class StudentStatusDto {
   id: string;
@@ -8,7 +8,7 @@ export class StudentStatusDto {
   image?: string | null;
   email?: string | null;
   pills?: PillStatusDto[];
-  questionnaires?: QuestionnaireAnswerDto[];
+  questionnaires?: QuestionnaireProgressDto[];
 
   constructor(data: StudentStatusDto) {
     this.id = data.id;
@@ -16,7 +16,7 @@ export class StudentStatusDto {
     this.lastname = data.lastname;
     this.image = data.image;
     this.email = data?.email;
-    this.pills = data?.pills;
+    this.pills = data.pills;
     this.questionnaires = data?.questionnaires;
   }
 }

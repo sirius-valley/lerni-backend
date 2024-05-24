@@ -35,6 +35,7 @@ import { NotificationService } from '../notification/notification.service';
 import { ProgramCountDto } from './dtos/program-count.dto';
 import { StudentStatusDto } from '../student/dtos/student-status.dto';
 import { PillStatusDto } from '../pill/dtos/pill-status.dto';
+import { QuestionnaireProgressDto } from '../questionnaire/dtos/questionnaire-progress.dto';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -678,23 +679,31 @@ export class ProgramService {
 
   async getStudentStatus(programVersionId: string): Promise<StudentStatusDto[]> {
     const students = await this.programRepository.getStudentStatus(programVersionId);
-    console.log(students);
-    const result = students.map((student) =>
-      student.pillSubmissions.filter((item) => item.pillVersion.programVersions[0].programVersionId !== programVersionId),
-    );
-    console.log(result);
-    return students.map(
-      (item) =>
-        new StudentStatusDto({
-          id: item.id,
-          name: item.name,
-          lastname: item.lastname,
-          image: item.image,
-          pills: item?.pillSubmissions.map(
-            (item, index) => new PillStatusDto(item.pillVersion.pill, item.pillVersion, index, item.progress),
-          ),
-          questionnaires: [],
+    const pills = await this.programRepository.getPillsByProgramVersionId(programVersionId);
+    const questionaries = await this.programRepository.getquestionnarieByProgramVersionId(programVersionId);
+    return students.map((item) => {
+      const completePillSubmissions = pills.map((pill, index) => {
+        const submission = item.pillSubmissions.find((submission) => submission.pillVersion.pill.id === pill.id);
+        if (submission) {
+          return new PillStatusDto(submission.pillVersion.pill, submission.pillVersion, index, submission.progress);
+        }
+        return new PillStatusDto(pill, pill?.pillVersion[0], index, 0);
+      });
+
+      return new StudentStatusDto({
+        id: item.id,
+        name: item.name,
+        lastname: item.lastname,
+        image: item.image,
+        pills: completePillSubmissions,
+        questionnaires: questionaries.map((questionnaire) => {
+          const submission = item.questionnaireSubmissions.find((sub) => sub.questionnaireVersionId === questionnaire.questions[0].id);
+          return new QuestionnaireProgressDto({
+            ...questionnaire,
+            progress: submission?.progress || 0,
+          });
         }),
-    );
+      });
+    });
   }
 }
