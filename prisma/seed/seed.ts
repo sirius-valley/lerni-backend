@@ -952,11 +952,13 @@ async function main() {
     update: {
       studentId: studentId,
       triviaMatchId: triviaMatchId,
+      completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
     },
     create: {
       id: studentTriviaMatchId,
       studentId: studentId,
       triviaMatchId: triviaMatchId,
+      completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
     },
   });
 
@@ -965,11 +967,13 @@ async function main() {
     update: {
       studentId: studentId,
       triviaMatchId: triviaMatchId2,
+      completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
     },
     create: {
       id: studentTriviaMatchId2,
       studentId: studentId,
       triviaMatchId: triviaMatchId2,
+      completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
     },
   });
 
@@ -1279,11 +1283,13 @@ async function extraPrograms(n: number = 10) {
       update: {
         studentId: studentId1,
         triviaMatchId: triviaMatchId1,
+        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
       },
       create: {
         id: studentTriviaMatchId1,
         studentId: studentId1,
         triviaMatchId: triviaMatchId1,
+        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
       },
     });
 
@@ -1292,11 +1298,13 @@ async function extraPrograms(n: number = 10) {
       update: {
         studentId: studentId,
         triviaMatchId: triviaMatchId1,
+        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
       },
       create: {
         id: studentTriviaMatchId1 + i,
         studentId: studentId,
         triviaMatchId: triviaMatchId1,
+        completeBefore: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
       },
     });
   }
