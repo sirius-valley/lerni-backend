@@ -11,7 +11,7 @@ import { ProgramRepository } from '../program/program.repository';
 
 process.env.JWT_SECRET = 'test_secret_long';
 process.env.NODE_ENV = 'development';
-process.env.OpenAI_API_KEY = 'openai_token';
+process.env.OPENAI_API_KEY = 'openai_token';
 describe('QuestionnaireController', () => {
   let controller: QuestionnaireController;
 
