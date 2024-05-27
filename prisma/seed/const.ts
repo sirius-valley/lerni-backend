@@ -21,27 +21,10 @@ export const introductionBlock = `{
     {
       "id": "cf3af498-b8d2-4281-ba5a-57be15d28cdd",
       "type": "ACTION",
-      "name": "<p><span>¿Cuál es tu nombre?</span></p>"
+      "name": "<p><span>¿Cuál es tu nombre completo?</span></p>"
     },
     {
       "id": "0e64b123-5fcb-46db-a2cf-5e39f0b90ed7",
-      "type": "QUESTION",
-      "name": "",
-      "question_type": "TEXTINPUT",
-      "metadata": {
-        "metadata": {
-          "lerni_question_type": "free-text"
-        },
-        "regex": ".*"
-      }
-    },
-    {
-      "id": "6bc4b333-9e25-4fea-903c-45d0419f89c8",
-      "type": "ACTION",
-      "name": "<p><span>¿Cuál es tu apellido?</span></p>"
-    },
-    {
-      "id": "6bc4b333-9e25-4fea-903c-45d0419f89c9",
       "type": "QUESTION",
       "name": "",
       "question_type": "TEXTINPUT",
@@ -301,14 +284,6 @@ export const introductionBlock = `{
     },
     {
       "from": "0e64b123-5fcb-46db-a2cf-5e39f0b90ed7",
-      "to": "6bc4b333-9e25-4fea-903c-45d0419f89c8"
-    },
-    {
-      "from": "6bc4b333-9e25-4fea-903c-45d0419f89c8",
-      "to": "6bc4b333-9e25-4fea-903c-45d0419f89c9"
-    },
-    {
-      "from": "6bc4b333-9e25-4fea-903c-45d0419f89c9",
       "to": "3b1c350e-7412-4334-9fd9-87eb6f8e802c"
     },
     {
