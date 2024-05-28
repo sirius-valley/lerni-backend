@@ -36,6 +36,12 @@ import { ProgramCountDto } from './dtos/program-count.dto';
 import { StudentStatusDto } from '../student/dtos/student-status.dto';
 import { PillStatusDto } from '../pill/dtos/pill-status.dto';
 import { QuestionnaireProgressDto } from '../questionnaire/dtos/questionnaire-progress.dto';
+import { SimpleQuestionnaireProgressDto } from '../questionnaire/dtos/simple-questionnaire-progress.dto';
+import { TriviaProgressDto } from '../trivia/dto/trivia-progress.dto';
+import { TriviaAnswerResponseStatus } from '../trivia/dto/trivia-answer-response.dto';
+import { StudentProgressDto } from './dtos/student-progress.dto';
+import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
+import { TriviaAnswer } from '@prisma/client';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -705,5 +711,71 @@ export class ProgramService {
         }),
       });
     });
+  }
+
+  async getStudentProgressByProgramVersionId(programVersionId: string, studentId: string) {
+    const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramVersionIdWithProgress(
+      studentId,
+      programVersionId,
+    );
+    if (!studentProgram) throw new HttpException('Student progress not found', 404);
+    const pills = this.calculateSimplePillDtos(studentProgram.programVersion.programVersionPillVersions);
+    const questionnaire = this.calculateQuestionnaireProgressDto(studentProgram.programVersion.programVersionQuestionnaireVersions);
+    const trivia = this.calculateTriviaProgressDto(studentProgram.programVersion.programVersionTrivias, studentId);
+    return new StudentProgressDto({
+      student: new SimpleStudentDto(studentProgram.student),
+      program: new ProgramListDto(studentProgram.programVersion.program, programVersionId),
+      pills,
+      questionnaire,
+      trivia,
+    });
+  }
+
+  private calculateQuestionnaireProgressDto(questionnaireVersions: any) {
+    return questionnaireVersions.map((qvQuestionnaireV: any) => {
+      return new SimpleQuestionnaireProgressDto({
+        name: qvQuestionnaireV.questionnaireVersion.questionnaire.name,
+        progress: qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
+        attempts: qvQuestionnaireV.questionnaireVersion._count.questionnaireSubmissions,
+        questionCount: qvQuestionnaireV.questionnaireVersion.questionCount,
+        correctAnswers:
+          qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers.filter((answer) => answer.isCorrect)
+            .length || 0,
+      });
+    })[0];
+  }
+
+  private calculateTriviaProgressDto(triviaVersions: any, studentId: string) {
+    return triviaVersions.map((tvTriviaV: any) => {
+      const triviaMatch = tvTriviaV.trivia.triviaMatches[0];
+      if (!triviaMatch)
+        return new TriviaProgressDto({
+          status: TriviaAnswerResponseStatus.NOT_STARTED,
+          correctAnswers: 0,
+          totalQuestions: tvTriviaV.trivia.questionCount,
+        });
+      const studentTrivia = triviaMatch.studentTriviaMatches.find((match) => match.studentId === studentId);
+      if (!studentTrivia) return;
+      const opponentTrivia = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== studentId);
+      return new TriviaProgressDto({
+        status: this.getMatchStatus(studentTrivia, tvTriviaV.trivia, opponentTrivia),
+        correctAnswers: studentTrivia.triviaAnswers.filter((answer) => answer.isCorrect).length,
+        totalQuestions: tvTriviaV.trivia.questionCount,
+      });
+    })[0];
+  }
+
+  private getMatchStatus(studentTriviaMatch: any, triviaMatch: any, opponentTriviaMatch?: any) {
+    if (!triviaMatch.finishedDateTime) return TriviaAnswerResponseStatus.IN_PROGRESS;
+    if (!opponentTriviaMatch) return TriviaAnswerResponseStatus.IN_PROGRESS;
+    return this.calculateMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers);
+  }
+
+  calculateMatchResult(studentAnswers: TriviaAnswer[], opponentAnswers: TriviaAnswer[]) {
+    const studentCorrectAnswers = studentAnswers.filter((answer) => answer.isCorrect).length;
+    const opponentCorrectAnswers = opponentAnswers.filter((answer) => answer.isCorrect).length;
+    if (studentCorrectAnswers > opponentCorrectAnswers) return TriviaAnswerResponseStatus.WON;
+    if (studentCorrectAnswers < opponentCorrectAnswers) return TriviaAnswerResponseStatus.LOST;
+    return TriviaAnswerResponseStatus.TIED;
   }
 }

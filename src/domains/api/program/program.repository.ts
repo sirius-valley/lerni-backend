@@ -972,4 +972,93 @@ export class ProgramRepository {
       },
     });
   }
+
+  async getStudentProgramByStudentIdAndProgramVersionIdWithProgress(studentId: string, programVersionId: string) {
+    return this.prisma.studentProgram.findFirst({
+      where: {
+        studentId,
+        programVersionId,
+      },
+      include: {
+        student: true,
+        programVersion: {
+          include: {
+            program: true,
+            programVersionPillVersions: {
+              include: {
+                pillVersion: {
+                  include: {
+                    pill: true,
+                    pillSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                    },
+                  },
+                },
+              },
+            },
+            programVersionQuestionnaireVersions: {
+              include: {
+                questionnaireVersion: {
+                  include: {
+                    questionnaire: true,
+                    questionnaireSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                      include: {
+                        questionnaireAnswers: true,
+                      },
+                    },
+                    _count: {
+                      select: {
+                        questionnaireSubmissions: {
+                          where: {
+                            studentId,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            programVersionTrivias: {
+              include: {
+                trivia: {
+                  include: {
+                    triviaMatches: {
+                      where: {
+                        studentTriviaMatches: {
+                          some: {
+                            studentId,
+                          },
+                        },
+                      },
+                      include: {
+                        studentTriviaMatches: {
+                          include: {
+                            triviaAnswers: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
