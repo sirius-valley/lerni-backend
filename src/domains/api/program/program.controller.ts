@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Put, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
@@ -8,6 +8,7 @@ import { CommentRequestDto } from './dtos/comment-request.dto';
 import { ProgramRequestDto } from './dtos/program-request.dto';
 import { ProgramUpdateRequestDto } from './dtos/program-update.dto';
 import { ProgramListResponseDto } from './dtos/program-list.dto';
+import { StudentStatusDto } from '../student/dtos/student-status.dto';
 
 @Controller('api/program')
 @ApiBearerAuth('JWT-auth')
@@ -92,5 +93,24 @@ export class ProgramController {
   @Get('questionnaires/:programVersionId')
   async getQuestionnaireAttempts(@Request() req: ApiRequest, @Param('programVersionId') programVersionId: string) {
     return await this.programService.getQuestionnaireAttemptsQuantity(programVersionId);
+  }
+
+  @Get('studentStatus/:programVersionId')
+  @HttpCode(200)
+  async getStudentStatusProgram(
+    @Request() req: ApiRequest,
+    @Param('programVersionId') programVersionId: string,
+  ): Promise<StudentStatusDto[]> {
+    return await this.programService.getStudentStatus(programVersionId);
+  }
+
+  @Get(':programVersionId/progress/:studentId')
+  @HttpCode(200)
+  async getStudentProgress(
+    @Request() req: ApiRequest,
+    @Param('programVersionId') programVersionId: string,
+    @Param('studentId') studentId: string,
+  ): Promise<any> {
+    return await this.programService.getStudentProgressByProgramVersionId(programVersionId, studentId);
   }
 }
