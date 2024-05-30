@@ -17,6 +17,9 @@ export class StudentService {
 
     if (!this.checkNecessaryFields(studentDto, necessaryFields) || !this.checkOptionalFields(studentDto, optionalFields))
       return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: 0, ranking: 0 });
+    const introductionCompletion = await this.studentRepository.findIntroductionPillSubmissionByStudentId(studentDto.id);
+    if (!this.checkIntroductionPillSubmission(introductionCompletion))
+      return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: false, points: studentDto.pointCount, ranking: 0 });
     const ranking = await this.leaderboardService.getStudentRankingById(studentDto.id);
     return new StudentDetailsDto(studentDto, { hasCompletedIntroduction: true, points: studentDto.pointCount, ranking: Number(ranking) });
   }
@@ -27,6 +30,11 @@ export class StudentService {
 
   private checkOptionalFields(studentDto: StudentDto, optionalFields: string[]) {
     return optionalFields.some((field) => studentDto[field] !== null);
+  }
+
+  private checkIntroductionPillSubmission(introductionSubmission?: any) {
+    if (!introductionSubmission) return false;
+    return introductionSubmission.progress === 100;
   }
 
   public async getStudentsByEmail(emails: string[]) {

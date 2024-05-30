@@ -45,6 +45,13 @@ describe('StudentController', () => {
         },
       };
 
+      prismaService.pillSubmission.findFirst.mockResolvedValueOnce({
+        id: '',
+        createdAt: new Date(),
+        progress: 100,
+        studentId: 'string',
+        pillVersionId: ' string',
+      });
       prismaService.pointRecord.findMany.mockResolvedValueOnce([]);
       //mock raw query
       prismaService.$queryRaw.mockResolvedValueOnce([{ ranking: 0 }]);

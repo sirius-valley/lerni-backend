@@ -3,6 +3,7 @@ import { PrismaService } from '../../../prisma.service';
 import { SimpleEmptyStudentDto } from './dtos/simple-empty-student.dto';
 import { SimpleStudentDto } from './dtos/simple-student.dto';
 import { StudentDto } from './dtos/student.dto';
+import { introductionID } from '../../../const';
 
 @Injectable()
 export class StudentRepository {
@@ -43,6 +44,15 @@ export class StudentRepository {
       where: { studentId },
     });
     return totalPoints.reduce((acc, point) => acc + point.amount, 0);
+  }
+
+  async findIntroductionPillSubmissionByStudentId(studentId: string) {
+    return this.prisma.pillSubmission.findFirst({
+      where: {
+        studentId,
+        pillVersionId: introductionID,
+      },
+    });
   }
 
   async findStudentById(id: string): Promise<SimpleStudentDto | null> {
