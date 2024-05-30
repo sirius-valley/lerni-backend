@@ -156,11 +156,15 @@ async function main() {
     update: {
       programId: programId,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
     create: {
       id: programVersionId,
       programId: programId,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
   });
 
@@ -267,11 +271,15 @@ async function main() {
     update: {
       programId: programIdNIC,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
     create: {
       id: NICProgramVersionId,
       programId: programIdNIC,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
   });
 
@@ -424,11 +432,15 @@ async function main() {
     update: {
       programId: FractureProgramId,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
     create: {
       id: FractureProgramVersionId,
       programId: FractureProgramId,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
   });
 
@@ -1067,11 +1079,15 @@ async function extraPrograms(n: number = 10) {
       update: {
         programId: programId1,
         version: 1,
+        startDate: new Date(),
+        endDate: new Date('2040-01-01'),
       },
       create: {
         id: programVersionId1,
         programId: programId1,
         version: 1,
+        startDate: new Date(),
+        endDate: new Date('2040-01-01'),
       },
     });
 
@@ -1596,11 +1612,15 @@ async function DEMOCapacitacion() {
     update: {
       programId: programIDDay1,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
     create: {
       id: programIDDay1Version,
       programId: programIDDay1,
       version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
     },
   });
 
