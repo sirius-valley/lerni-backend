@@ -764,7 +764,7 @@ export class ProgramService {
       if (!studentTrivia) return;
       const opponentTrivia = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== studentId);
       return new TriviaProgressDto({
-        status: this.getMatchStatus(studentTrivia, tvTriviaV.trivia, opponentTrivia),
+        status: this.getMatchStatus(studentTrivia, triviaMatch, opponentTrivia),
         correctAnswers: studentTrivia.triviaAnswers.filter((answer) => answer.isCorrect).length,
         totalQuestions: tvTriviaV.trivia.questionCount,
       });
@@ -773,7 +773,7 @@ export class ProgramService {
 
   private getMatchStatus(studentTriviaMatch: any, triviaMatch: any, opponentTriviaMatch?: any) {
     if (!triviaMatch.finishedDateTime) return TriviaAnswerResponseStatus.IN_PROGRESS;
-    if (!opponentTriviaMatch) return TriviaAnswerResponseStatus.IN_PROGRESS;
+    if (!opponentTriviaMatch) return TriviaAnswerResponseStatus.WON;
     return this.calculateMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers);
   }
 
