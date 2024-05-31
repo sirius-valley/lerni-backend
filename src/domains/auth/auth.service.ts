@@ -39,6 +39,7 @@ export class AuthService {
         ...registerDTO,
         password: hashedPassword,
       });
+      if (authCreated.user) await this.authRepository.createFirstStudentProgram(authCreated.user.id);
       const jwt = await this.jwtService.signAsync({ sub: authCreated.id }, { secret: this.configService.get<string>('JWT_SECRET') });
       await this.mailService.sendMail(authCreated.email);
       return new JwtDto(jwt);

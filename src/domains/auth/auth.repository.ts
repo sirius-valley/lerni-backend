@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { RegisterRequestDto } from './dtos/register-request.dto';
 import { AdminRegisterRequestDto } from './dtos/admin-register-request.dto';
+import { firstProgramVersionId } from '../../const';
 
 @Injectable()
 export class AuthRepository {
@@ -14,6 +15,18 @@ export class AuthRepository {
         user: {
           create: {},
         },
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
+  async createFirstStudentProgram(studentId: string) {
+    return this.prisma.studentProgram.create({
+      data: {
+        studentId,
+        programVersionId: firstProgramVersionId,
       },
     });
   }

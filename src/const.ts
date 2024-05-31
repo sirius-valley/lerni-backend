@@ -22,3 +22,5 @@ export const introductionTeacher = {
   profession: 'Maestro',
   image: 'https://lerni-images-2024.s3.amazonaws.com/avatar/lernito-teacher.png',
 };
+
+export const firstProgramVersionId = 'firstProgramVersionId';
