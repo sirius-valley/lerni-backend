@@ -37,7 +37,7 @@ import {
   NICQuestionnaireVersionId,
   NICstudentProgramId,
   pillBlock,
-  pillId,
+  pillId, pillSubmissionId, pillSubmissionId2,
   pillVersionId,
   programId,
   programIDDay1,
@@ -698,6 +698,20 @@ async function main() {
       },
     },
   });
+  await prisma.pillSubmission.upsert({
+    where: { id: pillSubmissionId },
+    update: {
+      studentId: studentId,
+      pillVersionId: introductionID,
+      progress: 100,
+    },
+    create: {
+      id: pillSubmissionId,
+      studentId: studentId,
+      pillVersionId: introductionID,
+      progress: 100,
+    },
+  });
   await prisma.student.upsert({
     where: { id: studentId2 },
     update: {
@@ -726,7 +740,20 @@ async function main() {
       },
     },
   });
-
+  await prisma.pillSubmission.upsert({
+    where: { id: pillSubmissionId2 },
+    update: {
+      studentId: studentId2,
+      pillVersionId: introductionID,
+      progress: 100,
+    },
+    create: {
+      id: pillSubmissionId2,
+      studentId: studentId2,
+      pillVersionId: introductionID,
+      progress: 100,
+    },
+  });
   await prisma.studentProgram.upsert({
     where: { id: studentProgramId },
     update: {
@@ -1016,6 +1043,7 @@ async function extraPrograms(n: number = 10) {
     const programVersionPillVersionId1 = 'programVersionPillVersionId ' + i;
     const studentId1 = 'studentId ' + i;
     const authId1 = 'authId ' + i;
+    const pillSubmissionId1 = 'pillSubmissionId ' + i;
     const studentProgramId1 = 'studentProgramId ' + i;
     const questionnaireId1 = 'questionnaireId ' + i;
     const questionnaireVersionId1 = 'questionnaireVersionId ' + i;
@@ -1177,6 +1205,20 @@ async function extraPrograms(n: number = 10) {
             id: authId1,
           },
         },
+      },
+    });
+    await prisma.pillSubmission.upsert({
+      where: { id: pillSubmissionId1 },
+      update: {
+        studentId: studentId1,
+        pillVersionId: introductionID,
+        progress: 100,
+      },
+      create: {
+        id: pillSubmissionId1,
+        studentId: studentId1,
+        pillVersionId: introductionID,
+        progress: 100,
       },
     });
     await prisma.studentProgram.upsert({
