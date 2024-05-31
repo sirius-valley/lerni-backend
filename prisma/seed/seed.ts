@@ -2,7 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import { introductionID } from '../../src/const';
 import {
   authId,
-  authId2, CapacitacionD1Trivia,
+  authId2,
+  CapacitacionD1Trivia,
   CapacitacionQuestionnaire,
   CuestionesMedicasPill,
   FractureB2Block,
@@ -37,7 +38,9 @@ import {
   NICQuestionnaireVersionId,
   NICstudentProgramId,
   pillBlock,
-  pillId, pillSubmissionId, pillSubmissionId2,
+  pillId,
+  pillSubmissionId,
+  pillSubmissionId2,
   pillVersionId,
   programId,
   programIDDay1,
@@ -57,7 +60,8 @@ import {
   studentProgramId,
   studentTriviaMatchId,
   studentTriviaMatchId2,
-  teacherId, testTriviaBlock,
+  teacherId,
+  testTriviaBlock,
   triviaBlock,
   triviaId,
   triviaId2,
@@ -65,6 +69,22 @@ import {
   triviaMatchId2,
   walterTeacherId,
 } from './const';
+import {
+  firstPillBlock,
+  firstPillId,
+  firstPillVersionId,
+  firstProgramId,
+  firstProgramVersionId,
+  firstProgramVersionPillVersionId,
+  firstProgramVersionQuestionnaireVersionId,
+  firstProgramVersionTriviaId,
+  firstQuestionnaireBlock,
+  firstQuestionnaireId,
+  firstQuestionnaireVersionId,
+  firstStudentProgramId,
+  firstTriviaBlock,
+  firstTriviaId, lernitoTeacherId,
+} from './intro-program.const';
 
 const prisma = new PrismaClient();
 
@@ -1016,6 +1036,7 @@ async function main() {
     },
   });
 
+  await firstProgram();
   await extraPrograms(10);
   await achievementSeed();
 }
@@ -1033,6 +1054,210 @@ main()
     process.exit(1);
   });
 
+async function firstProgram() {
+  await prisma.program.upsert({
+    where: { id: firstProgramId },
+    update: {
+      name: 'Primer Programa',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/introduction/primerprogramaheader.png',
+      hoursToComplete: 1,
+      pointsReward: 35,
+      description: 'Mi Primer Programa está diseñado para explicar todas las funcionalidades de Lerni y ofrecerte una experiencia de aprendizaje dinámica y envolvente. Con nuestras píldoras informativas, cuestionarios interactivos, trivias entretenidas y un sistema de puntos y leaderboard motivador, aprender nunca ha sido tan fácil y divertido. ¡Únete a Lerni y comienza tu camino hacia el conocimiento hoy mismo!',
+      teacher: {
+        connectOrCreate: {
+          where: { id: lernitoTeacherId },
+          create: {
+            id: lernitoTeacherId,
+            name: 'Lernito',
+            lastname: '',
+            email: 'teacher@mail.com',
+            password: 'password',
+            profession: 'Profesor',
+            image: 'https://lerni-images-2024.s3.amazonaws.com/avatar/lernito-teacher.png',
+          },
+        },
+      },
+    },
+    create: {
+      id: firstProgramId,
+      name: 'Primer Programa',
+      icon: 'https://lerni-images-2024.s3.amazonaws.com/introduction/primerprogramaheader.png',
+      hoursToComplete: 1,
+      pointsReward: 35,
+      description: 'Mi Primer Programa está diseñado para explicar todas las funcionalidades de Lerni y ofrecerte una experiencia de aprendizaje dinámica y envolvente. Con nuestras píldoras informativas, cuestionarios interactivos, trivias entretenidas y un sistema de puntos y leaderboard motivador, aprender nunca ha sido tan fácil y divertido. ¡Únete a Lerni y comienza tu camino hacia el conocimiento hoy mismo!',
+      teacher: {
+        connectOrCreate: {
+          where: { id: lernitoTeacherId },
+          create: {
+            id: lernitoTeacherId,
+            name: 'Lernito',
+            lastname: '',
+            email: 'teacher@mail.com',
+            password: 'password',
+            profession: 'Profesor',
+            image: 'https://lerni-images-2024.s3.amazonaws.com/avatar/lernito-teacher.png',
+          },
+        },
+      },
+    },
+  });
+
+  await prisma.programVersion.upsert({
+    where: { id: firstProgramVersionId },
+    update: {
+      programId: firstProgramId,
+      version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
+    },
+    create: {
+      id: firstProgramVersionId,
+      programId: firstProgramId,
+      version: 1,
+      startDate: new Date(),
+      endDate: new Date('2040-01-01'),
+    },
+  });
+
+  await prisma.pill.upsert({
+    where: { id: firstPillId },
+    update: {
+      name: 'Primera Píldora',
+      description: '¡Bienvenido a tu primera píldora!',
+      teacherComment: 'Esta es la píldora de prueba, es un buen lugar para comenzar.',
+    },
+    create: {
+      id: firstPillId,
+      name: 'Primera Píldora',
+      description: '¡Bienvenido a tu primera píldora!',
+      teacherComment: 'Esta es la píldora de prueba, es un buen lugar para comenzar.',
+    },
+  });
+
+  await prisma.pillVersion.upsert({
+    where: { id: firstPillVersionId },
+    update: {
+      block: firstPillBlock,
+      version: 1,
+      completionTimeMinutes: 5,
+      pillId: firstPillId,
+    },
+    create: {
+      id: firstPillVersionId,
+      block: firstPillBlock,
+      version: 1,
+      completionTimeMinutes: 5,
+      pillId: firstPillId,
+    },
+  });
+
+  await prisma.programVersionPillVersion.upsert({
+    where: { id: firstProgramVersionPillVersionId },
+    update: {
+      programVersionId: firstProgramVersionId,
+      pillVersionId: firstPillVersionId,
+      order: 1,
+    },
+    create: {
+      id: firstProgramVersionPillVersionId,
+      programVersionId: firstProgramVersionId,
+      pillVersionId: firstPillVersionId,
+      order: 1,
+    },
+  });
+
+  await prisma.questionnaire.upsert({
+    where: { id: firstQuestionnaireId },
+    update: {
+      name: 'Cuestionario de prueba',
+      description: 'Cuestionario de prueba',
+    },
+    create: {
+      id: firstQuestionnaireId,
+      name: 'Cuestionario de prueba',
+      description: 'Cuestionario de prueba',
+    },
+  });
+
+  await prisma.questionnaireVersion.upsert({
+    where: { id: firstQuestionnaireVersionId },
+    update: {
+      questionnaireId: firstQuestionnaireId,
+      version: 1,
+    },
+    create: {
+      id: firstQuestionnaireVersionId,
+      questionnaireId: firstQuestionnaireId,
+      completionTimeMinutes: 5,
+      cooldownInMinutes: 10,
+      block: firstQuestionnaireBlock,
+      questionCount: 3,
+      passsing_score: 50,
+      version: 1,
+    },
+  });
+
+  await prisma.programVersionQuestionnaireVersion.upsert({
+    where: { id: firstProgramVersionQuestionnaireVersionId },
+    update: {
+      programVersionId: firstProgramVersionId,
+      questionnaireVersionId: firstQuestionnaireVersionId,
+      order: 1,
+    },
+    create: {
+      id: firstProgramVersionQuestionnaireVersionId,
+      programVersionId: firstProgramVersionId,
+      questionnaireVersionId: firstQuestionnaireVersionId,
+      order: 1,
+    },
+  });
+
+  await prisma.trivia.upsert({
+    where: {
+      id: firstTriviaId,
+    },
+    update: {
+      block: firstTriviaBlock,
+      questionCount: 12,
+      pointsReward: 24,
+    },
+    create: {
+      id: firstTriviaId,
+      block: firstTriviaBlock,
+      questionCount: 12,
+      pointsReward: 24,
+    },
+  });
+
+  await prisma.programVersionTrivia.upsert({
+    where: { id: firstProgramVersionTriviaId },
+    update: {
+      order: 1,
+      triviaId: firstTriviaId,
+      programVersionId: firstProgramVersionId,
+    },
+    create: {
+      id: firstProgramVersionTriviaId,
+      order: 1,
+      triviaId: firstTriviaId,
+      programVersionId: firstProgramVersionId,
+    },
+  });
+
+  await prisma.studentProgram.upsert({
+    where: { id: firstStudentProgramId },
+    update: {
+      studentId: studentId,
+      programVersionId: firstProgramVersionId,
+    },
+    create: {
+      id: firstStudentProgramId,
+      studentId: studentId,
+      programVersionId: firstProgramVersionId,
+    },
+  });
+}
+
 async function extraPrograms(n: number = 10) {
   for (let i = 0; i < n; i++) {
     const programId1 = 'programId ' + i;
@@ -1045,6 +1270,7 @@ async function extraPrograms(n: number = 10) {
     const authId1 = 'authId ' + i;
     const pillSubmissionId1 = 'pillSubmissionId ' + i;
     const studentProgramId1 = 'studentProgramId ' + i;
+    const firstStudentProgramId1 = 'firstStudentProgramId ' + i;
     const questionnaireId1 = 'questionnaireId ' + i;
     const questionnaireVersionId1 = 'questionnaireVersionId ' + i;
     const programVersionQuestionnaireVersionId1 = 'programVersionQuestionnaireVersionId ' + i;
@@ -1244,6 +1470,19 @@ async function extraPrograms(n: number = 10) {
         id: studentProgramId1 + i,
         studentId: studentId,
         programVersionId: programVersionId1,
+      },
+    });
+
+    await prisma.studentProgram.upsert({
+      where: { id: firstStudentProgramId1 },
+      update: {
+        studentId: studentId1,
+        programVersionId: firstProgramVersionId,
+      },
+      create: {
+        id: firstStudentProgramId1,
+        studentId: studentId1,
+        programVersionId: firstProgramVersionId,
       },
     });
 
@@ -1500,12 +1739,14 @@ async function achievementSeed() {
   await prisma.achievement.upsert({
     where: { id: 'achievementId3' },
     update: {
-      description: 'Tu opinión es importante! Gracias a tu feedback, facilitaste el crecimiento y la mejora continua. ¡Sos esencial para el progreso!',
+      description:
+        'Tu opinión es importante! Gracias a tu feedback, facilitaste el crecimiento y la mejora continua. ¡Sos esencial para el progreso!',
     },
     create: {
       id: 'achievementId3',
       name: 'Dejar Feedback',
-      description: 'Tu opinión es importante! Gracias a tu feedback, facilitaste el crecimiento y la mejora continua. ¡Sos esencial para el progreso!',
+      description:
+        'Tu opinión es importante! Gracias a tu feedback, facilitaste el crecimiento y la mejora continua. ¡Sos esencial para el progreso!',
       trackedValue: 'feedback',
       achievementLevels: {
         create: [
