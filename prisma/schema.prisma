@@ -74,6 +74,7 @@ model Teacher {
   createdAt   DateTime @default(now())
 
   programs Program[]
+  pills    Pill[]
 }
 
 enum PointEvent {
@@ -178,11 +179,14 @@ model ProgramObjective {
 }
 
 model Pill {
-  id             String        @id @default(uuid())
+  id             String @id @default(uuid())
   name           String
   description    String
   teacherComment String
-  pillVersion    PillVersion[]
+
+  teacherId   String?
+  teacher     Teacher?      @relation(fields: [teacherId], references: [id])
+  pillVersion PillVersion[]
 }
 
 model PillVersion {
