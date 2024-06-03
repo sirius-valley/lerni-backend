@@ -81,7 +81,7 @@ export class PillRepository {
     });
   }
 
-  public async getTeacherByPillId(pillId: string) {
+  public async getProgramTeacherByPillId(pillId: string) {
     return this.prisma.teacher.findFirst({
       where: {
         programs: {
@@ -106,6 +106,18 @@ export class PillRepository {
         lastname: true,
         profession: true,
         image: true,
+      },
+    });
+  }
+
+  public async getPillTeacherByPillId(pillId: string) {
+    return this.prisma.teacher.findFirst({
+      where: {
+        pills: {
+          some: {
+            id: pillId,
+          },
+        },
       },
     });
   }

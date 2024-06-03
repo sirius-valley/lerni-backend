@@ -44,8 +44,7 @@ export class PillService {
 
   public async getPillVersionByPillId(authorization: string, student: StudentDto, pillId: string): Promise<PillProgressResponseDto> {
     const pillSubmission = await this.getPillSubmission(pillId, student);
-    const teacher = await this.pillRepository.getTeacherByPillId(pillId);
-    if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+    const teacher = await this.getPillTeacher(pillId);
     const answers = pillSubmission.pillAnswers?.map((answer) => new PillAnswerSpringDto(answer.questionId, JSON.parse(answer.value)));
     const springProgress = await this.springPillService.getSpringProgress(pillSubmission.pillVersion.block, authorization, answers);
     if (!springProgress) throw new HttpException('Error while calculating progress', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,7 +63,7 @@ export class PillService {
     if (this.questionAlreadyAnswered(pillSubmission.pillAnswers, answerRequest.questionId))
       throw new HttpException('Question already answered', HttpStatus.CONFLICT);
 
-    const teacher = await this.pillRepository.getTeacherByPillId(answerRequest.pillId);
+    const teacher = await this.getPillTeacher(answerRequest.pillId);
 
     const springProgress = await this.getSpringProgress(authorization, pillSubmission, answerRequest);
 
@@ -211,5 +210,13 @@ export class PillService {
 
   private questionAlreadyAnswered(pillAnswers: PillAnswer[], questionId: string) {
     return !!pillAnswers.find((pillAnswer) => pillAnswer.questionId === questionId);
+  }
+
+  private async getPillTeacher(pillId: string) {
+    const pillTeacher = await this.pillRepository.getPillTeacherByPillId(pillId);
+    if (pillTeacher) return pillTeacher;
+    const programTeacher = await this.pillRepository.getProgramTeacherByPillId(pillId);
+    if (!programTeacher) throw new HttpException('Teacher not found', 404);
+    return programTeacher;
   }
 }
