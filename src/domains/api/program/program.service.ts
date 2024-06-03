@@ -32,6 +32,16 @@ import { QuestionnaireDetailsWeb } from '../questionnaire/dtos/questionnaire-det
 import { AchievementService } from '../achievement/achievement.service';
 import { ProgramCardDto } from './dtos/program-card.dto';
 import { NotificationService } from '../notification/notification.service';
+import { ProgramCountDto } from './dtos/program-count.dto';
+import { StudentStatusDto } from '../student/dtos/student-status.dto';
+import { PillStatusDto } from '../pill/dtos/pill-status.dto';
+import { QuestionnaireProgressDto } from '../questionnaire/dtos/questionnaire-progress.dto';
+import { SimpleQuestionnaireProgressDto } from '../questionnaire/dtos/simple-questionnaire-progress.dto';
+import { TriviaProgressDto } from '../trivia/dto/trivia-progress.dto';
+import { TriviaAnswerResponseStatus } from '../trivia/dto/trivia-answer-response.dto';
+import { StudentProgressDto } from './dtos/student-progress.dto';
+import { SimpleStudentDto } from '../student/dtos/simple-student.dto';
+import { TriviaAnswer } from '@prisma/client';
 // eslint-disable-next-line
 const cron = require('node-cron');
 
@@ -148,11 +158,17 @@ export class ProgramService {
   public async getLeaderBoard(studentId: string, programId: string, options: LimitOffsetPagination) {
     const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramIdWithQuestionnaire(studentId, programId);
     if (!studentProgram) throw new HttpException('Program not found', 404);
-    const leaderboard: any = await this.programRepository.getPageableLeaderBoardByQuestionnaireId(
-      studentProgram.programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
-      options,
-    );
-    return this.formatLeaderBoard(leaderboard);
+    const { leaderboard, count }: { leaderboard: any; count: number } =
+      await this.programRepository.getPageableLeaderBoardByQuestionnaireId(
+        studentProgram.programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
+        options,
+      );
+    const formattedLeaderboard = this.formatLeaderBoard(leaderboard);
+    return {
+      leaderboard: formattedLeaderboard,
+      currentPage: options.offset ? options.offset : 1,
+      maxPage: Math.ceil(count / (options.limit || 10)),
+    };
   }
 
   private async calculateLeaderBoard(studentId: string, questionnaireId: string) {
@@ -663,5 +679,109 @@ export class ProgramService {
     result.create = newArray;
 
     return result;
+  }
+
+  async getTotalProgramsCount(): Promise<ProgramCountDto> {
+    const total = await this.programRepository.getTotalProgram();
+    const notStarted = await this.programRepository.getToStartProgram();
+    const inProgress = await this.programRepository.getInProgresProgram();
+    const completed = await this.programRepository.getFinishedProgram();
+    return new ProgramCountDto({ total, notStarted, inProgress, completed });
+  }
+
+  async getStudentStatus(programVersionId: string): Promise<StudentStatusDto[]> {
+    const students = await this.programRepository.getStudentStatus(programVersionId);
+    const pills = await this.programRepository.getPillsByProgramVersionId(programVersionId);
+    const questionaries = await this.programRepository.getquestionnarieByProgramVersionId(programVersionId);
+    return students.map((item) => {
+      const completePillSubmissions = pills.map((pill, index) => {
+        const submission = item.pillSubmissions.find((submission) => submission.pillVersion.pill.id === pill.id);
+        if (submission) {
+          return new PillStatusDto(submission.pillVersion.pill, submission.pillVersion, index, submission.progress);
+        }
+        return new PillStatusDto(pill, pill?.pillVersion[0], index, 0);
+      });
+
+      return new StudentStatusDto({
+        id: item.id,
+        name: item.name,
+        lastname: item.lastname,
+        image: item.image,
+        pills: completePillSubmissions,
+        questionnaires: questionaries.map((questionnaire) => {
+          const submission = item.questionnaireSubmissions.find((sub) => sub.questionnaireVersionId === questionnaire.questions[0].id);
+          return new QuestionnaireProgressDto({
+            ...questionnaire,
+            progress: submission?.progress || 0,
+          });
+        }),
+      });
+    });
+  }
+
+  async getStudentProgressByProgramVersionId(programVersionId: string, studentId: string) {
+    const studentProgram = await this.programRepository.getStudentProgramByStudentIdAndProgramVersionIdWithProgress(
+      studentId,
+      programVersionId,
+    );
+    if (!studentProgram) throw new HttpException('Student progress not found', 404);
+    const pills = this.calculateSimplePillDtos(studentProgram.programVersion.programVersionPillVersions);
+    const questionnaire = this.calculateQuestionnaireProgressDto(studentProgram.programVersion.programVersionQuestionnaireVersions);
+    const trivia = this.calculateTriviaProgressDto(studentProgram.programVersion.programVersionTrivias, studentId);
+    return new StudentProgressDto({
+      student: new SimpleStudentDto(studentProgram.student),
+      program: new ProgramListDto(studentProgram.programVersion.program, programVersionId),
+      pills,
+      questionnaire,
+      trivia,
+    });
+  }
+
+  private calculateQuestionnaireProgressDto(questionnaireVersions: any) {
+    return questionnaireVersions.map((qvQuestionnaireV: any) => {
+      return new SimpleQuestionnaireProgressDto({
+        name: qvQuestionnaireV.questionnaireVersion.questionnaire.name,
+        progress: qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.progress || 0,
+        attempts: qvQuestionnaireV.questionnaireVersion._count.questionnaireSubmissions,
+        questionCount: qvQuestionnaireV.questionnaireVersion.questionCount,
+        correctAnswers:
+          qvQuestionnaireV.questionnaireVersion.questionnaireSubmissions[0]?.questionnaireAnswers.filter((answer) => answer.isCorrect)
+            .length || 0,
+      });
+    })[0];
+  }
+
+  private calculateTriviaProgressDto(triviaVersions: any, studentId: string) {
+    return triviaVersions.map((tvTriviaV: any) => {
+      const triviaMatch = tvTriviaV.trivia.triviaMatches[0];
+      if (!triviaMatch)
+        return new TriviaProgressDto({
+          status: TriviaAnswerResponseStatus.NOT_STARTED,
+          correctAnswers: 0,
+          totalQuestions: tvTriviaV.trivia.questionCount,
+        });
+      const studentTrivia = triviaMatch.studentTriviaMatches.find((match) => match.studentId === studentId);
+      if (!studentTrivia) return;
+      const opponentTrivia = triviaMatch.studentTriviaMatches.find((match) => match.studentId !== studentId);
+      return new TriviaProgressDto({
+        status: this.getMatchStatus(studentTrivia, triviaMatch, opponentTrivia),
+        correctAnswers: studentTrivia.triviaAnswers.filter((answer) => answer.isCorrect).length,
+        totalQuestions: tvTriviaV.trivia.questionCount,
+      });
+    })[0];
+  }
+
+  private getMatchStatus(studentTriviaMatch: any, triviaMatch: any, opponentTriviaMatch?: any) {
+    if (!triviaMatch.finishedDateTime) return TriviaAnswerResponseStatus.IN_PROGRESS;
+    if (!opponentTriviaMatch) return TriviaAnswerResponseStatus.WON;
+    return this.calculateMatchResult(studentTriviaMatch.triviaAnswers, opponentTriviaMatch.triviaAnswers);
+  }
+
+  calculateMatchResult(studentAnswers: TriviaAnswer[], opponentAnswers: TriviaAnswer[]) {
+    const studentCorrectAnswers = studentAnswers.filter((answer) => answer.isCorrect).length;
+    const opponentCorrectAnswers = opponentAnswers.filter((answer) => answer.isCorrect).length;
+    if (studentCorrectAnswers > opponentCorrectAnswers) return TriviaAnswerResponseStatus.WON;
+    if (studentCorrectAnswers < opponentCorrectAnswers) return TriviaAnswerResponseStatus.LOST;
+    return TriviaAnswerResponseStatus.TIED;
   }
 }

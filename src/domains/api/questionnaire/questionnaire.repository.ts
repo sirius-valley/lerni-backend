@@ -89,6 +89,9 @@ export class QuestionnaireRepository {
         finishedDateTime: new Date(),
         student: {
           update: {
+            pointCount: {
+              increment: points,
+            },
             points: {
               create: {
                 amount: points,

@@ -41,6 +41,7 @@ model Student {
   profession String?
   city       String?
   image      String?
+  pointCount Int      @default(0)
   createdAt  DateTime @default(now())
 
   authId String @unique

@@ -26,7 +26,6 @@ export class AchievementService {
   }
 
   private async checkProgress(achievement: any, studentAchievement: any, studentId: string) {
-    console.log(achievement);
     if (this.calculateProgress(achievement, studentAchievement.progress + 1) < 100) {
       await this.achievementRepository.updateProgress(studentAchievement.id, studentAchievement.progress + 1);
     } else {

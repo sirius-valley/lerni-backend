@@ -1,5 +1,5 @@
 export const introductionID = '7cf767b2-9ac5-4420-8680-a9e000438d94';
-export const necessaryFields = ['name', 'lastname', 'city'];
+export const necessaryFields = ['name', 'lastname', 'city', 'image'];
 export const optionalFields = ['profession', 'career'];
 export const questionnaireAnswerPoints = 5;
 export const maxResetCodesPerHour = 10;
@@ -20,5 +20,7 @@ export const introductionTeacher = {
   name: 'Maestro',
   lastname: 'Maestro',
   profession: 'Maestro',
-  image: 'https://lerni-images-2024.s3.amazonaws.com/profesor_image_profile.jpg',
+  image: 'https://lerni-images-2024.s3.amazonaws.com/avatar/lernito-teacher.png',
 };
+
+export const firstProgramVersionId = 'firstProgramVersionId';

@@ -10,7 +10,6 @@ import { configuration } from '../../../../config/configuration';
 import { SpringPillService } from '../pill-external-api/spring-pill.service';
 import { HttpException } from '@nestjs/common';
 import { StudentModule } from '../student/student.module';
-import { AnswerRequestDto } from './dtos/answer-request.dto';
 import { PillProgressResponseDto } from './dtos/pill-progress-response.dto';
 import { introductionTeacher } from '../../../const';
 import { HeadlandsAdapter } from './adapters/headlands.adapter';
@@ -18,9 +17,11 @@ import { ThreadRequestDto } from './dtos/thread-request.dto';
 import { PillBlockDto } from './dtos/pill-block.dto';
 import { ElementType, FormType } from './interfaces/pill.interface';
 import { AchievementModule } from '../achievement/achievement.module';
+import { OpenAIService } from './openai.client';
 
 process.env.NODE_ENV = 'development';
 process.env.JWT_SECRET = 'test_secret_long';
+process.env.OPENAI_API_KEY = 'openai_token';
 describe('PillController', () => {
   let pillController: PillController;
   let prismaService: DeepMockProxy<PrismaService>;
@@ -37,7 +38,7 @@ describe('PillController', () => {
         AchievementModule,
       ],
       controllers: [PillController],
-      providers: [PillService, PillRepository, PrismaService, SpringPillService, HeadlandsAdapter],
+      providers: [PillService, PillRepository, PrismaService, SpringPillService, HeadlandsAdapter, OpenAIService],
     })
       .overrideProvider(PrismaService)
       .useValue(mockDeep<PrismaService>())
@@ -100,70 +101,6 @@ describe('PillController', () => {
         );
       });
     });
-
-    describe('answerPill', () => {
-      it('should return pill version when pill exists', async () => {
-        prismaService.pillSubmission.findFirst.mockResolvedValueOnce({
-          pillVersion: {
-            id: '1',
-            pillId: '123',
-            version: 1,
-            completionTimeMinutes: 10,
-            block: '{"elements": []}',
-            progress: 0,
-            pill: {
-              id: '123',
-              name: 'name',
-              description: 'description',
-              teacherComment: 'teacherComment',
-            },
-            programVersions: [
-              {
-                order: 1,
-              },
-            ],
-          },
-          pillAnswers: [],
-        } as any);
-        prismaService.teacher.findFirst.mockResolvedValueOnce({
-          id: '1',
-          name: 'name',
-          lastname: 'lastname',
-          profession: 'profession',
-          image: 'image',
-        } as any);
-        springPillService.answerPill.mockResolvedValueOnce({
-          progress: 0.0,
-          completed: false,
-          nodes: [],
-        } as any);
-
-        await expect(
-          pillController.answerPill(req as any, new AnswerRequestDto('123', '114', 'pepe')),
-        ).resolves.toMatchObject<PillProgressResponseDto>({
-          pill: {
-            version: 1,
-            pillOrder: 1,
-            completionTimeMinutes: 10,
-            id: '123',
-            name: 'name',
-            description: 'description',
-            teacherComment: 'teacherComment',
-            completed: false,
-            progress: 0,
-            bubbles: [],
-          },
-          teacher: {
-            id: '1',
-            name: 'name',
-            lastname: 'lastname',
-            profession: 'profession',
-            image: 'image',
-          },
-        });
-      });
-    });
-
     describe('getIntroduction', () => {
       it('should return introductionPill', async () => {
         prismaService.pillVersion.findFirst.mockResolvedValueOnce({

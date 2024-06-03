@@ -53,7 +53,7 @@ describe('AuthController', () => {
       });
 
       await expect(authController.register(new RegisterRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
-        new HttpException('Email already in use', 409),
+        new HttpException('Este email ya ha sido registrado', 409),
       );
     });
     it('should return token successfully when not found', async () => {
@@ -74,7 +74,7 @@ describe('AuthController', () => {
       prismaService.auth.findUnique.mockResolvedValueOnce(null);
 
       await expect(authController.login(new LoginRequestDto('test@mail.com', 'Password12'))).rejects.toThrow(
-        new HttpException('User with provided email not found', 404),
+        new HttpException('Email no registrado', 404),
       );
     });
 
@@ -96,7 +96,7 @@ describe('AuthController', () => {
         password: '$2b$10$g4aIAoxVYBx/CcSgUE7lue32ImLYKYIhY09djyIwKs4m1bcC/C/2i',
       } as any);
       expect(authController.login(new LoginRequestDto('test@mail.com', 'WrongPassword'))).rejects.toThrow(
-        new HttpException('Invalid credentials', 401),
+        new HttpException('Email o contraseña incorrecta', 401),
       );
     });
   });

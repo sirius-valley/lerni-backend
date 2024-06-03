@@ -58,6 +58,7 @@
     "handlebars": "^4.7.8",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.8",
+    "openai": "^4.46.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",

@@ -41,10 +41,20 @@ describe('StudentController', () => {
           profession: 'Student',
           city: 'London',
           image: 'profile.jpg',
+          pointCount: 0,
         },
       };
 
+      prismaService.pillSubmission.findFirst.mockResolvedValueOnce({
+        id: '',
+        createdAt: new Date(),
+        progress: 100,
+        studentId: 'string',
+        pillVersionId: ' string',
+      });
       prismaService.pointRecord.findMany.mockResolvedValueOnce([]);
+      //mock raw query
+      prismaService.$queryRaw.mockResolvedValueOnce([{ ranking: 0 }]);
 
       // Assert
       await expect(controller.getStudentDetails(req as any)).resolves.toEqual({
@@ -57,6 +67,7 @@ describe('StudentController', () => {
         image: 'profile.jpg',
         hasCompletedIntroduction: true,
         points: 0,
+        ranking: 0,
       });
     });
 
@@ -68,6 +79,9 @@ describe('StudentController', () => {
           name: 'John',
           lastname: 'Doe',
           city: 'London',
+          profession: null,
+          career: null,
+          image: null,
         },
       };
 
@@ -80,11 +94,12 @@ describe('StudentController', () => {
         name: 'John',
         lastname: 'Doe',
         city: 'London',
-        profession: undefined,
-        career: undefined,
-        image: undefined,
+        profession: null,
+        career: null,
+        image: null,
         hasCompletedIntroduction: false,
         points: 0,
+        ranking: 0,
       });
     });
 
@@ -93,9 +108,11 @@ describe('StudentController', () => {
       const req = {
         user: {
           id: 'studentId123',
+          name: null,
           lastname: 'Doe',
           profession: 'Student',
           city: 'London',
+          career: null,
           image: 'profile.jpg',
         },
       };
@@ -106,14 +123,15 @@ describe('StudentController', () => {
       // Assert
       expect(result).toEqual({
         id: 'studentId123',
-        name: undefined,
+        name: null,
         lastname: 'Doe',
         city: 'London',
         profession: 'Student',
-        career: undefined,
+        career: null,
         image: 'profile.jpg',
         hasCompletedIntroduction: false,
         points: 0,
+        ranking: 0,
       });
     });
   });

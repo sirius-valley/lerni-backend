@@ -571,7 +571,14 @@ export class ProgramRepository {
   async getPageableLeaderBoardByQuestionnaireId(questionnaireId: string, options: LimitOffsetPagination) {
     const limit = options.limit || 10;
     const offset = options.offset || 0;
-    return this.prisma.$queryRaw`
+
+    const count = await this.prisma.pointRecord.count({
+      where: {
+        sourceEntity: 'questionnaire',
+        entityId: questionnaireId,
+      },
+    });
+    const leaderboard = await this.prisma.$queryRaw`
         SELECT *,
                "PointRecord".id as "pointId",
                ROW_NUMBER()        OVER (ORDER BY amount DESC) AS pos
@@ -583,6 +590,7 @@ export class ProgramRepository {
             LIMIT ${limit}
         OFFSET ${offset * limit};
     `;
+    return { leaderboard, count };
   }
 
   async getProgramByProgramVersion(programVersionId: string) {
@@ -848,6 +856,214 @@ export class ProgramRepository {
         programs: {
           some: {
             programVersionId,
+          },
+        },
+      },
+    });
+  }
+
+  async getToStartProgram() {
+    return this.prisma.programVersion.count({
+      where: {
+        startDate: {
+          gte: new Date(),
+        },
+      },
+    });
+  }
+
+  async getFinishedProgram() {
+    return this.prisma.programVersion.count({
+      where: {
+        endDate: {
+          lte: new Date(),
+        },
+      },
+    });
+  }
+
+  async getTotalProgram() {
+    return this.prisma.programVersion.count({});
+  }
+
+  async getInProgresProgram() {
+    return this.prisma.programVersion.count({
+      where: {
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(),
+        },
+      },
+    });
+  }
+
+  async getStudentStatus(programVersionId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        programs: {
+          some: {
+            programVersionId,
+          },
+        },
+      },
+      include: {
+        pillSubmissions: {
+          where: {
+            pillVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+          include: {
+            pillVersion: {
+              include: {
+                pill: true,
+                programVersions: true,
+              },
+            },
+          },
+        },
+        questionnaireSubmissions: {
+          where: {
+            questionnaireVersion: {
+              programVersions: {
+                some: {
+                  programVersionId,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getPillsByProgramVersionId(programVersionId: string) {
+    return this.prisma.pill.findMany({
+      where: {
+        pillVersion: {
+          some: {
+            programVersions: {
+              some: {
+                programVersionId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        pillVersion: true,
+      },
+    });
+  }
+
+  async getquestionnarieByProgramVersionId(programVersionId: string) {
+    return this.prisma.questionnaire.findMany({
+      where: {
+        questions: {
+          some: {
+            programVersions: {
+              some: {
+                programVersionId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        questions: true,
+      },
+    });
+  }
+
+  async getStudentProgramByStudentIdAndProgramVersionIdWithProgress(studentId: string, programVersionId: string) {
+    return this.prisma.studentProgram.findFirst({
+      where: {
+        studentId,
+        programVersionId,
+      },
+      include: {
+        student: true,
+        programVersion: {
+          include: {
+            program: true,
+            programVersionPillVersions: {
+              include: {
+                pillVersion: {
+                  include: {
+                    pill: true,
+                    pillSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                    },
+                  },
+                },
+              },
+            },
+            programVersionQuestionnaireVersions: {
+              include: {
+                questionnaireVersion: {
+                  include: {
+                    questionnaire: true,
+                    questionnaireSubmissions: {
+                      where: {
+                        studentId,
+                      },
+                      orderBy: {
+                        createdAt: 'desc',
+                      },
+                      take: 1,
+                      include: {
+                        questionnaireAnswers: true,
+                      },
+                    },
+                    _count: {
+                      select: {
+                        questionnaireSubmissions: {
+                          where: {
+                            studentId,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            programVersionTrivias: {
+              include: {
+                trivia: {
+                  include: {
+                    triviaMatches: {
+                      where: {
+                        studentTriviaMatches: {
+                          some: {
+                            studentId,
+                          },
+                        },
+                      },
+                      include: {
+                        studentTriviaMatches: {
+                          include: {
+                            triviaAnswers: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },

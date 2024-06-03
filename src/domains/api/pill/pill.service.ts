@@ -14,6 +14,7 @@ import { HeadlandsAdapter } from './adapters/headlands.adapter';
 import { PillBlockDto } from './dtos/pill-block.dto';
 import { ThreadRequestDto } from './dtos/thread-request.dto';
 import { AchievementService } from '../achievement/achievement.service';
+import { OpenAIService } from './openai.client';
 
 @Injectable()
 export class PillService {
@@ -23,6 +24,7 @@ export class PillService {
     private readonly studentRepository: StudentRepository,
     private readonly headlandsAdapter: HeadlandsAdapter,
     private readonly achievementService: AchievementService,
+    private readonly openAIService: OpenAIService,
   ) {}
 
   public async getIntroduction(authorization: string, student: StudentDto) {
@@ -174,9 +176,29 @@ export class PillService {
       if (!studentDto[key] || !Object.values(introductionVariables).includes(studentDto[key])) return studentDto;
       studentDto[key] = this.capitalizeAndTrim(studentDto[key]);
     });
-    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, varName, this.capitalizeAndTrim(answerRequest.answer));
+    const answer = await this.retrieveData(answerRequest.answer, varName);
+    const studentData = this.getStudentUpdatedData(answer, varName);
+    const updatedStudent = await this.studentRepository.updateStudent(studentDto.id, studentData);
     if (!updatedStudent) throw new HttpException('Error while updating student', HttpStatus.INTERNAL_SERVER_ERROR);
     return updatedStudent;
+  }
+
+  private retrieveData(answer, varName) {
+    if (varName === 'image') return answer.trim();
+    return this.openAIService.retrieveData(this.capitalizeAndTrim(answer), varName);
+  }
+
+  private getStudentUpdatedData(answer: string, varName: string) {
+    if (varName === 'name') {
+      const separatedName = answer.split(', ');
+      return {
+        name: this.capitalizeAndTrim(separatedName[0]),
+        lastname: this.capitalizeAndTrim(separatedName[1]),
+      };
+    }
+    return {
+      [varName]: answer,
+    };
   }
 
   private capitalizeAndTrim(str) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { StudentService } from './student.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
@@ -14,7 +14,7 @@ import { CheckStudent } from './dtos/student-check-request.sto';
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
-  @Get('me')
+  @Get('profile')
   async getStudentDetails(@Request() req: ApiRequest) {
     return await this.studentService.getStudentDetails(req.user);
   }
@@ -22,5 +22,17 @@ export class StudentController {
   @Post('check')
   async checkStudent(@Body() data: CheckStudent) {
     return await this.studentService.getStudentsByEmail(data.emails);
+  }
+
+  @Get('registered')
+  @HttpCode(200)
+  async getRegisteredStudents() {
+    return this.studentService.getRegisteredStudents();
+  }
+
+  @Get('profile/:studentId')
+  @HttpCode(200)
+  async getStudentProfile(@Request() req: ApiRequest, @Param('studentId') studentId?: string) {
+    return await this.studentService.getStudentProfile(req.user, studentId);
   }
 }

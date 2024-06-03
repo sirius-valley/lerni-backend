@@ -3,6 +3,7 @@ import { PrismaService } from '../../../prisma.service';
 import { SimpleEmptyStudentDto } from './dtos/simple-empty-student.dto';
 import { SimpleStudentDto } from './dtos/simple-student.dto';
 import { StudentDto } from './dtos/student.dto';
+import { introductionID } from '../../../const';
 
 @Injectable()
 export class StudentRepository {
@@ -15,11 +16,11 @@ export class StudentRepository {
     return student ? new StudentDto(student as StudentDto) : null;
   }
 
-  async updateStudent(studentId: string, field: string, value: string) {
+  async updateStudent(studentId: string, data: Partial<StudentDto>): Promise<StudentDto | null> {
     const student = await this.prisma.student.update({
       where: { id: studentId },
       data: {
-        [field]: value,
+        ...data,
       },
     });
     return student ? new StudentDto(student as StudentDto) : null;
@@ -45,6 +46,15 @@ export class StudentRepository {
     return totalPoints.reduce((acc, point) => acc + point.amount, 0);
   }
 
+  async findIntroductionPillSubmissionByStudentId(studentId: string) {
+    return this.prisma.pillSubmission.findFirst({
+      where: {
+        studentId,
+        pillVersionId: introductionID,
+      },
+    });
+  }
+
   async findStudentById(id: string): Promise<SimpleStudentDto | null> {
     const student = await this.prisma.student.findUnique({
       where: {
@@ -52,6 +62,15 @@ export class StudentRepository {
       },
     });
     return student ? new SimpleStudentDto(student as SimpleStudentDto) : null;
+  }
+
+  async findStudentByIdSelectStudentDto(id: string): Promise<StudentDto | null> {
+    const student = await this.prisma.student.findUnique({
+      where: {
+        id,
+      },
+    });
+    return student ? new StudentDto(student as StudentDto) : null;
   }
 
   async enrollStudent(studentId: string, programVersionId: string) {
@@ -68,12 +87,52 @@ export class StudentRepository {
   }
 
   async addPoints(studentId: string, amount: number, entityId: string, sourceEntity: string) {
-    return this.prisma.pointRecord.create({
+    return this.prisma.student.update({
+      where: {
+        id: studentId,
+      },
       data: {
-        studentId,
-        amount,
-        entityId,
-        sourceEntity,
+        pointCount: {
+          increment: amount,
+        },
+        points: {
+          create: {
+            amount,
+            entityId,
+            sourceEntity,
+          },
+        },
+      },
+    });
+  }
+
+  async getRegisteredStudents() {
+    return this.prisma.student.count({
+      where: {
+        name: {
+          not: null,
+        },
+        lastname: {
+          not: null,
+        },
+        city: {
+          not: null,
+        },
+        image: {
+          not: null,
+        },
+        OR: [
+          {
+            career: {
+              not: null,
+            },
+          },
+          {
+            profession: {
+              not: null,
+            },
+          },
+        ],
       },
     });
   }

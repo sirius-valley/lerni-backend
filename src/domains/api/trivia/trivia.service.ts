@@ -367,15 +367,23 @@ export class TriviaService {
     const trivia = await this.triviaRepository.getTriviaById(match.triviaMatch.triviaId);
     if (!trivia) return;
     const opponent = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(match.triviaMatchId, match.studentId);
+    const status = this.triviaMatchStatus(match, trivia, opponent);
     return new TriviaHistoryDto(
       match.triviaMatchId,
-      this.triviaMatchStatus(match, trivia, opponent),
+      status,
       program.name,
       10, // TODO HARDCODED
       10, // TODO HARDCODED
       opponent ? new SimpleStudentDto(opponent.student) : null,
       match.triviaMatch.createdAt,
+      this.getCompleteBeforeDate(status, match, opponent),
     );
+  }
+
+  private getCompleteBeforeDate(status: TriviaAnswerResponseStatus, student: any, opponent?: any) {
+    if (!opponent) return student.completeBefore;
+    if (status === TriviaAnswerResponseStatus.WAITING) return opponent.completeBefore;
+    return student.completeBefore;
   }
 
   private triviaMatchStatus(triviaMatch: any, trivia: Trivia, opponent?: any) {

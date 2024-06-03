@@ -6,6 +6,7 @@ export class StudentDto {
   career?: string;
   city?: string;
   image?: string;
+  pointCount: number;
   authId: string;
   email?: string;
 
@@ -17,6 +18,7 @@ export class StudentDto {
     this.career = data.career;
     this.city = data.city;
     this.image = data.image;
+    this.pointCount = data.pointCount;
     this.authId = data.authId;
     this.email = data?.email;
   }
