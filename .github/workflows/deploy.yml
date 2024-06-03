@@ -50,12 +50,14 @@ jobs:
           EMAIL_HOST: ${{secrets.EMAIL_HOST}}
           EMAIL_USER: ${{secrets.EMAIL_USER}}
           EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+          SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+          OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
           ENVIRONMENT: development
         run: |
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build --build-arg PORT="$PORT" --build-arg DATABASE_URL="$DATABASE_URL" --build-arg POSTGRES_USER="$POSTGRES_USER" --build-arg POSTGRES_PASSWORD="$POSTGRES_PASSWORD" --build-arg JWT_SECRET="$JWT_SECRET" --build-arg SPRING_SERVICE_URL="$SPRING_SERVICE_URL" --build-arg EMAIL_HOST="$EMAIL_HOST" --build-arg EMAIL_USER="$EMAIL_USER" --build-arg EMAIL_PASSWORD="$EMAIL_PASSWORD" --build-arg ENVIRONMENT="$ENVIRONMENT" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build --build-arg PORT="$PORT" --build-arg DATABASE_URL="$DATABASE_URL" --build-arg POSTGRES_USER="$POSTGRES_USER" --build-arg POSTGRES_PASSWORD="$POSTGRES_PASSWORD" --build-arg JWT_SECRET="$JWT_SECRET" --build-arg SPRING_SERVICE_URL="$SPRING_SERVICE_URL" --build-arg EMAIL_HOST="$EMAIL_HOST" --build-arg EMAIL_USER="$EMAIL_USER" --build-arg EMAIL_PASSWORD="$EMAIL_PASSWORD" --build-arg SENTRY_DSN="$SENTRY_DSN" --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" --build-arg ENVIRONMENT="$ENVIRONMENT" -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
