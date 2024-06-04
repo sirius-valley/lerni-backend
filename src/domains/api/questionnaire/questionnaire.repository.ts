@@ -205,11 +205,12 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async createQuestionnaire(name: string, description: string) {
-    return await this.prisma.questionnaire.create({
+  public async createQuestionnaire(name: string, description: string, teacherId?: string) {
+    return this.prisma.questionnaire.create({
       data: {
         name,
         description,
+        teacherId,
       },
     });
   }
