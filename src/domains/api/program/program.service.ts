@@ -308,6 +308,7 @@ export class ProgramService {
           name: item.name,
           description: item.description,
           teacherComment: item.teacherComment,
+          teacherId: item.teacherId,
         });
       }),
     );

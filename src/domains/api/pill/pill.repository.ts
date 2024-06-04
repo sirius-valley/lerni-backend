@@ -174,8 +174,8 @@ export class PillRepository {
     });
   }
 
-  public async createPill(pill: { name: string; description: string; teacherComment: string }) {
-    return await this.prisma.pill.create({
+  public async createPill(pill: { name: string; description: string; teacherComment: string; teacherId?: string }) {
+    return this.prisma.pill.create({
       data: {
         ...pill,
       },
