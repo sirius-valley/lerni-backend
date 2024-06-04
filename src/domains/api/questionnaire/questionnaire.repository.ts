@@ -146,7 +146,7 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async getTeacherByQuestionnaireId(questionnaireId: string) {
+  public async getProgramTeacherByQuestionnaireId(questionnaireId: string) {
     return this.prisma.teacher.findFirst({
       where: {
         programs: {
@@ -162,6 +162,25 @@ export class QuestionnaireRepository {
                 },
               },
             },
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        profession: true,
+        image: true,
+      },
+    });
+  }
+
+  public async getQuestionnaireTeacherByQuestionnaireId(questionnaireId: string) {
+    return this.prisma.teacher.findFirst({
+      where: {
+        questionnaires: {
+          some: {
+            id: questionnaireId,
           },
         },
       },

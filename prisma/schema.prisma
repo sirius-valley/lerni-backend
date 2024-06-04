@@ -73,8 +73,9 @@ model Teacher {
   description String?
   createdAt   DateTime @default(now())
 
-  programs Program[]
-  pills    Pill[]
+  programs       Program[]
+  pills          Pill[]
+  questionnaires Questionnaire[]
 }
 
 enum PointEvent {
@@ -257,6 +258,8 @@ model Questionnaire {
   description String
   createdAt   DateTime @default(now())
 
+  teacherId String?
+  teacher   Teacher?               @relation(fields: [teacherId], references: [id])
   questions QuestionnaireVersion[]
 }
 
