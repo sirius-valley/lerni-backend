@@ -308,6 +308,7 @@ export class ProgramService {
           name: item.name,
           description: item.description,
           teacherComment: item.teacherComment,
+          teacherId: item.teacherId,
         });
       }),
     );
@@ -328,10 +329,10 @@ export class ProgramService {
   }
 
   public async addQuestionnaireToProgram(programId: string, data: QuestionnaireRequestDto) {
-    const questionarie = await this.questionnaireRepository.createQuestionnaire(data.name, data.description);
+    const questionnaire = await this.questionnaireRepository.createQuestionnaire(data.name, data.description, data.teacherId);
 
     const questionnaireVersion = await this.questionnaireRepository.createQuestionnaireVersion(
-      questionarie.id,
+      questionnaire.id,
       data.completionTimeMinutes,
       data.cooldownInMinutes,
       data.block,
