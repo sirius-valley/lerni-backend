@@ -267,7 +267,7 @@ export class QuestionnaireService {
           options: node.nodeContent.metadata.options,
           correct: node.correct,
           pointsAwarded: node.answer !== '' ? (node.correct ? questionnaireAnswerPoints : 0) : undefined,
-          optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
+          optionImages: node.nodeContent.metadata.metadata.option_images,
           correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
         };
     }
