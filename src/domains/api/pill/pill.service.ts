@@ -213,6 +213,7 @@ export class PillService {
   }
 
   private async getPillTeacher(pillId: string) {
+    if (pillId === introductionID) return introductionTeacher;
     const pillTeacher = await this.pillRepository.getPillTeacherByPillId(pillId);
     if (pillTeacher) return pillTeacher;
     const programTeacher = await this.pillRepository.getProgramTeacherByPillId(pillId);
