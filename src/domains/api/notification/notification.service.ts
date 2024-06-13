@@ -6,11 +6,10 @@ import { NotificationRepository } from './notification.repository';
 
 @Injectable()
 export class NotificationService {
-  client: SNSClient;
   constructor(private readonly notificationRepository: NotificationRepository) {}
 
   public async sendNotification(params: NotificationDto) {
-    this.client = new SNSClient();
+    const client = await new SNSClient();
     const user = await this.notificationRepository.searchToken(params.userId);
     if (!user) return undefined;
 
@@ -28,7 +27,7 @@ export class NotificationService {
 
     try {
       const command = new PublishCommand(params_sns);
-      const response = await this.client.send(command);
+      const response = await client.send(command);
       return response.MessageId;
     } catch (error) {
       throw new HttpException(`Can't send notification ${error?.message}`, HttpStatus.BAD_REQUEST);
@@ -37,16 +36,18 @@ export class NotificationService {
 
   public async publishNotification(input: any) {
     const command = new PublishCommand(input);
-    return await this.client.send(command);
+    const client = await new SNSClient();
+    return await client.send(command);
   }
 
   public async saveToken(id: string, token: string) {
+    const client = await new SNSClient();
     const input = {
       PlatformApplicationArn: process.env.AWS_TOPIC_ARN,
       Token: token,
     };
     const command = new CreatePlatformEndpointCommand(input);
-    const response_sns = await this.client.send(command);
+    const response_sns = await client.send(command);
     if (!response_sns.EndpointArn) throw new HttpException('AWS ERROR', HttpStatus.BAD_REQUEST);
     const response = this.notificationRepository.updateToken(id, response_sns.EndpointArn);
     if (!response) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
