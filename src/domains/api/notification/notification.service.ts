@@ -7,11 +7,10 @@ import { NotificationRepository } from './notification.repository';
 @Injectable()
 export class NotificationService {
   client: SNSClient;
-  constructor(private readonly notificationRepository: NotificationRepository) {
-    this.client = new SNSClient();
-  }
+  constructor(private readonly notificationRepository: NotificationRepository) {}
 
   public async sendNotification(params: NotificationDto) {
+    this.client = new SNSClient();
     const user = await this.notificationRepository.searchToken(params.userId);
     if (!user) return undefined;
 
