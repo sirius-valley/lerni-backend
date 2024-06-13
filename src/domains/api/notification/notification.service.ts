@@ -32,7 +32,7 @@ export class NotificationService {
       const response = await this.client.send(command);
       return response.MessageId;
     } catch (error) {
-      throw new HttpException("Can't send notification", HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Can't send notification ${error?.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 
