@@ -107,6 +107,10 @@ export class PillService {
     const answer = varName ? await this.checkIntroductionAnswer(student, answerRequest, varName) : { student, answerRequest };
     const springAnswer = this.formatSpringAnswerRequest(answer.answerRequest);
     const springProgress = await this.springPillService.answerPill(authorization, pillSubmission.pillVersion.block, springAnswer);
+    if (springProgress.completed) {
+      this.studentRepository.addPoints(student.id, 5, introductionID, 'introduction');
+      this.achievementService.updateProgress(student.id, 'introduction');
+    }
     const replacedPill = this.replaceFullName(springProgress, answer.student.name + ' ' + answer.student.lastname);
     const formattedPillBlock = this.formatIntroductionPillBlock(replacedPill, []);
     await this.pillRepository.createPillAnswer(
@@ -133,7 +137,7 @@ export class PillService {
 
   private async checkIntroductionAnswer(studentDto: StudentDto, answerRequest: AnswerRequestDto, varName: string) {
     const answerJson = JSON.parse(answerRequest.answer.toString());
-    const response = await this.openAIService.retrieveData(answerJson.value, varName as Field);
+    const response = await this.getResponse(answerJson.value, varName);
     const student = response !== 'Undetected' ? await this.saveIntroductionProgress(studentDto, response, varName) : studentDto;
     const answer = { value: answerJson.value, detected: response !== 'Undetected' };
     return {
@@ -179,7 +183,7 @@ export class PillService {
     return {
       completed: springProgress.completed,
       progress: !springProgress.completed && springProgress.progress === 100 ? 95 : springProgress.progress,
-      bubbles: this.mergeIntroductionData(springProgress, answers),
+      bubbles: this.mergeIntroductionData(springProgress, answers.reverse()),
     };
   }
 

@@ -19,7 +19,7 @@ export class PillRepository {
           include: {
             pillAnswers: {
               orderBy: {
-                createdAt: 'desc',
+                createdAt: 'asc',
               },
             },
           },
