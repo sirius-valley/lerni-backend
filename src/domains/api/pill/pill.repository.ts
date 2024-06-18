@@ -17,7 +17,11 @@ export class PillRepository {
             studentId: studentId,
           },
           include: {
-            pillAnswers: true,
+            pillAnswers: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
           },
         },
       },
@@ -25,7 +29,7 @@ export class PillRepository {
   }
 
   public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string | string[], progress: number) {
-    value = JSON.stringify(value);
+    value = value.toString();
     return this.prisma.pillSubmission.update({
       data: {
         pillAnswers: {
