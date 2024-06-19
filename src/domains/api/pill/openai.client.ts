@@ -3,8 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { ChatCompletionTool } from 'openai/resources';
 
-export type Field = 'name' | 'profession' | 'image';
-
+export type Field = 'name' | 'profession' | 'image' | 'city';
 @Injectable()
 export class OpenAIService {
   private openai: OpenAI;
@@ -14,9 +13,10 @@ export class OpenAIService {
   }
 
   private readonly examples = {
-    name: 'Me llamo carlos apellidez => Carlos, Apellidez | Me llamo carlos facundo apellidez => Carlos Facundo, Apellidez | Soy carlos facundo hernandez carrazco => Carlos Facundo, Hernandez Carrazco | Hola soy fernando rodriguez gonzalez => Fernando, Rodriguez Gonzalez',
+    name: 'Me llamo carlos apellidez => Carlos, Apellidez | Me llamo carlos facundo apellidez => Carlos Facundo, Apellidez | Soy carlos facundo hernandez carrazco => Carlos Facundo, Hernandez Carrazco | Hola soy fernando rodriguez gonzalez => Fernando, Rodriguez Gonzalez | ajlfewjaio => Undetected | abc abc => Undetected',
     profession: 'Hola, soy un doctor => Doctor | Soy un doctor en medicina => Doctor en medicina | Soy estudiante => Estudiante',
     image: 'some url => some url | image => image',
+    city: 'Soy de Buenos Aires => Buenos Aires | pilar => Pilar | soy de Buenos Aires Argentina => Buenos Aires, Argentina | campana => Campana',
   };
 
   private context(field: Field) {
