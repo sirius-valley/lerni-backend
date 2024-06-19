@@ -17,7 +17,11 @@ export class PillRepository {
             studentId: studentId,
           },
           include: {
-            pillAnswers: true,
+            pillAnswers: {
+              orderBy: {
+                createdAt: 'asc',
+              },
+            },
           },
         },
       },
@@ -25,7 +29,7 @@ export class PillRepository {
   }
 
   public async createPillAnswer(pillSubmissionId: string, questionId: string, value: string | string[], progress: number) {
-    value = JSON.stringify(value);
+    value = value.toString();
     return this.prisma.pillSubmission.update({
       data: {
         pillAnswers: {
@@ -81,7 +85,7 @@ export class PillRepository {
     });
   }
 
-  public async getTeacherByPillId(pillId: string) {
+  public async getProgramTeacherByPillId(pillId: string) {
     return this.prisma.teacher.findFirst({
       where: {
         programs: {
@@ -106,6 +110,18 @@ export class PillRepository {
         lastname: true,
         profession: true,
         image: true,
+      },
+    });
+  }
+
+  public async getPillTeacherByPillId(pillId: string) {
+    return this.prisma.teacher.findFirst({
+      where: {
+        pills: {
+          some: {
+            id: pillId,
+          },
+        },
       },
     });
   }
@@ -162,8 +178,8 @@ export class PillRepository {
     });
   }
 
-  public async createPill(pill: { name: string; description: string; teacherComment: string }) {
-    return await this.prisma.pill.create({
+  public async createPill(pill: { name: string; description: string; teacherComment: string; teacherId?: string }) {
+    return this.prisma.pill.create({
       data: {
         ...pill,
       },

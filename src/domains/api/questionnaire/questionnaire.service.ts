@@ -218,9 +218,11 @@ export class QuestionnaireService {
   }
 
   private async getTeacher(questionnaireId: string) {
-    const teacher = await this.questionnaireRepository.getTeacherByQuestionnaireId(questionnaireId);
-    if (!teacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
-    return new TeacherDto(teacher);
+    const teacher = await this.questionnaireRepository.getQuestionnaireTeacherByQuestionnaireId(questionnaireId);
+    if (teacher) return new TeacherDto(teacher);
+    const programTeacher = await this.questionnaireRepository.getProgramTeacherByQuestionnaireId(questionnaireId);
+    if (!programTeacher) throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+    return new TeacherDto(programTeacher);
   }
 
   private mergeData(springProgress: any, questionnaireBlock: any) {

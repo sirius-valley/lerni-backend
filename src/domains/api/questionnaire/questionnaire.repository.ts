@@ -146,7 +146,7 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async getTeacherByQuestionnaireId(questionnaireId: string) {
+  public async getProgramTeacherByQuestionnaireId(questionnaireId: string) {
     return this.prisma.teacher.findFirst({
       where: {
         programs: {
@@ -175,6 +175,25 @@ export class QuestionnaireRepository {
     });
   }
 
+  public async getQuestionnaireTeacherByQuestionnaireId(questionnaireId: string) {
+    return this.prisma.teacher.findFirst({
+      where: {
+        questionnaires: {
+          some: {
+            id: questionnaireId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        profession: true,
+        image: true,
+      },
+    });
+  }
+
   public async updateQuestionnaireSubmissionProgress(questionnaireSubmissionId: string, progress: number) {
     return this.prisma.questionnaireSubmission.update({
       data: {
@@ -186,11 +205,12 @@ export class QuestionnaireRepository {
     });
   }
 
-  public async createQuestionnaire(name: string, description: string) {
-    return await this.prisma.questionnaire.create({
+  public async createQuestionnaire(name: string, description: string, teacherId?: string) {
+    return this.prisma.questionnaire.create({
       data: {
         name,
         description,
+        teacherId,
       },
     });
   }

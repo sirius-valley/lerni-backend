@@ -1,4 +1,4 @@
-import { IsInt, IsJSON, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsJSON, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class QuestionnaireRequestDto {
   @IsNotEmpty()
@@ -8,6 +8,10 @@ export class QuestionnaireRequestDto {
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @IsOptional()
+  @IsString()
+  teacherId: string;
 
   @IsNotEmpty()
   @IsInt()
@@ -35,6 +39,7 @@ export class QuestionnaireRequestDto {
   constructor(questionnaire: QuestionnaireRequestDto) {
     this.name = questionnaire.name;
     this.description = questionnaire.description;
+    this.teacherId = questionnaire.teacherId;
     this.passsingScore = questionnaire.passsingScore;
     this.cooldownInMinutes = questionnaire.cooldownInMinutes;
     this.block = questionnaire.block;
