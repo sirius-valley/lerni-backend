@@ -315,6 +315,16 @@ export class TriviaService {
             item.triviaMatch.finishedDateTime,
           );
         }
+        return new TriviaHistoryDto(
+          item.triviaMatchId,
+          TriviaAnswerResponseStatus.WAITING,
+          program.name,
+          0,
+          0,
+          null,
+          item.createdAt,
+          item.triviaMatch.finishedDateTime,
+        );
       }),
     );
 
