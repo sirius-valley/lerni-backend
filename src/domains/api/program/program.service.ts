@@ -491,7 +491,7 @@ export class ProgramService {
     });
 
     const students = program.studentPrograms.map((item) => {
-      return new StudentDto({ ...(item.student as StudentDto), email: item.student.auth.email });
+      return new StudentDto({ ...(item.student as StudentDto), email: item.student.auth?.email });
     });
 
     const pills = program.programVersionPillVersions.map((item) => {
@@ -597,7 +597,7 @@ export class ProgramService {
         return { id: item };
       }),
       program.studentPrograms.map((item) => {
-        return { id: item.student.auth.email };
+        return { id: item.student.auth?.email };
       }),
     );
 
