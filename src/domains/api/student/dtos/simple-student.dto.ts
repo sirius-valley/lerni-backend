@@ -4,7 +4,7 @@ export class SimpleStudentDto {
   lastname: string | null;
   image: string | null;
   pointCount: number;
-  authId: string;
+  authId: string | null;
 
   constructor(data: SimpleStudentDto) {
     this.id = data.id;
