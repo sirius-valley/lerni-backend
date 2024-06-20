@@ -212,6 +212,7 @@ export class ProgramService {
       programVersionQuestionnaireVersions: questionnaireVersions,
     } = programVersion;
 
+    const feedbackSent = programVersion.program.comments.length > 0;
     const pills = this.calculateSimplePillDtos(pillVersions);
 
     return new ProgramDetailsDto({
@@ -224,6 +225,7 @@ export class ProgramService {
       estimatedHours: program.hoursToComplete,
       points: program.pointsReward,
       programDescription: program.description ?? '',
+      feedbackSent,
       pills: pills,
       questionnaire: this.calculateSimpleQuestionnairesDtos(
         questionnaireVersions,
