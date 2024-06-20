@@ -30,7 +30,7 @@ model ResetPasswordToken {
   validatedDate DateTime?
 
   authId String
-  auth   Auth   @relation(fields: [authId], references: [id])
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade)
 }
 
 model Student {
@@ -44,8 +44,8 @@ model Student {
   pointCount Int      @default(0)
   createdAt  DateTime @default(now())
 
-  authId String @unique
-  auth   Auth   @relation(fields: [authId], references: [id])
+  authId String? @unique
+  auth   Auth?   @relation(fields: [authId], references: [id])
 
   points PointRecord[]
 
@@ -378,7 +378,7 @@ model TriviaAnswer {
   createdAt  DateTime @default(now())
 
   studentTriviaMatchId String
-  studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id])
+  studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id], onDelete: Cascade)
 }
 
 model Achievement {
