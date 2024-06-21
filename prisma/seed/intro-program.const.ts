@@ -228,7 +228,7 @@ export const firstPillBlock = `{
     {
       "id": "29",
       "type": "ACTION",
-      "name": "<p>Por último, vamos a ver <strong>"deslizamiento para continuar"</strong>! 🎚️</p>"
+      "name": "<p>Por último, vamos a ver <strong>&quot;deslizamiento para continuar&quot;</strong>! 🎚️</p>"
     },
     {
       "id": "30",
