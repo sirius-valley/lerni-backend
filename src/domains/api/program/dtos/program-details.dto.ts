@@ -13,6 +13,8 @@ export class ProgramDetailsDto {
   estimatedHours: number;
   points: number;
   programDescription: string;
+  hasSentFeedback: boolean;
+  hasPlayedTrivia: boolean;
   pills: SimplePillDto[];
   questionnaire: SimpleQuestionnaireDto[];
   leaderBoard: ProgramLeaderboardDto;
@@ -29,6 +31,8 @@ export class ProgramDetailsDto {
     this.estimatedHours = programDetailsDto.estimatedHours;
     this.points = programDetailsDto.points;
     this.programDescription = programDetailsDto.programDescription;
+    this.hasSentFeedback = programDetailsDto.hasSentFeedback;
+    this.hasPlayedTrivia = programDetailsDto.hasPlayedTrivia;
     this.pills = programDetailsDto.pills;
     this.questionnaire = programDetailsDto.questionnaire;
     this.leaderBoard = programDetailsDto.leaderBoard;
