@@ -65,7 +65,7 @@ export class ProgramService {
       studentId,
       programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
     );
-    return this.createProgramDetailsDto(programVersion, leaderBoard, studentId);
+    return await this.createProgramDetailsDto(programVersion, leaderBoard, studentId);
   }
 
   public async getProgramsByStudentId(studentId: string, status: string, options: LimitOffsetPagination) {
@@ -205,7 +205,7 @@ export class ProgramService {
     throw new HttpException('Program not found', 404);
   }
 
-  private createProgramDetailsDto(programVersion: any, leaderBoard: ProgramLeaderboardDto, studentId: string) {
+  private async createProgramDetailsDto(programVersion: any, leaderBoard: ProgramLeaderboardDto, studentId: string) {
     const {
       program,
       programVersionPillVersions: pillVersions,
@@ -214,7 +214,7 @@ export class ProgramService {
 
     const hasSentFeedback = programVersion.program.comments.length > 0;
     const pills = this.calculateSimplePillDtos(pillVersions);
-    const triviaMatch = this.triviaRepository.findStudentTriviaMatchByStudentIdAndProgramId(studentId, programVersion.id);
+    const triviaMatch = await this.triviaRepository.findStudentTriviaMatchByStudentIdAndProgramId(studentId, programVersion.id);
 
     return new ProgramDetailsDto({
       id: program.id,
