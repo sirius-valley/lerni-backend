@@ -436,6 +436,23 @@ export class TriviaRepository {
     });
   }
 
+  async findStudentTriviaMatchByStudentIdAndProgramId(studentId: string, programVersionId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId,
+        triviaMatch: {
+          trivia: {
+            programVersions: {
+              some: {
+                programVersionId,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async updateFinishDateTriviaMatch(triviaId: string) {
     return this.prisma.triviaMatch.update({
       where: {
