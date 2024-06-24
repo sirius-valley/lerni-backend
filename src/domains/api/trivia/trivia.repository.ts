@@ -204,7 +204,36 @@ export class TriviaRepository {
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
       include: {
-        triviaMatch: true,
+        triviaAnswers: true,
+        triviaMatch: {
+          include: {
+            trivia: {
+              include: {
+                programVersions: {
+                  take: 1,
+                  include: {
+                    programVersion: {
+                      include: {
+                        program: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            studentTriviaMatches: {
+              where: {
+                studentId: {
+                  not: studentId,
+                },
+              },
+              include: {
+                triviaAnswers: true,
+                student: true,
+              },
+            },
+          },
+        },
       },
     });
     const total = await this.prisma.studentTriviaMatch.count({

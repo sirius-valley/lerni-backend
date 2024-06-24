@@ -39,7 +39,7 @@ export class TriviaService {
   }
 
   private checkIn72Hours = () => {
-    cron.schedule(' * */60 * * *', () => {
+    cron.schedule('0 * * * *', () => {
       this.checkAllNotFinishStatus();
     });
   };
@@ -297,26 +297,24 @@ export class TriviaService {
     const options = { limit: Number(10), offset: (page - 1) * 10 };
     const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
 
-    const newResults = await Promise.all(
-      results.map(async (item) => {
-        const program = await this.getProgramByTriviaMatchId(item.triviaMatchId);
-        const otherMatches = await this.triviaRepository.getStudentTriviaMatchNotIdStudent(item.triviaMatchId, item.studentId);
-        if (otherMatches) {
-          const opponent = await this.studentService.getStudentById(otherMatches.studentId);
-          const { status, studentScore, opponentScore } = await this.getTriviaResult(item.id, otherMatches.id);
-          return new TriviaHistoryDto(
-            item.triviaMatchId,
-            status,
-            program.name,
-            studentScore,
-            opponentScore,
-            opponent,
-            item.createdAt,
-            item.triviaMatch.finishedDateTime,
-          );
-        }
-      }),
-    );
+    const newResults = results.map((item) => {
+      const program = item.triviaMatch.trivia.programVersions[0].programVersion.program;
+      const otherMatches = item.triviaMatch.studentTriviaMatches.find((match) => match.studentId !== student.id);
+      if (otherMatches) {
+        const opponent = new SimpleStudentDto(otherMatches.student);
+        const { status, studentScore, opponentScore } = this.getTriviaResult(item, otherMatches);
+        return new TriviaHistoryDto(
+          item.triviaMatchId,
+          status,
+          program.name,
+          studentScore,
+          opponentScore,
+          opponent,
+          item.createdAt,
+          item.triviaMatch.finishedDateTime,
+        );
+      }
+    });
 
     return { results: newResults, totalPages: Math.ceil(total / 10) };
   }
@@ -333,9 +331,9 @@ export class TriviaService {
     return program;
   }
 
-  private async getTriviaResult(studentId: string, oponentId: string) {
-    const otherAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(oponentId);
-    const myAnswer = await this.triviaRepository.getTriviaAnswerCorrectCountByMatchId(studentId);
+  private getTriviaResult(studentMatch: any, opponentMatch: any) {
+    const otherAnswer = studentMatch.triviaAnswers.filter((answer) => answer.isCorrect).length;
+    const myAnswer = opponentMatch.triviaAnswers.filter((answer) => answer.isCorrect).length;
     const status =
       otherAnswer > myAnswer
         ? TriviaAnswerResponseStatus.LOST
