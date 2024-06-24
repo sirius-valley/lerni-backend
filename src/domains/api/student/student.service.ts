@@ -69,4 +69,9 @@ export class StudentService {
       ranking: Number(ranking),
     });
   }
+
+  public async deleteAccount(studentDto: StudentDto) {
+    if (!studentDto.id) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    await this.studentRepository.updateStudentToDeleteByStudentId(studentDto.id);
+  }
 }

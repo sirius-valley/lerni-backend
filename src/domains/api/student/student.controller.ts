@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { StudentService } from './student.service';
 import { AttachStudentDataInterceptor } from '../../../interceptors/attach-student-data.interceptor';
@@ -34,5 +34,11 @@ export class StudentController {
   @HttpCode(200)
   async getStudentProfile(@Request() req: ApiRequest, @Param('studentId') studentId?: string) {
     return await this.studentService.getStudentProfile(req.user, studentId);
+  }
+
+  @Delete('delete')
+  @HttpCode(200)
+  async deleteAccount(@Request() req: ApiRequest) {
+    return await this.studentService.deleteAccount(req.user);
   }
 }

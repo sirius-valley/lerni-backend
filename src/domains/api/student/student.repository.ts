@@ -136,4 +136,26 @@ export class StudentRepository {
       },
     });
   }
+
+  async updateStudentToDeleteByStudentId(studentId: string) {
+    return this.prisma.student.update({
+      where: {
+        id: studentId,
+      },
+      data: {
+        name: 'Usuario Eliminado',
+        lastname: '',
+        profession: '',
+        career: '',
+        auth: {
+          delete: true,
+        },
+        studentTriviaMatches: {
+          deleteMany: {
+            finishedDateTime: null,
+          },
+        },
+      },
+    });
+  }
 }

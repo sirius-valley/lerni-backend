@@ -586,7 +586,7 @@ export class ProgramRepository {
     const leaderboard = await this.prisma.$queryRaw`
         SELECT *,
                "PointRecord".id as "pointId",
-               ROW_NUMBER()        OVER (ORDER BY amount DESC) AS pos
+               ROW_NUMBER()        OVER (ORDER BY amount DESC, "PointRecord"."createdAt" DESC) AS pos
         FROM "PointRecord"
                  JOIN "Student" ON "PointRecord"."studentId" = "Student"."id"
         WHERE "sourceEntity" = 'questionnaire'
