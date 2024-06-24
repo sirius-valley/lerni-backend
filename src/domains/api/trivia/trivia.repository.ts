@@ -193,8 +193,15 @@ export class TriviaRepository {
       where: {
         studentId,
         triviaMatch: {
-          isNot: {
-            finishedDateTime: null,
+          studentTriviaMatches: {
+            some: {
+              studentId: {
+                not: studentId,
+              },
+            },
+          },
+          finishedDateTime: {
+            not: null,
           },
         },
       },
@@ -240,8 +247,15 @@ export class TriviaRepository {
       where: {
         studentId,
         triviaMatch: {
-          isNot: {
-            finishedDateTime: null,
+          studentTriviaMatches: {
+            some: {
+              studentId: {
+                not: studentId,
+              },
+            },
+          },
+          finishedDateTime: {
+            not: null,
           },
         },
       },

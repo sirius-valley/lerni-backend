@@ -294,7 +294,7 @@ export class TriviaService {
   }
 
   public async getTriviaHistory(student: StudentDto, page: number): Promise<any> {
-    const options = { limit: Number(10), offset: (page - 1) * 10 };
+    const options = { limit: Number(10), offset: page >= 1 ? (page - 1) * 10 : 0 };
     const { results, total } = await this.triviaRepository.getTriviaHistory(student.id, options);
 
     const newResults = results.map((item) => {
