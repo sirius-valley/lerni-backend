@@ -154,6 +154,11 @@ export class ProgramRepository {
             program: {
               include: {
                 teacher: true,
+                comments: {
+                  where: {
+                    studentId,
+                  },
+                },
               },
             },
           },
