@@ -193,8 +193,15 @@ export class TriviaRepository {
       where: {
         studentId,
         triviaMatch: {
-          isNot: {
-            finishedDateTime: null,
+          studentTriviaMatches: {
+            some: {
+              studentId: {
+                not: studentId,
+              },
+            },
+          },
+          finishedDateTime: {
+            not: null,
           },
         },
       },
@@ -204,15 +211,51 @@ export class TriviaRepository {
       skip: options.offset ? options.offset : 0,
       take: options.limit ? options.limit : 10,
       include: {
-        triviaMatch: true,
+        triviaAnswers: true,
+        triviaMatch: {
+          include: {
+            trivia: {
+              include: {
+                programVersions: {
+                  take: 1,
+                  include: {
+                    programVersion: {
+                      include: {
+                        program: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            studentTriviaMatches: {
+              where: {
+                studentId: {
+                  not: studentId,
+                },
+              },
+              include: {
+                triviaAnswers: true,
+                student: true,
+              },
+            },
+          },
+        },
       },
     });
     const total = await this.prisma.studentTriviaMatch.count({
       where: {
         studentId,
         triviaMatch: {
-          isNot: {
-            finishedDateTime: null,
+          studentTriviaMatches: {
+            some: {
+              studentId: {
+                not: studentId,
+              },
+            },
+          },
+          finishedDateTime: {
+            not: null,
           },
         },
       },
@@ -432,6 +475,23 @@ export class TriviaRepository {
       },
       include: {
         studentTriviaMatches: true,
+      },
+    });
+  }
+
+  async findStudentTriviaMatchByStudentIdAndProgramId(studentId: string, programVersionId: string) {
+    return this.prisma.studentTriviaMatch.findFirst({
+      where: {
+        studentId,
+        triviaMatch: {
+          trivia: {
+            programVersions: {
+              some: {
+                programVersionId,
+              },
+            },
+          },
+        },
       },
     });
   }

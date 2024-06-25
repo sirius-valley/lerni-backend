@@ -6,8 +6,10 @@ export const maxResetCodesPerHour = 10;
 export const maxResetTokenAttemptsPerCode = 5;
 export const introductionVariables = {
   '0e64b123-5fcb-46db-a2cf-5e39f0b90ed7': 'name',
+  'c8715c31-7eeb-4529-877a-09c0cce071d9': 'name',
   '6bc4b333-9e25-4fea-903c-45d0419f89c9': 'lastname',
   '70b6b4a9-a50d-4f19-8833-08f1763b9409': 'city',
+  'cfd88d2a-f258-4572-8850-83d4a4febcd4': 'city',
   'bd7b151f-a1f1-406d-898b-f8dfb2f89ec5': 'career',
   '74e1cbe3-7ff8-4b17-8302-fd60b1bbeb85': 'profession',
   '3dc9d90b-5e24-4ccc-9ed8-a21509b50ba6': 'profession',

@@ -30,7 +30,7 @@ model ResetPasswordToken {
   validatedDate DateTime?
 
   authId String
-  auth   Auth   @relation(fields: [authId], references: [id])
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade)
 }
 
 model Student {
@@ -44,8 +44,8 @@ model Student {
   pointCount Int      @default(0)
   createdAt  DateTime @default(now())
 
-  authId String @unique
-  auth   Auth   @relation(fields: [authId], references: [id])
+  authId String? @unique
+  auth   Auth?   @relation(fields: [authId], references: [id])
 
   points PointRecord[]
 
@@ -73,7 +73,9 @@ model Teacher {
   description String?
   createdAt   DateTime @default(now())
 
-  programs Program[]
+  programs       Program[]
+  pills          Pill[]
+  questionnaires Questionnaire[]
 }
 
 enum PointEvent {
@@ -178,11 +180,14 @@ model ProgramObjective {
 }
 
 model Pill {
-  id             String        @id @default(uuid())
+  id             String @id @default(uuid())
   name           String
   description    String
   teacherComment String
-  pillVersion    PillVersion[]
+
+  teacherId   String?
+  teacher     Teacher?      @relation(fields: [teacherId], references: [id])
+  pillVersion PillVersion[]
 }
 
 model PillVersion {
@@ -253,6 +258,8 @@ model Questionnaire {
   description String
   createdAt   DateTime @default(now())
 
+  teacherId String?
+  teacher   Teacher?               @relation(fields: [teacherId], references: [id])
   questions QuestionnaireVersion[]
 }
 
@@ -371,7 +378,7 @@ model TriviaAnswer {
   createdAt  DateTime @default(now())
 
   studentTriviaMatchId String
-  studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id])
+  studentTriviaMatch   StudentTriviaMatch @relation(fields: [studentTriviaMatchId], references: [id], onDelete: Cascade)
 }
 
 model Achievement {

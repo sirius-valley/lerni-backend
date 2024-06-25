@@ -57,12 +57,12 @@ export const firstPillBlock = `{
     {
       "id": "5",
       "type": "ACTION",
-      "name": "<p>Bueno, el primero que vamos a ver es <strong>'Respuesta simple'</strong> 🔘 </p>"
+      "name": "<p>Primero, vamos a conocer la <strong>'Respuesta simple'</strong> 🔘</p>"
     },
     {
       "id": "6",
       "type": "ACTION",
-      "name": "<p>Mediante este tipo de respuesta, vas a poder seleccionar una sola respuesta a lo que el 👨🏻👩🏻 instructor pregunte!</p>"
+      "name": "<p>Con este tipo de interacción, podrás elegir una única opción para responder a las preguntas del 👨🏻👩🏻 instructor.</p>"
     },
     {
       "id": "7",
@@ -133,7 +133,7 @@ export const firstPillBlock = `{
     {
       "id": "16",
       "type": "ACTION",
-      "name": "<p>Mediante este tipo de respuesta, vas a poder seleccionar multiples respuesta a la pregunta del instructor!</p>"
+      "name": "<p>Mediante este tipo de interacción, vas a poder seleccionar multiples respuesta a la pregunta del instructor!</p>"
     },
     {
       "id": "17",
@@ -175,7 +175,7 @@ export const firstPillBlock = `{
     {
       "id": "22",
       "type": "ACTION",
-      "name": "<p>El que vamos a ver ahora se llama <strong>Carousel de imagenes</strong>! 🖼️</p>"
+      "name": "<p>El que vamos a ver ahora se llama <strong>Carrusel de imagenes</strong>! 🖼️</p>"
     },
     {
       "id": "23",
@@ -190,7 +190,7 @@ export const firstPillBlock = `{
     {
       "id": "25",
       "type": "ACTION",
-      "name": "<p>¿Quién de estos personajes no es un 🌃 <strong>Skywalker</strong></p>"
+      "name": "<p>¿Quién de estos personajes no es un 🌃 <strong>Skywalker</strong>?</p>"
     },
     {
       "id": "26",
@@ -228,7 +228,7 @@ export const firstPillBlock = `{
     {
       "id": "29",
       "type": "ACTION",
-      "name": "<p>Por último, vamos a ver el deslizamiento para continuar! 🎚️</p>"
+      "name": "<p>Por último, vamos a ver <strong>&quot;deslizamiento para continuar&quot;</strong>! 🎚️</p>"
     },
     {
       "id": "30",

@@ -65,7 +65,7 @@ export class ProgramService {
       studentId,
       programVersion.programVersionQuestionnaireVersions[0].questionnaireVersion.questionnaireId,
     );
-    return this.createProgramDetailsDto(programVersion, leaderBoard);
+    return await this.createProgramDetailsDto(programVersion, leaderBoard, studentId);
   }
 
   public async getProgramsByStudentId(studentId: string, status: string, options: LimitOffsetPagination) {
@@ -205,14 +205,16 @@ export class ProgramService {
     throw new HttpException('Program not found', 404);
   }
 
-  private createProgramDetailsDto(programVersion: any, leaderBoard: ProgramLeaderboardDto) {
+  private async createProgramDetailsDto(programVersion: any, leaderBoard: ProgramLeaderboardDto, studentId: string) {
     const {
       program,
       programVersionPillVersions: pillVersions,
       programVersionQuestionnaireVersions: questionnaireVersions,
     } = programVersion;
 
+    const hasSentFeedback = programVersion.program.comments.length > 0;
     const pills = this.calculateSimplePillDtos(pillVersions);
+    const triviaMatch = await this.triviaRepository.findStudentTriviaMatchByStudentIdAndProgramId(studentId, programVersion.id);
 
     return new ProgramDetailsDto({
       id: program.id,
@@ -224,6 +226,8 @@ export class ProgramService {
       estimatedHours: program.hoursToComplete,
       points: program.pointsReward,
       programDescription: program.description ?? '',
+      hasSentFeedback,
+      hasPlayedTrivia: !!triviaMatch,
       pills: pills,
       questionnaire: this.calculateSimpleQuestionnairesDtos(
         questionnaireVersions,
@@ -308,6 +312,7 @@ export class ProgramService {
           name: item.name,
           description: item.description,
           teacherComment: item.teacherComment,
+          teacherId: item.teacherId,
         });
       }),
     );
@@ -328,10 +333,10 @@ export class ProgramService {
   }
 
   public async addQuestionnaireToProgram(programId: string, data: QuestionnaireRequestDto) {
-    const questionarie = await this.questionnaireRepository.createQuestionnaire(data.name, data.description);
+    const questionnaire = await this.questionnaireRepository.createQuestionnaire(data.name, data.description, data.teacherId);
 
     const questionnaireVersion = await this.questionnaireRepository.createQuestionnaireVersion(
-      questionarie.id,
+      questionnaire.id,
       data.completionTimeMinutes,
       data.cooldownInMinutes,
       data.block,
@@ -490,7 +495,7 @@ export class ProgramService {
     });
 
     const students = program.studentPrograms.map((item) => {
-      return new StudentDto({ ...(item.student as StudentDto), email: item.student.auth.email });
+      return new StudentDto({ ...(item.student as StudentDto), email: item.student.auth?.email });
     });
 
     const pills = program.programVersionPillVersions.map((item) => {
@@ -596,7 +601,7 @@ export class ProgramService {
         return { id: item };
       }),
       program.studentPrograms.map((item) => {
-        return { id: item.student.auth.email };
+        return { id: item.student.auth?.email };
       }),
     );
 

@@ -11,6 +11,10 @@ export class PillRequestDto {
   teacherComment: string;
 
   @IsOptional()
+  @IsString()
+  teacherId: string;
+
+  @IsOptional()
   @IsNumber()
   version: number;
 
@@ -25,6 +29,7 @@ export class PillRequestDto {
     this.description = data.description;
     this.teacherComment = data.teacherComment;
     this.version = data.version;
+    this.teacherId = data.teacherId;
     this.completionTimeMinutes = data.completionTimeMinutes;
     this.block = data.block;
   }
