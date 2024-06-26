@@ -246,7 +246,7 @@ export class PillService {
         return {
           value: answer.answer ?? '',
           options: node.nodeContent.metadata.options,
-          optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
+          optionImages: node.nodeContent.metadata.metadata.option_images,
         };
     }
   }
