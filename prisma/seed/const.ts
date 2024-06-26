@@ -213,12 +213,12 @@ export const introductionBlock = `{
           ]
         },
         "options": [
-          "Elegir",
-          "Elegir",
-          "Elegir",
-          "Elegir",
-          "Elegir",
-          "Elegir"
+          "Lernito Punk",
+          "Lernito Leia",
+          "Lernito Einstein",
+          "Lernito",
+          "Lernito Astronauta",
+          "Lernito 8-bit"
         ]
       }
     },

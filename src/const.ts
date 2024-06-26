@@ -26,3 +26,12 @@ export const introductionTeacher = {
 };
 
 export const firstProgramVersionId = 'firstProgramVersionId';
+
+export const profileImageMap = {
+  'Lernito Punk': 'https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png',
+  'Lernito Leia': 'https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png',
+  'Lernito Einstein': 'https://lerni-images-2024.s3.amazonaws.com/avatar/51777242273.png',
+  Lernito: 'https://lerni-images-2024.s3.amazonaws.com/avatar/26281048736.png',
+  'Lernito Astronauta': 'https://lerni-images-2024.s3.amazonaws.com/avatar/61168468556.png',
+  'Lernito 8-bit': 'https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png',
+};
