@@ -703,7 +703,7 @@ export const questionnaireBlock = `{
          "metadata":{
             "metadata":{
                "lerni_question_type":"carousel",
-               "correct_answer": "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
+               "correct_answer": "Opcion 1 Verdadera",
                "option_images":[
                   "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
                   "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
