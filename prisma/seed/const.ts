@@ -203,22 +203,22 @@ export const introductionBlock = `{
       "metadata":{
         "metadata":{
           "lerni_question_type":"carousel",
-          "option_descriptions":[
-            "Elegir",
-            "Elegir",
-            "Elegir",
-            "Elegir",
-            "Elegir",
-            "Elegir"
+          "option_images": [
+            "https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png",
+            "https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png",
+            "https://lerni-images-2024.s3.amazonaws.com/avatar/51777242273.png",
+            "https://lerni-images-2024.s3.amazonaws.com/avatar/26281048736.png",
+            "https://lerni-images-2024.s3.amazonaws.com/avatar/61168468556.png",
+            "https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png"
           ]
         },
-        "options":[
-          "https://lerni-images-2024.s3.amazonaws.com/avatar/36169390813.png",
-          "https://lerni-images-2024.s3.amazonaws.com/avatar/63345516952.png",
-          "https://lerni-images-2024.s3.amazonaws.com/avatar/51777242273.png",
-          "https://lerni-images-2024.s3.amazonaws.com/avatar/26281048736.png",
-          "https://lerni-images-2024.s3.amazonaws.com/avatar/61168468556.png",
-          "https://lerni-images-2024.s3.amazonaws.com/avatar/98214318138.png"
+        "options": [
+          "Lernito Punk",
+          "Lernito Leia",
+          "Lernito Einstein",
+          "Lernito",
+          "Lernito Astronauta",
+          "Lernito 8-bit"
         ]
       }
     },
@@ -570,18 +570,18 @@ export const pillBlock = `{
                 "metadata": {
                     "metadata": {
                         "lerni_question_type": "carousel",
-                        "option_descriptions": [
-                            "Opcion 1 Verdadera",
-                            "Opcion 2 Falsa",
-                            "Opcion 3 falsa",
-                            "Opcion 4 Verdadera"
+                        "option_images": [
+                          "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
+                          "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
+                          "https://cdn.dev.headlands.cloud/image/attachment/6e8ace0b-62b5-4980-9159-d47dfa815c87",
+                          "https://cdn.dev.headlands.cloud/image/attachment/fb205a63-bcca-46b6-9237-5502e9ab29b1"
                         ]
                     },
                     "options": [
-                        "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
-                        "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
-                        "https://cdn.dev.headlands.cloud/image/attachment/6e8ace0b-62b5-4980-9159-d47dfa815c87",
-                        "https://cdn.dev.headlands.cloud/image/attachment/fb205a63-bcca-46b6-9237-5502e9ab29b1"
+                      "Opcion 1 Verdadera",
+                      "Opcion 2 Falsa",
+                      "Opcion 3 falsa",
+                      "Opcion 4 Verdadera"
                     ]
                 }
             }
@@ -703,19 +703,19 @@ export const questionnaireBlock = `{
          "metadata":{
             "metadata":{
                "lerni_question_type":"carousel",
-               "correct_answer": "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
-               "option_descriptions":[
-                  "Opcion 1 Verdadera",
-                  "Opcion 2 Falsa",
-                  "Opcion 3 falsa",
-                  "Opcion 4 Falsa"
+               "correct_answer": "Opcion 1 Verdadera",
+               "option_images":[
+                  "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
+                  "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
+                  "https://cdn.dev.headlands.cloud/image/attachment/6e8ace0b-62b5-4980-9159-d47dfa815c87",
+                  "https://cdn.dev.headlands.cloud/image/attachment/fb205a63-bcca-46b6-9237-5502e9ab29b1"
                ]
             },
             "options":[
-               "https://cdn.dev.headlands.cloud/image/attachment/61782f50-1f43-42e2-9920-860c7f0de66b",
-               "https://cdn.dev.headlands.cloud/image/attachment/78dae0b9-ac95-499a-8ff1-34d7fd675b74",
-               "https://cdn.dev.headlands.cloud/image/attachment/6e8ace0b-62b5-4980-9159-d47dfa815c87",
-               "https://cdn.dev.headlands.cloud/image/attachment/fb205a63-bcca-46b6-9237-5502e9ab29b1"
+               "Opcion 1 Verdadera",
+               "Opcion 2 Falsa",
+               "Opcion 3 falsa",
+               "Opcion 4 Falsa"
             ]
          }
       }

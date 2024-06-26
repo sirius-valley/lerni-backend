@@ -200,18 +200,18 @@ export const firstPillBlock = `{
       "metadata": {
         "metadata": {
           "lerni_question_type": "carousel",
-          "option_descriptions": [
-            "Darth Vader",
-            "Leia",
-            "Rey",
-            "Luke"
+          "option_images": [
+            "https://lerni-images-2024.s3.amazonaws.com/introduction/darth-vader-enfadado-star-wars.jpg",
+            "https://lerni-images-2024.s3.amazonaws.com/introduction/download.jpeg",
+            "https://lerni-images-2024.s3.amazonaws.com/introduction/fotonoticia_20240424115623_690.jpg",
+            "https://lerni-images-2024.s3.amazonaws.com/introduction/luke-skywalker-boba-fett-1643971893.jpg"
           ]
         },
         "options": [
-          "https://lerni-images-2024.s3.amazonaws.com/introduction/darth-vader-enfadado-star-wars.jpg",
-          "https://lerni-images-2024.s3.amazonaws.com/introduction/download.jpeg",
-          "https://lerni-images-2024.s3.amazonaws.com/introduction/fotonoticia_20240424115623_690.jpg",
-          "https://lerni-images-2024.s3.amazonaws.com/introduction/luke-skywalker-boba-fett-1643971893.jpg"
+          "Darth Vader",
+          "Leia",
+          "Rey",
+          "Luke"
         ]
       }
     },

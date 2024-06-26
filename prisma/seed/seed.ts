@@ -368,6 +368,7 @@ async function main() {
     update: {
       questionnaireId: NICQuestionnaireId,
       version: 1,
+      block: NICQuestionnaire,
     },
     create: {
       id: NICQuestionnaireVersionId,
@@ -631,6 +632,7 @@ async function main() {
     update: {
       questionnaireId: FractureQuestionnaireId,
       version: 1,
+      block: NICQuestionnaire,
     },
     create: {
       id: FractureQuestionnaireVersionId,
@@ -890,6 +892,7 @@ async function main() {
     update: {
       questionnaireId: questionnaireId,
       version: 1,
+      block: questionnaireBlock,
     },
     create: {
       id: questionnaireVersionId,
@@ -1184,6 +1187,7 @@ async function firstProgram() {
     update: {
       questionnaireId: firstQuestionnaireId,
       version: 1,
+      block: firstQuestionnaireBlock,
     },
     create: {
       id: firstQuestionnaireVersionId,
@@ -1504,6 +1508,7 @@ async function extraPrograms(n: number = 10) {
       update: {
         questionnaireId: questionnaireId1,
         version: 1,
+        block: questionnaireBlock,
       },
       create: {
         id: questionnaireVersionId1,
@@ -2071,6 +2076,7 @@ async function DEMOCapacitacion() {
     update: {
       questionnaireId: questionnaireIDDay1,
       version: 1,
+      block: CapacitacionQuestionnaire,
     },
     create: {
       id: questionnaireIDDay1Version,

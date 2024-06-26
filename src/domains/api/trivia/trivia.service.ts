@@ -280,7 +280,7 @@ export class TriviaService {
           value: node.answer,
           options: node.nodeContent.metadata.options,
           correct: node.correct,
-          optionDescriptions: node.nodeContent.metadata.metadata.option_descriptions,
+          optionImages: node.nodeContent.metadata.metadata.option_images,
           correctValue: node.answer !== '' ? (node.correct ? [node.nodeContent.metadata.metadata.correct_answer] : []) : undefined,
         };
     }

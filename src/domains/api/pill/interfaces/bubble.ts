@@ -37,5 +37,5 @@ export type BubbleDto =
       value: string[];
       correct?: boolean;
       pointsAwarded?: number;
-      optionDescriptions: string[];
+      optionImages: string[];
     };
