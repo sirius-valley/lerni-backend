@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiRequest } from '../../../types/api-request.interface';
@@ -23,5 +23,11 @@ export class NotificationController {
   @Post('token')
   async updateToken(@Request() req: ApiRequest, @Body() request: NewTokenDto) {
     return this.notificationService.saveToken(req.user.authId, request.token);
+  }
+
+  @Post('remove-token')
+  @HttpCode(200)
+  async removeToken(@Request() req: ApiRequest) {
+    return this.notificationService.removeToken(req.user.authId);
   }
 }
