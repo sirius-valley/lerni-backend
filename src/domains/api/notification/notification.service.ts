@@ -53,4 +53,9 @@ export class NotificationService {
     if (!response) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     return 'OK';
   }
+
+  public async removeToken(authId: string) {
+    await this.notificationRepository.updateToken(authId, '');
+    return;
+  }
 }
